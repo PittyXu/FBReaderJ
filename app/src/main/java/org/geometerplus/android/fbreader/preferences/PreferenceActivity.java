@@ -41,7 +41,6 @@ import org.geometerplus.fbreader.fbreader.options.FooterOptions;
 import org.geometerplus.fbreader.fbreader.options.ImageOptions;
 import org.geometerplus.fbreader.fbreader.options.MiscOptions;
 import org.geometerplus.fbreader.fbreader.options.PageTurningOptions;
-import org.geometerplus.fbreader.fbreader.options.SyncOptions;
 import org.geometerplus.fbreader.fbreader.options.ViewOptions;
 import org.geometerplus.fbreader.tips.TipsManager;
 import org.geometerplus.zlibrary.core.application.ZLKeyBindings;
@@ -111,7 +110,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
     final FooterOptions footerOptions = viewOptions.getFooterOptions();
     final PageTurningOptions pageTurningOptions = new PageTurningOptions();
     final ImageOptions imageOptions = new ImageOptions();
-    final SyncOptions syncOptions = new SyncOptions();
     final ColorProfile profile = viewOptions.getColorProfile();
     final ZLTextStyleCollection collection = viewOptions.getTextStyleCollection();
     final ZLKeyBindings keyBindings = new ZLKeyBindings();

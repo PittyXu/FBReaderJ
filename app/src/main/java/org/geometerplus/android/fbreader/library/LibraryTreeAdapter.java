@@ -95,8 +95,6 @@ class LibraryTreeAdapter extends TreeAdapter {
 	private int getCoverResourceId(LibraryTree tree) {
 		if (tree.getBook() != null) {
 			return R.drawable.ic_list_library_book;
-		} else if (tree instanceof ExternalViewTree) {
-			return R.drawable.plugin_bookshelf;
 		} else if (tree instanceof FileFirstLevelTree) {
 			return R.drawable.ic_list_library_folder;
 		} else if (tree instanceof SearchResultsTree) {

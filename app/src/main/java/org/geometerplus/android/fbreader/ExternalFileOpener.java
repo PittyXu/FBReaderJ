@@ -83,7 +83,6 @@ class ExternalFileOpener implements FBReaderApp.ExternalFileOpener {
 			.setPositiveButton(buttonResource.getResource("yes").getValue(), new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					PackageUtil.installFromMarket(myReader, plugin.packageName());
 					myDialog = null;
 				}
 			})

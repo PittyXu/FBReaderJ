@@ -48,7 +48,6 @@ import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
 import org.geometerplus.android.fbreader.tree.TreeActivity;
 
 public class LibraryActivity extends TreeActivity<LibraryTree> implements MenuItem.OnMenuItemClickListener, View.OnCreateContextMenuListener, IBookCollection.Listener<Book> {
-	static final String START_SEARCH_ACTION = "action.fbreader.library.start-search";
 
 	private final BookCollectionShadow myCollection = new BookCollectionShadow();
 	private volatile RootTree myRootTree;
@@ -75,18 +74,6 @@ public class LibraryActivity extends TreeActivity<LibraryTree> implements MenuIt
 				init(getIntent());
 			}
 		});
-	}
-
-	@Override
-	protected void onNewIntent(Intent intent) {
-		if (START_SEARCH_ACTION.equals(intent.getAction())) {
-			final String pattern = intent.getStringExtra(SearchManager.QUERY);
-			if (pattern != null && pattern.length() > 0) {
-				startBookSearch(pattern);
-			}
-		} else {
-			super.onNewIntent(intent);
-		}
 	}
 
 	@Override
@@ -117,13 +104,9 @@ public class LibraryActivity extends TreeActivity<LibraryTree> implements MenuIt
 	@Override
 	protected void onListItemClick(ListView listView, View view, int position, long rowId) {
 		final LibraryTree tree = (LibraryTree)getTreeAdapter().getItem(position);
-		if (tree instanceof ExternalViewTree) {
-			runOrInstallExternalView(true);
-		} else {
-			final Book book = tree.getBook();
-			if (book == null) {
-				openTree(tree);
-			}
+		final Book book = tree.getBook();
+		if (book == null) {
+			openTree(tree);
 		}
 	}
 
@@ -133,19 +116,11 @@ public class LibraryActivity extends TreeActivity<LibraryTree> implements MenuIt
 	private final ZLStringOption BookSearchPatternOption =
 		new ZLStringOption("BookSearch", "Pattern", "");
 
-	private void openSearchResults() {
-		final LibraryTree tree = myRootTree.getSearchResultsTree();
-		if (tree != null) {
-			openTree(tree);
-		}
-	}
-
 	@Override
 	public boolean onSearchRequested() {
 		if (DeviceType.Instance().hasStandardSearchDialog()) {
 			startSearch(BookSearchPatternOption.getValue(), true, null, false);
 		} else {
-			SearchDialogUtil.showDialog(this, LibrarySearchActivity.class, BookSearchPatternOption.getValue(), null);
 		}
 		return true;
 	}
@@ -157,16 +132,6 @@ public class LibraryActivity extends TreeActivity<LibraryTree> implements MenuIt
 		int MarkAsRead            = 3;
 		int MarkAsUnread          = 4;
 		int DeleteBook            = 5;
-		int UploadAgain           = 6;
-		int TryAgain              = 7;
-	}
-	private interface OptionsItemId {
-		int Search                = 0;
-		int Rescan                = 1;
-		int UploadAgain           = 2;
-		int TryAgain              = 3;
-		int DeleteAll             = 4;
-		int ExternalView          = 5;
 	}
 
 	@Override
@@ -195,12 +160,6 @@ public class LibraryActivity extends TreeActivity<LibraryTree> implements MenuIt
 		if (myCollection.canRemoveBook(book, true)) {
 			menu.add(0, ContextItemId.DeleteBook, 0, resource.getResource("deleteBook").getValue());
 		}
-		if (book.hasLabel(Book.SYNC_DELETED_LABEL)) {
-			menu.add(0, ContextItemId.UploadAgain, 0, resource.getResource("uploadAgain").getValue());
-		}
-		if (book.hasLabel(Book.SYNC_FAILURE_LABEL)) {
-			menu.add(0, ContextItemId.TryAgain, 0, resource.getResource("tryAgain").getValue());
-		}
 	}
 
 	@Override
@@ -211,13 +170,6 @@ public class LibraryActivity extends TreeActivity<LibraryTree> implements MenuIt
 			return onContextItemSelected(item.getItemId(), book);
 		}
 		return super.onContextItemSelected(item);
-	}
-
-	private void syncAgain(Book book) {
-		book.removeLabel(Book.SYNC_FAILURE_LABEL);
-		book.removeLabel(Book.SYNC_DELETED_LABEL);
-		book.addNewLabel(Book.SYNC_TOSYNC_LABEL);
-		myCollection.saveBook(book);
 	}
 
 	private boolean onContextItemSelected(int itemId, Book book) {
@@ -249,124 +201,13 @@ public class LibraryActivity extends TreeActivity<LibraryTree> implements MenuIt
 			case ContextItemId.DeleteBook:
 				tryToDeleteBook(book);
 				return true;
-			case ContextItemId.UploadAgain:
-			case ContextItemId.TryAgain:
-				syncAgain(book);
-				if (getCurrentTree().onBookEvent(BookEvent.Updated, book)) {
-					getTreeAdapter().replaceAll(getCurrentTree().subtrees(), true);
-				}
-				return true;
 		}
 		return false;
 	}
 
-	//
-	// Options menu
-	//
-
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		addMenuItem(menu, OptionsItemId.Search, "localSearch", R.drawable.ic_menu_search);
-		addMenuItem(menu, OptionsItemId.Rescan, "rescan", R.drawable.ic_menu_refresh);
-		addMenuItem(menu, OptionsItemId.UploadAgain, "uploadAgain", -1);
-		addMenuItem(menu, OptionsItemId.TryAgain, "tryAgain", -1);
-		addMenuItem(menu, OptionsItemId.DeleteAll, "deleteAll", -1);
-		if (Build.VERSION.SDK_INT >= 9) {
-			addMenuItem(menu, OptionsItemId.ExternalView, "bookshelfView", -1);
-		}
-		return true;
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		super.onPrepareOptionsMenu(menu);
-
-		boolean enableUploadAgain = false;
-		boolean enableTryAgain = false;
-		boolean enableDeleteAll = false;
-		final LibraryTree tree = getCurrentTree();
-		if (tree instanceof SyncLabelTree) {
-			final String label = ((SyncLabelTree)tree).Label;
-			if (Book.SYNC_DELETED_LABEL.equals(label)) {
-				enableUploadAgain = true;
-				enableDeleteAll = true;
-			} else if (Book.SYNC_FAILURE_LABEL.equals(label)) {
-				enableTryAgain = true;
-			}
-		}
-
-		final MenuItem rescanItem = menu.findItem(OptionsItemId.Rescan);
-		myCollection.bindToService(this, new Runnable() {
-			public void run() {
-				rescanItem.setEnabled(myCollection.status().IsComplete);
-			}
-		});
-		rescanItem.setVisible(tree == myRootTree);
-		menu.findItem(OptionsItemId.UploadAgain).setVisible(enableUploadAgain);
-		menu.findItem(OptionsItemId.TryAgain).setVisible(enableTryAgain);
-		menu.findItem(OptionsItemId.DeleteAll).setVisible(enableDeleteAll);
-
-		return true;
-	}
-
-	private MenuItem addMenuItem(Menu menu, int id, String resourceKey, int iconId) {
-		final String label = LibraryTree.resource().getResource(resourceKey).getValue();
-		final MenuItem item = menu.add(0, id, Menu.NONE, label);
-		item.setOnMenuItemClickListener(this);
-		if (iconId != -1) {
-			item.setIcon(iconId);
-		}
-		return item;
-	}
-
-	public boolean onMenuItemClick(MenuItem item) {
-		switch (item.getItemId()) {
-			case OptionsItemId.Search:
-				return onSearchRequested();
-			case OptionsItemId.Rescan:
-				if (myCollection.status().IsComplete) {
-					myCollection.reset(true);
-					openTree(myRootTree);
-				}
-				return true;
-			case OptionsItemId.UploadAgain:
-			case OptionsItemId.TryAgain:
-				for (FBTree tree : getCurrentTree().subtrees()) {
-					if (tree instanceof BookTree) {
-						syncAgain(((BookTree)tree).Book);
-					}
-				}
-				getTreeAdapter().replaceAll(getCurrentTree().subtrees(), true);
-				return true;
-			case OptionsItemId.DeleteAll:
-			{
-				final List<Book> books = new LinkedList<Book>();
-				for (FBTree tree : getCurrentTree().subtrees()) {
-					if (tree instanceof BookTree) {
-						books.add(((BookTree)tree).Book);
-					}
-				}
-				tryToDeleteBooks(books);
-				return true;
-			}
-			case OptionsItemId.ExternalView:
-				runOrInstallExternalView(true);
-				return true;
-			default:
-				return true;
-		}
-	}
-
-	private void runOrInstallExternalView(boolean install) {
-		try {
-			startActivity(new Intent(FBReaderIntents.Action.EXTERNAL_LIBRARY));
-			finish();
-		} catch (ActivityNotFoundException e) {
-			if (install) {
-				PackageUtil.installFromMarket(this, "org.fbreader.plugin.library");
-			}
-		}
+	public boolean onMenuItemClick(final MenuItem item) {
+		return false;
 	}
 
 	//
@@ -428,42 +269,6 @@ public class LibraryActivity extends TreeActivity<LibraryTree> implements MenuIt
 
 	private void tryToDeleteBook(Book book) {
 		tryToDeleteBooks(Collections.singletonList(book));
-	}
-
-	private void startBookSearch(final String pattern) {
-		BookSearchPatternOption.setValue(pattern);
-
-		final Thread searcher = new Thread("Library.searchBooks") {
-			public void run() {
-				final SearchResultsTree oldSearchResults = myRootTree.getSearchResultsTree();
-
-				if (oldSearchResults != null && pattern.equals(oldSearchResults.Pattern)) {
-					onSearchEvent(true);
-				} else if (myCollection.hasBooks(new Filter.ByPattern(pattern))) {
-					if (oldSearchResults != null) {
-						oldSearchResults.removeSelf();
-					}
-					myRootTree.createSearchResultsTree(pattern);
-					onSearchEvent(true);
-				} else {
-					onSearchEvent(false);
-				}
-			}
-		};
-		searcher.setPriority((Thread.MIN_PRIORITY + Thread.NORM_PRIORITY) / 2);
-		searcher.start();
-	}
-
-	private void onSearchEvent(final boolean found) {
-		runOnUiThread(new Runnable() {
-			public void run() {
-				if (found) {
-					openSearchResults();
-				} else {
-					UIMessageUtil.showErrorMessage(LibraryActivity.this, "bookNotFound");
-				}
-			}
-		});
 	}
 
 	public void onBookEvent(BookEvent event, Book book) {

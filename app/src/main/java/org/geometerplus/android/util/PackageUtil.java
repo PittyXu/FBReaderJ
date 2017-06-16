@@ -34,9 +34,6 @@ import org.geometerplus.zlibrary.core.options.ZLBooleanOption;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 
 public abstract class PackageUtil {
-	private static Uri marketUri(String pkg) {
-		return Uri.parse("market://details?id=" + pkg);
-	}
 
 	public static boolean canBeStarted(Context context, Intent intent, boolean checkSignature) {
 		final PackageManager manager = context.getApplicationContext().getPackageManager();
@@ -55,16 +52,5 @@ public abstract class PackageUtil {
 		return
 			PackageManager.SIGNATURE_MATCH ==
 			manager.checkSignatures(context.getPackageName(), activityInfo.packageName);
-	}
-
-	public static boolean installFromMarket(Activity activity, String pkg) {
-		try {
-			activity.startActivity(new Intent(
-				Intent.ACTION_VIEW, marketUri(pkg)
-			));
-			return true;
-		} catch (ActivityNotFoundException e) {
-			return false;
-		}
 	}
 }

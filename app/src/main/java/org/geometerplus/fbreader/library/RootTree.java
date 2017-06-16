@@ -22,7 +22,6 @@ package org.geometerplus.fbreader.library;
 import java.util.List;
 
 import org.geometerplus.fbreader.book.IBookCollection;
-import org.geometerplus.fbreader.fbreader.options.SyncOptions;
 import org.geometerplus.fbreader.formats.PluginCollection;
 import org.geometerplus.fbreader.tree.FBTree;
 
@@ -31,9 +30,6 @@ public class RootTree extends LibraryTree {
 		super(collection, pluginCollection);
 
 		//new ExternalViewTree(this);
-		if (new SyncOptions().Enabled.getValue()) {
-			new SyncTree(this);
-		}
 		new FileFirstLevelTree(this);
 	}
 
@@ -58,7 +54,7 @@ public class RootTree extends LibraryTree {
 		if (children.isEmpty()) {
 			position = 0;
 		} else {
-			position = children.get(0) instanceof ExternalViewTree ? 1 : 0;
+			position = 0;
 		}
 		return new SearchResultsTree(this, LibraryTree.ROOT_FOUND, pattern, position);
 	}

@@ -84,7 +84,6 @@ public class DictionaryNotInstalledActivity extends ListActivity {
 		public final void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			switch (position) {
 				case 0: // install
-					installDictionary();
 					break;
 				case 1: // configure
 					startActivity(new Intent(
@@ -95,12 +94,6 @@ public class DictionaryNotInstalledActivity extends ListActivity {
 					break;
 			}
 			finish();
-		}
-	}
-
-	private void installDictionary() {
-		if (!PackageUtil.installFromMarket(this, myPackageName)) {
-			UIMessageUtil.showErrorMessage(this, "cannotRunAndroidMarket", myDictionaryName);
 		}
 	}
 }
