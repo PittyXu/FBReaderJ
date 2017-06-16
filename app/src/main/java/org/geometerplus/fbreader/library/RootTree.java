@@ -31,12 +31,6 @@ public class RootTree extends LibraryTree {
 		super(collection, pluginCollection);
 
 		//new ExternalViewTree(this);
-		new FavoritesTree(this);
-		new RecentBooksTree(this);
-		new AuthorListTree(this);
-		new TitleListTree(this);
-		new SeriesListTree(this);
-		new TagListTree(this);
 		if (new SyncOptions().Enabled.getValue()) {
 			new SyncTree(this);
 		}

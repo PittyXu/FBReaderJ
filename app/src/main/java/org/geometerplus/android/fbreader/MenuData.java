@@ -60,8 +60,6 @@ public abstract class MenuData {
 			addToplevelNode(new MenuNode.Item(ActionCode.INCREASE_FONT));
 			addToplevelNode(new MenuNode.Item(ActionCode.DECREASE_FONT));
 			addToplevelNode(new MenuNode.Item(ActionCode.SHOW_NAVIGATION));
-			addToplevelNode(new MenuNode.Item(ActionCode.INSTALL_PLUGINS));
-			addToplevelNode(new MenuNode.Item(ActionCode.OPEN_WEB_HELP));
 			addToplevelNode(new MenuNode.Item(ActionCode.OPEN_START_SCREEN));
 			ourNodes = Collections.unmodifiableList(ourNodes);
 		}

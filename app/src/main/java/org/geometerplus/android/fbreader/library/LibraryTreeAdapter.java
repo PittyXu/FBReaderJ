@@ -97,16 +97,6 @@ class LibraryTreeAdapter extends TreeAdapter {
 			return R.drawable.ic_list_library_book;
 		} else if (tree instanceof ExternalViewTree) {
 			return R.drawable.plugin_bookshelf;
-		} else if (tree instanceof FavoritesTree) {
-			return R.drawable.ic_list_library_favorites;
-		} else if (tree instanceof RecentBooksTree || tree instanceof SyncTree) {
-			return R.drawable.ic_list_library_recent;
-		} else if (tree instanceof AuthorListTree) {
-			return R.drawable.ic_list_library_authors;
-		} else if (tree instanceof TitleListTree) {
-			return R.drawable.ic_list_library_books;
-		} else if (tree instanceof TagListTree) {
-			return R.drawable.ic_list_library_tags;
 		} else if (tree instanceof FileFirstLevelTree) {
 			return R.drawable.ic_list_library_folder;
 		} else if (tree instanceof SearchResultsTree) {
@@ -120,8 +110,6 @@ class LibraryTreeAdapter extends TreeAdapter {
 			} else {
 				return R.drawable.ic_list_library_permission_denied;
 			}
-		} else if (tree instanceof AuthorTree) {
-			return R.drawable.ic_list_library_author;
 		} else if (tree instanceof TagTree) {
 			return R.drawable.ic_list_library_tag;
 		}
