@@ -50,8 +50,6 @@ class SelectionPopup extends PopupPanel implements View.OnClickListener {
 
 		final ZLResource resource = ZLResource.resource("selectionPopup");
 		setupButton(R.id.selection_panel_copy, resource.getResource("copyToClipboard").getValue());
-		setupButton(R.id.selection_panel_share, resource.getResource("share").getValue());
-		setupButton(R.id.selection_panel_translate, resource.getResource("translate").getValue());
 		setupButton(R.id.selection_panel_bookmark, resource.getResource("bookmark").getValue());
 		setupButton(R.id.selection_panel_close, resource.getResource("close").getValue());
 	}
@@ -97,12 +95,6 @@ class SelectionPopup extends PopupPanel implements View.OnClickListener {
 		switch (view.getId()) {
 			case R.id.selection_panel_copy:
 				Application.runAction(ActionCode.SELECTION_COPY_TO_CLIPBOARD);
-				break;
-			case R.id.selection_panel_share:
-				Application.runAction(ActionCode.SELECTION_SHARE);
-				break;
-			case R.id.selection_panel_translate:
-				Application.runAction(ActionCode.SELECTION_TRANSLATE);
 				break;
 			case R.id.selection_panel_bookmark:
 				Application.runAction(ActionCode.SELECTION_BOOKMARK);

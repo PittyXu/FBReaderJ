@@ -43,11 +43,9 @@ import org.geometerplus.android.fbreader.api.ApiServerImplementation;
 import org.geometerplus.android.fbreader.api.FBReaderIntents;
 import org.geometerplus.android.fbreader.api.MenuNode;
 import org.geometerplus.android.fbreader.api.PluginApi;
-import org.geometerplus.android.fbreader.dict.DictionaryUtil;
 import org.geometerplus.android.fbreader.formatPlugin.PluginUtil;
 import org.geometerplus.android.fbreader.httpd.DataService;
 import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
-import org.geometerplus.android.fbreader.tips.TipsActivity;
 import org.geometerplus.android.util.DeviceType;
 import org.geometerplus.android.util.SearchDialogUtil;
 import org.geometerplus.android.util.UIMessageUtil;
@@ -63,7 +61,6 @@ import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.fbreader.options.ColorProfile;
 import org.geometerplus.fbreader.formats.ExternalFormatPlugin;
 import org.geometerplus.fbreader.formats.PluginCollection;
-import org.geometerplus.fbreader.tips.TipsManager;
 import org.geometerplus.zlibrary.core.application.ZLApplicationWindow;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.library.ZLibrary;
@@ -204,8 +201,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 			public void run() {
 				runOnUiThread(new Runnable() {
 					public void run() {
-						new TipRunner().start();
-						DictionaryUtil.init(FBReader.this, null);
 						final Intent intent = getIntent();
 						if (intent != null && FBReaderIntents.Action.PLUGIN.equals(intent.getAction())) {
 							new RunPluginAction(FBReader.this, myFBReaderApp, intent.getData()).run();
@@ -285,8 +280,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		myFBReaderApp.addAction(ActionCode.SELECTION_SHOW_PANEL, new SelectionShowPanelAction(this, myFBReaderApp));
 		myFBReaderApp.addAction(ActionCode.SELECTION_HIDE_PANEL, new SelectionHidePanelAction(this, myFBReaderApp));
 		myFBReaderApp.addAction(ActionCode.SELECTION_COPY_TO_CLIPBOARD, new SelectionCopyAction(this, myFBReaderApp));
-		myFBReaderApp.addAction(ActionCode.SELECTION_SHARE, new SelectionShareAction(this, myFBReaderApp));
-		myFBReaderApp.addAction(ActionCode.SELECTION_TRANSLATE, new SelectionTranslateAction(this, myFBReaderApp));
 		myFBReaderApp.addAction(ActionCode.SELECTION_BOOKMARK, new SelectionBookmarkAction(this, myFBReaderApp));
 
 		myFBReaderApp.addAction(ActionCode.DISPLAY_BOOK_POPUP, new DisplayBookPopupAction(this, myFBReaderApp));
@@ -483,30 +476,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 			null,
 			null
 		);
-	}
-
-	private class TipRunner extends Thread {
-		TipRunner() {
-			setPriority(MIN_PRIORITY);
-		}
-
-		public void run() {
-			final TipsManager manager = new TipsManager(Paths.systemInfo(FBReader.this));
-			switch (manager.requiredAction()) {
-				case Initialize:
-					startActivity(new Intent(
-						TipsActivity.INITIALIZE_ACTION, null, FBReader.this, TipsActivity.class
-					));
-					break;
-				case Show:
-					startActivity(new Intent(
-						TipsActivity.SHOW_TIP_ACTION, null, FBReader.this, TipsActivity.class
-					));
-					break;
-				case None:
-					break;
-			}
-		}
 	}
 
 	@Override
@@ -856,7 +825,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	private BroadcastReceiver myBatteryInfoReceiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
 			final int level = intent.getIntExtra("level", 100);
-			final ZLAndroidApplication application = (ZLAndroidApplication)getApplication();
 			setBatteryLevel(level);
 			switchWakeLock(
 				hasWindowFocus() &&

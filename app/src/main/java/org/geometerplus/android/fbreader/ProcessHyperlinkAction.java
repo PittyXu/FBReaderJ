@@ -22,7 +22,6 @@ package org.geometerplus.android.fbreader;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 
-import org.geometerplus.android.fbreader.dict.DictionaryUtil;
 import org.geometerplus.android.fbreader.image.ImageViewActivity;
 import org.geometerplus.android.util.OrientationUtil;
 import org.geometerplus.fbreader.bookmodel.FBHyperlinkType;
@@ -103,18 +102,6 @@ class ProcessHyperlinkAction extends FBAndroidAction {
         }
       }
     } else if (soul instanceof ZLTextWordRegionSoul) {
-      DictionaryUtil.openTextInDictionary(
-          BaseActivity,
-          ((ZLTextWordRegionSoul) soul).Word.getString(),
-          true,
-          region.getTop(),
-          region.getBottom(),
-          new Runnable() {
-            public void run() {
-              BaseActivity.outlineRegion(soul);
-            }
-          }
-      );
     }
   }
 
