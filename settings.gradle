@@ -1,3 +1,1 @@
-include ':app', ':fileChooser', ':fbreaderutils'
-
-project(':fileChooser').projectDir = new File('thirdParty/fileChooser')
+include ':app', ':fbreaderutils'

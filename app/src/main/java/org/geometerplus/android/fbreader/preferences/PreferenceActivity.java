@@ -24,11 +24,7 @@ import android.net.Uri;
 import android.view.KeyEvent;
 
 import org.geometerplus.android.fbreader.FBReader;
-import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
-import org.geometerplus.android.fbreader.preferences.background.BackgroundPreference;
-import org.geometerplus.android.fbreader.preferences.fileChooser.FileChooserCollection;
 import org.geometerplus.android.util.DeviceType;
-import org.geometerplus.fbreader.Paths;
 import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.fbreader.FBView;
@@ -55,10 +51,6 @@ import java.util.Locale;
 
 public class PreferenceActivity extends ZLPreferenceActivity {
 
-  private final FileChooserCollection myChooserCollection = new FileChooserCollection(this, 2000);
-  private static final int BACKGROUND_REQUEST_CODE = 3000;
-  private BackgroundPreference myBackgroundPreference;
-
   public PreferenceActivity() {
     super("Preferences");
   }
@@ -66,22 +58,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
   @Override
   protected void onResume() {
     super.onResume();
-  }
-
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (resultCode != RESULT_OK) {
-      return;
-    }
-
-    if (BACKGROUND_REQUEST_CODE == requestCode) {
-      if (myBackgroundPreference != null) {
-        myBackgroundPreference.update(data);
-      }
-      return;
-    }
-
-    myChooserCollection.update(requestCode, data);
   }
 
   @Override
@@ -111,32 +87,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
     // or set user-defined locale as default
     final String decimalSeparator =
         String.valueOf(new DecimalFormatSymbols(Locale.getDefault()).getDecimalSeparator());
-
-    final Screen directoriesScreen = createPreferenceScreen("directories");
-    final Runnable libraryUpdater = new Runnable() {
-      public void run() {
-        final BookCollectionShadow bookCollection = new BookCollectionShadow();
-        bookCollection.bindToService(PreferenceActivity.this, new Runnable() {
-          public void run() {
-            bookCollection.reset(false);
-            bookCollection.unbind();
-          }
-        });
-      }
-    };
-    directoriesScreen.addPreference(myChooserCollection.createPreference(
-        directoriesScreen.Resource, "bookPath", Paths.BookPathOption, libraryUpdater
-    ));
-    directoriesScreen.addPreference(myChooserCollection.createPreference(
-        directoriesScreen.Resource, "downloadDir", Paths.DownloadsDirectoryOption, libraryUpdater
-    ));
-    final PreferenceSet fontReloader = new PreferenceSet.Reloader();
-    directoriesScreen.addPreference(myChooserCollection.createPreference(
-        directoriesScreen.Resource, "fontPath", Paths.FontPathOption, fontReloader
-    ));
-    directoriesScreen.addPreference(myChooserCollection.createPreference(
-        directoriesScreen.Resource, "tempDir", Paths.TempDirectoryOption(this), null
-    ));
 
     final Screen appearanceScreen = createPreferenceScreen("appearance");
     appearanceScreen.addPreference(new LanguagePreference(
@@ -235,6 +185,8 @@ public class PreferenceActivity extends ZLPreferenceActivity {
     fontPropertiesScreen.addOption(ZLAndroidPaintContext.SubpixelOption, "subpixel");
 
     final ZLTextBaseStyle baseStyle = collection.getBaseStyle();
+
+    final PreferenceSet fontReloader = new PreferenceSet.Reloader();
 
     fontReloader.add(textScreen.addPreference(new FontPreference(
         this, textScreen.Resource.getResource("font"),
@@ -363,19 +315,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
         return profile.WallpaperOption.getValue().startsWith("/");
       }
     };
-    myBackgroundPreference = new BackgroundPreference(
-        this,
-        profile,
-        colorsScreen.Resource.getResource("background"),
-        BACKGROUND_REQUEST_CODE
-    ) {
-      @Override
-      public void update(Intent data) {
-        super.update(data);
-        backgroundSet.run();
-      }
-    };
-    colorsScreen.addPreference(myBackgroundPreference);
     backgroundSet.add(colorsScreen.addOption(profile.FillModeOption, "fillMode"));
     backgroundSet.run();
 
