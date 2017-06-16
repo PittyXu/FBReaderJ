@@ -148,56 +148,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
         directoriesScreen.Resource, "tempDir", Paths.TempDirectoryOption(this), null
     ));
 
-    final Screen syncScreen = createPreferenceScreen("sync");
-    final PreferenceSet syncPreferences = new PreferenceSet.Enabler() {
-      @Override
-      protected Boolean detectState() {
-        return syncOptions.Enabled.getValue();
-      }
-    };
-    syncScreen.addPreference(new UrlPreference(this, syncScreen.Resource, "site"));
-    syncScreen.addPreference(new ZLCheckBoxPreference(
-        this, syncScreen.Resource.getResource("enable")
-    ) {
-      {
-        if (syncOptions.Enabled.getValue()) {
-          setChecked(true);
-        } else {
-          setChecked(false);
-        }
-      }
-
-      @Override
-      protected void onClick() {
-        super.onClick();
-        syncPreferences.run();
-
-        if (!isChecked()) {
-          syncOptions.Enabled.setValue(false);
-          syncPreferences.run();
-          return;
-        }
-
-        UIUtil.createExecutor(PreferenceActivity.this, "tryConnect").execute(new Runnable() {
-          public void run() {
-            runOnUiThread(new Runnable() {
-              public void run() {
-                setChecked(false);
-              }
-            });
-          }
-        }, null);
-      }
-
-    });
-    syncPreferences.add(
-        syncScreen.addOption(syncOptions.UploadAllBooks, "uploadAllBooks", "values"));
-    syncPreferences.add(syncScreen.addOption(syncOptions.Positions, "positions", "values"));
-    syncPreferences.add(syncScreen.addOption(syncOptions.ChangeCurrentBook, "changeCurrentBook"));
-    //syncPreferences.add(syncScreen.addOption(syncOptions.Metainfo, "metainfo", "values"));
-    syncPreferences.add(syncScreen.addOption(syncOptions.Bookmarks, "bookmarks", "values"));
-    syncPreferences.run();
-
     final Screen appearanceScreen = createPreferenceScreen("appearance");
     appearanceScreen.addPreference(new LanguagePreference(
         this, appearanceScreen.Resource.getResource("language"), ZLResource.interfaceLanguages()
@@ -722,19 +672,5 @@ public class PreferenceActivity extends ZLPreferenceActivity {
 
     final Screen tipsScreen = createPreferenceScreen("tips");
     tipsScreen.addOption(TipsManager.ShowTipsOption, "showTips");
-
-    final Screen aboutScreen = createPreferenceScreen("about");
-    aboutScreen.addPreference(new InfoPreference(
-        this,
-        aboutScreen.Resource.getResource("version").getValue(),
-        androidLibrary.getFullVersionName()
-    ));
-    aboutScreen.addPreference(new UrlPreference(this, aboutScreen.Resource, "site"));
-    aboutScreen.addPreference(new UrlPreference(this, aboutScreen.Resource, "email"));
-    aboutScreen.addPreference(new UrlPreference(this, aboutScreen.Resource, "googleplus"));
-    aboutScreen.addPreference(new UrlPreference(this, aboutScreen.Resource, "twitter"));
-    aboutScreen.addPreference(new UrlPreference(this, aboutScreen.Resource, "facebook"));
-    aboutScreen.addPreference(
-        new ThirdPartyLibrariesPreference(this, aboutScreen.Resource, "thirdParty"));
   }
 }

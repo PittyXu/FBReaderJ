@@ -46,7 +46,6 @@ public abstract class MenuData {
 			addToplevelNode(new MenuNode.Item(ActionCode.SEARCH, R.drawable.ic_menu_search));
 			addToplevelNode(new MenuNode.Item(ActionCode.SHARE_BOOK));
 			addToplevelNode(new MenuNode.Item(ActionCode.SHOW_PREFERENCES));
-			addToplevelNode(new MenuNode.Item(ActionCode.SHOW_BOOK_INFO));
 			final MenuNode.Submenu orientations = new MenuNode.Submenu("screenOrientation");
 			orientations.Children.add(new MenuNode.Item(ActionCode.SET_SCREEN_ORIENTATION_SYSTEM));
 			orientations.Children.add(new MenuNode.Item(ActionCode.SET_SCREEN_ORIENTATION_SENSOR));

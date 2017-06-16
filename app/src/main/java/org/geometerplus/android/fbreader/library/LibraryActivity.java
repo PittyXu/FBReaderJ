@@ -121,21 +121,10 @@ public class LibraryActivity extends TreeActivity<LibraryTree> implements MenuIt
 			runOrInstallExternalView(true);
 		} else {
 			final Book book = tree.getBook();
-			if (book != null) {
-				showBookInfo(book);
-			} else {
+			if (book == null) {
 				openTree(tree);
 			}
 		}
-	}
-
-	//
-	// show BookInfoActivity
-	//
-	private void showBookInfo(Book book) {
-		final Intent intent = new Intent(getApplicationContext(), BookInfoActivity.class);
-		FBReaderIntents.putBookExtra(intent, book);
-		OrientationUtil.startActivity(this, intent);
 	}
 
 	//
@@ -163,14 +152,13 @@ public class LibraryActivity extends TreeActivity<LibraryTree> implements MenuIt
 
 	private interface ContextItemId {
 		int OpenBook              = 0;
-		int ShowBookInfo          = 1;
-		int AddToFavorites        = 2;
-		int RemoveFromFavorites   = 3;
-		int MarkAsRead            = 4;
-		int MarkAsUnread          = 5;
-		int DeleteBook            = 6;
-		int UploadAgain           = 7;
-		int TryAgain              = 8;
+		int AddToFavorites        = 1;
+		int RemoveFromFavorites   = 2;
+		int MarkAsRead            = 3;
+		int MarkAsUnread          = 4;
+		int DeleteBook            = 5;
+		int UploadAgain           = 6;
+		int TryAgain              = 7;
 	}
 	private interface OptionsItemId {
 		int Search                = 0;
@@ -194,7 +182,6 @@ public class LibraryActivity extends TreeActivity<LibraryTree> implements MenuIt
 		final ZLResource resource = LibraryTree.resource();
 		menu.setHeaderTitle(book.getTitle());
 		menu.add(0, ContextItemId.OpenBook, 0, resource.getResource("openBook").getValue());
-		menu.add(0, ContextItemId.ShowBookInfo, 0, resource.getResource("showBookInfo").getValue());
 		if (book.hasLabel(Book.FAVORITE_LABEL)) {
 			menu.add(0, ContextItemId.RemoveFromFavorites, 0, resource.getResource("removeFromFavorites").getValue());
 		} else {
@@ -237,9 +224,6 @@ public class LibraryActivity extends TreeActivity<LibraryTree> implements MenuIt
 		switch (itemId) {
 			case ContextItemId.OpenBook:
 				FBReader.openBookActivity(this, book, null);
-				return true;
-			case ContextItemId.ShowBookInfo:
-				showBookInfo(book);
 				return true;
 			case ContextItemId.AddToFavorites:
 				book.addNewLabel(Book.FAVORITE_LABEL);
