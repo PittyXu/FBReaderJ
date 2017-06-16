@@ -59,10 +59,6 @@ public class ImageViewActivity extends Activity {
 			showStatusBar ? 0 : WindowManager.LayoutParams.FLAG_FULLSCREEN
 		);
 
-		Thread.setDefaultUncaughtExceptionHandler(
-			new org.geometerplus.zlibrary.ui.android.library.UncaughtExceptionHandler(this)
-		);
-
 		setContentView(new ImageView());
 
 		final Intent intent = getIntent();

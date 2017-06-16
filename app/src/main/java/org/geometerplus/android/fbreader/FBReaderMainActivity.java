@@ -29,7 +29,6 @@ import com.github.johnpersano.supertoasts.SuperActivityToast;
 import org.geometerplus.zlibrary.core.options.ZLIntegerOption;
 import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 import org.geometerplus.zlibrary.core.options.ZLStringOption;
-import org.geometerplus.zlibrary.ui.android.library.UncaughtExceptionHandler;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 import org.geometerplus.zlibrary.ui.android.view.AndroidFontUtil;
@@ -44,7 +43,6 @@ public abstract class FBReaderMainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle saved) {
 		super.onCreate(saved);
-		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler(this));
 	}
 
 	public ZLAndroidLibrary getZLibrary() {

@@ -30,15 +30,12 @@ public abstract class FBReaderIntents {
 		String API                              = "android.fbreader.action.API";
 		String API_CALLBACK                     = "android.fbreader.action.API_CALLBACK";
 		String VIEW                             = "android.fbreader.action.VIEW";
-		String CANCEL_MENU                      = "android.fbreader.action.CANCEL_MENU";
 		String CONFIG_SERVICE                   = "android.fbreader.action.CONFIG_SERVICE";
 		String LIBRARY_SERVICE                  = "android.fbreader.action.LIBRARY_SERVICE";
 		String LIBRARY                          = "android.fbreader.action.LIBRARY";
 		String BOOKMARKS                        = "android.fbreader.action.BOOKMARKS";
 		String EXTERNAL_BOOKMARKS               = "android.fbreader.action.EXTERNAL_BOOKMARKS";
 		String PREFERENCES                      = "android.fbreader.action.PREFERENCES";
-		String ERROR                            = "android.fbreader.action.ERROR";
-		String CRASH                            = "android.fbreader.action.CRASH";
 		String PLUGIN                           = "android.fbreader.action.PLUGIN";
 		String PLUGIN_CRASH                     = "android.fbreader.action.PLUGIN_CRASH";
 		String EDIT_STYLES                      = "android.fbreader.action.EDIT_STYLES";
@@ -55,16 +52,11 @@ public abstract class FBReaderIntents {
 
 		String LIBRARY_BOOK                     = "fbreader.library_service.book_event";
 		String LIBRARY_BUILD                    = "fbreader.library_service.build_event";
-		String LIBRARY_COVER_READY              = "fbreader.library_service.cover_ready";
-
-		String SYNC_UPDATED                     = "android.fbreader.event.sync.UPDATED";
 	}
 
 	public interface Key {
 		String BOOK                             = "fbreader.book";
 		String BOOKMARK                         = "fbreader.bookmark";
-		String PLUGIN                           = "fbreader.plugin";
-		String TYPE                             = "fbreader.type";
 	}
 
 	public static Intent defaultInternalIntent(String action) {
