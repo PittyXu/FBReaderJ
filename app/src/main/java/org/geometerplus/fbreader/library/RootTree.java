@@ -19,18 +19,13 @@
 
 package org.geometerplus.fbreader.library;
 
-import java.util.List;
-
 import org.geometerplus.fbreader.book.IBookCollection;
 import org.geometerplus.fbreader.formats.PluginCollection;
-import org.geometerplus.fbreader.tree.FBTree;
 
 public class RootTree extends LibraryTree {
 	public RootTree(IBookCollection collection, PluginCollection pluginCollection) {
 		super(collection, pluginCollection);
 
-		//new ExternalViewTree(this);
-		new FileFirstLevelTree(this);
 	}
 
 	public LibraryTree getLibraryTree(LibraryTree.Key key) {
@@ -42,21 +37,6 @@ public class RootTree extends LibraryTree {
 		}
 		final LibraryTree parentTree = getLibraryTree(key.Parent);
 		return parentTree != null ? (LibraryTree)parentTree.getSubtree(key.Id) : null;
-	}
-
-	public SearchResultsTree getSearchResultsTree() {
-		return (SearchResultsTree)getSubtree(LibraryTree.ROOT_FOUND);
-	}
-
-	public SearchResultsTree createSearchResultsTree(String pattern) {
-		final int position;
-		final List<FBTree> children = subtrees();
-		if (children.isEmpty()) {
-			position = 0;
-		} else {
-			position = 0;
-		}
-		return new SearchResultsTree(this, LibraryTree.ROOT_FOUND, pattern, position);
 	}
 
 	@Override

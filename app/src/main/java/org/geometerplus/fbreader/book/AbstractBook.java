@@ -30,8 +30,6 @@ import org.geometerplus.zlibrary.core.util.RationalNumber;
 import org.geometerplus.fbreader.sort.TitledEntity;
 
 public abstract class AbstractBook extends TitledEntity<AbstractBook> {
-	public static final String FAVORITE_LABEL = "favorite";
-	public static final String READ_LABEL = "read";
 
 	protected volatile long myId;
 

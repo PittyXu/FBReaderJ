@@ -76,17 +76,6 @@ public abstract class LibraryTree extends FBTree {
 		return true;
 	}
 
-	boolean createTagSubtree(Tag tag) {
-		final TagTree temp = new TagTree(Collection, PluginCollection, tag);
-		int position = Collections.binarySearch(subtrees(), temp);
-		if (position >= 0) {
-			return false;
-		} else {
-			new TagTree(this, tag, - position - 1);
-			return true;
-		}
-	}
-
 	boolean createBookWithAuthorsSubtree(Book book) {
 		final BookWithAuthorsTree temp = new BookWithAuthorsTree(Collection, PluginCollection, book);
 		int position = Collections.binarySearch(subtrees(), temp);

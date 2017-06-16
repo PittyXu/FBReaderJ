@@ -20,15 +20,12 @@
 package org.geometerplus.fbreader.fbreader;
 
 public interface ActionCode {
-	String SHOW_LIBRARY = "library";
 	String SHOW_PREFERENCES = "preferences";
 	String SHOW_TOC = "toc";
 	String SHOW_BOOKMARKS = "bookmarks";
 
 	String SWITCH_TO_NIGHT_PROFILE = "night";
 	String SWITCH_TO_DAY_PROFILE = "day";
-
-	String SHARE_BOOK = "shareBook";
 
 	String SEARCH = "search";
 	String FIND_PREVIOUS = "findPrevious";
@@ -53,7 +50,6 @@ public interface ActionCode {
 
 	String GO_BACK = "goBack";
 	String EXIT = "exit";
-	String SHOW_CANCEL_MENU = "cancelMenu";
 
 	String SET_SCREEN_ORIENTATION_SYSTEM = "screenOrientationSystem";
 	String SET_SCREEN_ORIENTATION_SENSOR = "screenOrientationSensor";

@@ -151,7 +151,6 @@ public final class FBReaderApp extends ZLApplication {
 			}
 		}
 		final Book bookToOpen = book;
-		bookToOpen.addNewLabel(Book.READ_LABEL);
 		Collection.saveBook(bookToOpen);
 
 		final SynchronousExecutor executor = createExecutor("loadingBook");
@@ -525,28 +524,6 @@ public final class FBReaderApp extends ZLApplication {
 				mySaverThread.start();
 			}
 			mySaverThread.add(new PositionSaver(myStoredPositionBook, myStoredPosition, progress));
-		}
-	}
-
-	public boolean hasCancelActions() {
-		return new CancelMenuHelper().getActionsList(Collection).size() > 1;
-	}
-
-	public void runCancelAction(CancelMenuHelper.ActionType type, Bookmark bookmark) {
-		switch (type) {
-			case library:
-				runAction(ActionCode.SHOW_LIBRARY);
-				break;
-			case previousBook:
-				openBook(Collection.getRecentBook(1), null, null);
-				break;
-			case returnTo:
-				Collection.deleteBookmark(bookmark);
-				gotoBookmark(bookmark, true);
-				break;
-			case close:
-				closeWindow();
-				break;
 		}
 	}
 

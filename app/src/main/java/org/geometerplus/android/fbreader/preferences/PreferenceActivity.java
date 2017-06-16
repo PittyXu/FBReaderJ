@@ -29,12 +29,10 @@ import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
 import org.geometerplus.android.fbreader.preferences.background.BackgroundPreference;
 import org.geometerplus.android.fbreader.preferences.fileChooser.FileChooserCollection;
 import org.geometerplus.android.util.DeviceType;
-import org.geometerplus.android.util.UIUtil;
 import org.geometerplus.fbreader.Paths;
 import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.fbreader.FBView;
-import org.geometerplus.fbreader.fbreader.options.CancelMenuHelper;
 import org.geometerplus.fbreader.fbreader.options.ColorProfile;
 import org.geometerplus.fbreader.fbreader.options.EInkOptions;
 import org.geometerplus.fbreader.fbreader.options.FooterOptions;
@@ -649,24 +647,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
     imagesScreen.addOption(imageOptions.FitToScreen, "fitImagesToScreen");
     imagesScreen.addOption(imageOptions.ImageViewBackground, "backgroundColor");
     imagesScreen.addOption(imageOptions.MatchBackground, "matchBackground");
-
-    final CancelMenuHelper cancelMenuHelper = new CancelMenuHelper();
-    final Screen cancelMenuScreen = createPreferenceScreen("cancelMenu");
-    cancelMenuScreen.addOption(cancelMenuHelper.ShowLibraryItemOption, "library");
-    cancelMenuScreen.addOption(cancelMenuHelper.ShowPreviousBookItemOption, "previousBook");
-    cancelMenuScreen.addOption(cancelMenuHelper.ShowPositionItemsOption, "positions");
-    final String[] backKeyActions =
-        {ActionCode.EXIT, ActionCode.SHOW_CANCEL_MENU};
-    cancelMenuScreen.addPreference(new ZLStringChoicePreference(
-        this, cancelMenuScreen.Resource.getResource("backKeyAction"),
-        keyBindings.getOption(KeyEvent.KEYCODE_BACK, false), backKeyActions
-    ));
-    final String[] backKeyLongPressActions =
-        {ActionCode.EXIT, ActionCode.SHOW_CANCEL_MENU, FBReaderApp.NoAction};
-    cancelMenuScreen.addPreference(new ZLStringChoicePreference(
-        this, cancelMenuScreen.Resource.getResource("backKeyLongPressAction"),
-        keyBindings.getOption(KeyEvent.KEYCODE_BACK, true), backKeyLongPressActions
-    ));
 
     final Screen tipsScreen = createPreferenceScreen("tips");
     tipsScreen.addOption(TipsManager.ShowTipsOption, "showTips");
