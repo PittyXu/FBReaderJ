@@ -49,8 +49,6 @@ import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 import org.geometerplus.fbreader.Paths;
 import org.geometerplus.fbreader.book.*;
 import org.geometerplus.fbreader.formats.PluginCollection;
-import org.geometerplus.fbreader.network.NetworkLibrary;
-import org.geometerplus.fbreader.network.HtmlUtil;
 
 import org.geometerplus.android.fbreader.FBReader;
 import org.geometerplus.android.fbreader.api.FBReaderIntents;
@@ -272,7 +270,6 @@ public class BookInfoActivity extends Activity implements IBookCollection.Listen
 			bodyView.setVisibility(View.GONE);
 		} else {
 			titleView.setText(myResource.getResource("annotation").getValue());
-			bodyView.setText(HtmlUtil.getHtmlText(NetworkLibrary.Instance(Paths.systemInfo(this)), annotation));
 			bodyView.setMovementMethod(new LinkMovementMethod());
 			bodyView.setTextColor(ColorStateList.valueOf(bodyView.getTextColors().getDefaultColor()));
 		}

@@ -41,12 +41,10 @@ import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.fbreader.book.*;
 
 import org.geometerplus.android.fbreader.api.FBReaderIntents;
-import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
 import org.geometerplus.android.util.ViewUtil;
 
 public class EditBookmarkActivity extends Activity implements IBookCollection.Listener<Book> {
 	private final ZLResource myResource = ZLResource.resource("editBookmark");
-	private final BookCollectionShadow myCollection = new BookCollectionShadow();
 	private Bookmark myBookmark;
 	private StyleListAdapter myStylesAdapter;
 
@@ -108,18 +106,6 @@ public class EditBookmarkActivity extends Activity implements IBookCollection.Li
 		final Button saveTextButton = (Button)findViewById(R.id.edit_bookmark_save_text_button);
 		saveTextButton.setEnabled(false);
 		saveTextButton.setText(myResource.getResource("saveText").getValue());
-		saveTextButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				myCollection.bindToService(EditBookmarkActivity.this, new Runnable() {
-					public void run() {
-						myBookmark.setText(editor.getText().toString());
-						myCollection.saveBookmark(myBookmark);
-						saveTextButton.setEnabled(false);
-					}
-				});
-			}
-		});
 		editor.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence sequence, int start, int before, int count) {
@@ -138,50 +124,21 @@ public class EditBookmarkActivity extends Activity implements IBookCollection.Li
 
 		final Button deleteButton = (Button)findViewById(R.id.edit_bookmark_delete_button);
 		deleteButton.setText(myResource.getResource("deleteBookmark").getValue());
-		deleteButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				myCollection.bindToService(EditBookmarkActivity.this, new Runnable() {
-					public void run() {
-						myCollection.deleteBookmark(myBookmark);
-						finish();
-					}
-				});
-			}
-		});
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-
-		myCollection.bindToService(this, new Runnable() {
-			public void run() {
-				final List<HighlightingStyle> styles = myCollection.highlightingStyles();
-				if (styles.isEmpty()) {
-					finish();
-					return;
-				}
-				myStylesAdapter = new StyleListAdapter(styles);
-				final ListView stylesList =
-					(ListView)findViewById(R.id.edit_bookmark_content_style);
-				stylesList.setAdapter(myStylesAdapter);
-				stylesList.setOnItemClickListener(myStylesAdapter);
-				myCollection.addListener(EditBookmarkActivity.this);
-			}
-		});
 	}
 
 	@Override
 	protected void onDestroy() {
-		myCollection.unbind();
 		super.onDestroy();
 	}
 
 	// method from IBookCollection.Listener
 	public void onBookEvent(BookEvent event, Book book) {
 		if (event == BookEvent.BookmarkStyleChanged) {
-			myStylesAdapter.setStyleList(myCollection.highlightingStyles());
 		}
 	}
 
@@ -250,13 +207,6 @@ public class EditBookmarkActivity extends Activity implements IBookCollection.Li
 
 		public final synchronized void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			final HighlightingStyle style = getItem(position);
-			myCollection.bindToService(EditBookmarkActivity.this, new Runnable() {
-				public void run() {
-					myBookmark.setStyleId(style.Id);
-					myCollection.setDefaultHighlightingStyleId(style.Id);
-					myCollection.saveBookmark(myBookmark);
-				}
-			});
 			notifyDataSetChanged();
 		}
 	}

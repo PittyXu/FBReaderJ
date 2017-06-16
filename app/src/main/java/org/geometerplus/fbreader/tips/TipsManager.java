@@ -24,12 +24,8 @@ import java.io.File;
 
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.options.*;
-import org.geometerplus.zlibrary.core.network.QuietNetworkContext;
-import org.geometerplus.zlibrary.core.network.ZLNetworkException;
 import org.geometerplus.zlibrary.core.util.SystemInfo;
 
-import org.geometerplus.fbreader.network.NetworkLibrary;
-import org.geometerplus.fbreader.network.atom.ATOMXMLReader;
 
 public class TipsManager {
 	private final SystemInfo mySystemInfo;
@@ -44,7 +40,6 @@ public class TipsManager {
 	// index of next tip to show
 	private final ZLIntegerOption myIndexOption;
 
-	private volatile boolean myDownloadInProgress;
 
 	public TipsManager(SystemInfo systemInfo) {
 		mySystemInfo = systemInfo;
@@ -66,9 +61,7 @@ public class TipsManager {
 		if (myTips == null) {
 			final ZLFile file = ZLFile.createFileByPath(getLocalFilePath());
 			if (file.exists()) {
-				final TipsFeedHandler handler = new TipsFeedHandler();
-				new ATOMXMLReader(NetworkLibrary.Instance(mySystemInfo), handler, false).readQuietly(file);
-				final List<Tip> tips = Collections.unmodifiableList(handler.Tips);
+				final List<Tip> tips = Collections.emptyList();
 				if (tips.size() > 0) {
 					myTips = tips;
 				}
@@ -120,7 +113,6 @@ public class TipsManager {
 	public static enum Action {
 		Initialize,
 		Show,
-		Download,
 		None
 	}
 
@@ -130,34 +122,12 @@ public class TipsManager {
 				return myLastShownOption.getValue() + DELAY < currentTime()
 					? Action.Show : Action.None;
 			} else {
-				return myDownloadInProgress
-					? Action.None : Action.Download;
+				return Action.None;
 			}
 		} else if (!TipsAreInitializedOption.getValue()) {
 			//return Action.Initialize;
 			return Action.None;
 		}
 		return Action.None;
-	}
-
-	public synchronized void startDownloading() {
-		if (requiredAction() != Action.Download) {
-			return;
-		}
-
-		myDownloadInProgress = true;
-
-		Config.Instance().runOnConnect(new Runnable() {
-			public void run() {
-				final File tipsFile = new File(getLocalFilePath());
-				tipsFile.getParentFile().mkdirs();
-				new Thread(new Runnable() {
-					public void run() {
-						new QuietNetworkContext().downloadToFileQuietly(getUrl(), tipsFile);
-						myDownloadInProgress = false;
-					}
-				}).start();
-			}
-		});
 	}
 }
