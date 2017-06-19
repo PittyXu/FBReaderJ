@@ -257,24 +257,6 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> implement
 		});
 	}
 
-	public synchronized boolean hasSeries() {
-		if (myInterface != null) {
-			try {
-				return myInterface.hasSeries();
-			} catch (RemoteException e) {
-			}
-		}
-		return false;
-	}
-
-	public List<String> series() {
-		return listCall(new ListCallable<String>() {
-			public List<String> call() throws RemoteException {
-				return myInterface.series();
-			}
-		});
-	}
-
 	public List<String> titles(final BookQuery query) {
 		return listCall(new ListCallable<String>() {
 			public List<String> call() throws RemoteException {

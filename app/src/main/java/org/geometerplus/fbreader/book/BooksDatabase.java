@@ -50,9 +50,6 @@ public abstract class BooksDatabase {
 	protected void addTag(DbBook book, Tag tag) {
 		book.addTagWithNoCheck(tag);
 	}
-	protected void setSeriesInfo(DbBook book, String series, String index) {
-		book.setSeriesInfoWithNoCheck(series, index);
-	}
 
 	protected abstract void executeAsTransaction(Runnable actions);
 
@@ -68,7 +65,6 @@ public abstract class BooksDatabase {
 	protected abstract List<Author> listAuthors(long bookId);
 	protected abstract List<Tag> listTags(long bookId);
 	protected abstract List<Label> listLabels(long bookId);
-	protected abstract SeriesInfo getSeriesInfo(long bookId);
 	protected abstract List<UID> listUids(long bookId);
 	protected abstract boolean hasVisibleBookmark(long bookId);
 	protected abstract RationalNumber getProgress(long bookId);
@@ -81,7 +77,6 @@ public abstract class BooksDatabase {
 	protected abstract void saveBookAuthorInfo(long bookId, long index, Author author);
 	protected abstract void deleteAllBookTags(long bookId);
 	protected abstract void saveBookTagInfo(long bookId, Tag tag);
-	protected abstract void saveBookSeriesInfo(long bookId, SeriesInfo seriesInfo);
 	protected abstract void deleteAllBookUids(long bookId);
 	protected abstract void saveBookUid(long bookId, UID uid);
 	protected abstract void saveBookProgress(long bookId, RationalNumber progress);

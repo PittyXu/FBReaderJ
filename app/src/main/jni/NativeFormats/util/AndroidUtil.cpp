@@ -108,7 +108,6 @@ shared_ptr<StringMethod> AndroidUtil::Method_Book_getTitle;
 shared_ptr<StringMethod> AndroidUtil::Method_Book_getLanguage;
 shared_ptr<StringMethod> AndroidUtil::Method_Book_getEncodingNoDetection;
 shared_ptr<VoidMethod> AndroidUtil::Method_Book_setTitle;
-shared_ptr<VoidMethod> AndroidUtil::Method_Book_setSeriesInfo;
 shared_ptr<VoidMethod> AndroidUtil::Method_Book_setLanguage;
 shared_ptr<VoidMethod> AndroidUtil::Method_Book_setEncoding;
 shared_ptr<VoidMethod> AndroidUtil::Method_Book_addAuthor;
@@ -189,7 +188,6 @@ bool AndroidUtil::init(JavaVM* jvm) {
 	Method_Book_getLanguage = new StringMethod(Class_AbstractBook, "getLanguage", "()");
 	Method_Book_getEncodingNoDetection = new StringMethod(Class_AbstractBook, "getEncodingNoDetection", "()");
 	Method_Book_setTitle = new VoidMethod(Class_AbstractBook, "setTitle", "(Ljava/lang/String;)");
-	Method_Book_setSeriesInfo = new VoidMethod(Class_AbstractBook, "setSeriesInfo", "(Ljava/lang/String;Ljava/lang/String;)");
 	Method_Book_setLanguage = new VoidMethod(Class_AbstractBook, "setLanguage", "(Ljava/lang/String;)");
 	Method_Book_setEncoding = new VoidMethod(Class_AbstractBook, "setEncoding", "(Ljava/lang/String;)");
 	Method_Book_addAuthor = new VoidMethod(Class_AbstractBook, "addAuthor", "(Ljava/lang/String;Ljava/lang/String;)");

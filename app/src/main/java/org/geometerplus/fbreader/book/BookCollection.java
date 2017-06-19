@@ -397,29 +397,29 @@ public class BookCollection extends AbstractBookCollection<DbBook> {
 		return myDatabase.listLabels();
 	}
 
-	public boolean hasSeries() {
-		synchronized (myBooksByFile) {
-			for (DbBook book : myBooksByFile.values()) {
-				if (book.getSeriesInfo() != null) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+//	public boolean hasSeries() {
+//		synchronized (myBooksByFile) {
+//			for (DbBook book : myBooksByFile.values()) {
+//				if (book.getSeriesInfo() != null) {
+//					return true;
+//				}
+//			}
+//		}
+//		return false;
+//	}
 
-	public List<String> series() {
-		final Set<String> series = new TreeSet<String>();
-		synchronized (myBooksByFile) {
-			for (DbBook book : myBooksByFile.values()) {
-				final SeriesInfo info = book.getSeriesInfo();
-				if (info != null) {
-					series.add(info.Series.getTitle());
-				}
-			}
-		}
-		return new ArrayList<String>(series);
-	}
+//	public List<String> series() {
+//		final Set<String> series = new TreeSet<String>();
+//		synchronized (myBooksByFile) {
+//			for (DbBook book : myBooksByFile.values()) {
+//				final SeriesInfo info = book.getSeriesInfo();
+//				if (info != null) {
+//					series.add(info.Series.getTitle());
+//				}
+//			}
+//		}
+//		return new ArrayList<String>(series);
+//	}
 
 	public List<String> firstTitleLetters() {
 		synchronized (myBooksByFile) {

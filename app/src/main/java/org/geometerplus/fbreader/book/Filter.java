@@ -94,19 +94,6 @@ public abstract class Filter {
 		}
 	}
 
-	public final static class BySeries extends Filter {
-		public final Series Series;
-
-		public BySeries(Series series) {
-			Series = series;
-		}
-
-		public boolean matches(AbstractBook book) {
-			final SeriesInfo info = book.getSeriesInfo();
-			return info != null && Series.equals(info.Series);
-		}
-	}
-
 	public final static class HasBookmark extends Filter {
 		public boolean matches(AbstractBook book) {
 			return book != null && book.HasBookmark;

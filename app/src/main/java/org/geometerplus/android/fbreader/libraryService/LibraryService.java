@@ -214,14 +214,6 @@ public class LibraryService extends Service {
 			return strings;
 		}
 
-		public boolean hasSeries() {
-			return myCollection.hasSeries();
-		}
-
-		public List<String> series() {
-			return myCollection.series();
-		}
-
 		public List<String> tags() {
 			final List<Tag> tags = myCollection.tags();
 			final List<String> strings = new ArrayList<String>(tags.size());

@@ -235,7 +235,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		setContentView(R.layout.main);
 		myRootView = (RelativeLayout)findViewById(R.id.root_view);
 		myMainView = (ZLAndroidWidget)findViewById(R.id.main_view);
-		setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 
 		myFBReaderApp = (FBReaderApp)FBReaderApp.Instance();
 		if (myFBReaderApp == null) {

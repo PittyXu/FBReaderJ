@@ -56,7 +56,6 @@ public final class DbBook extends AbstractBook {
 		myAuthors = database.listAuthors(myId);
 		myTags = database.listTags(myId);
 		myLabels = database.listLabels(myId);
-		mySeriesInfo = database.getSeriesInfo(myId);
 		myUids = database.listUids(myId);
 		myProgress = database.getProgress(myId);
 		HasBookmark = database.hasVisibleBookmark(myId);
@@ -87,7 +86,7 @@ public final class DbBook extends AbstractBook {
 			case ProgressNotSaved:
 				return saveProgress(database) ? WhatIsSaved.Progress : WhatIsSaved.Nothing;
 			default:
-			case NotSaved:	
+			case NotSaved:
 				return saveFull(database) ? WhatIsSaved.Everything : WhatIsSaved.Nothing;
 		}
 	}
@@ -152,7 +151,6 @@ public final class DbBook extends AbstractBook {
 						database.addLabel(myId, label);
 					}
 				}
-				database.saveBookSeriesInfo(myId, mySeriesInfo);
 				database.deleteAllBookUids(myId);
 				for (UID uid : uids()) {
 					database.saveBookUid(myId, uid);
@@ -202,7 +200,6 @@ public final class DbBook extends AbstractBook {
 			ComparisonUtil.equal(myLanguage, other.myLanguage) &&
 			ComparisonUtil.equal(myAuthors, other.myAuthors) &&
 			MiscUtil.listsEquals(myTags, other.myTags) &&
-			ComparisonUtil.equal(mySeriesInfo, other.mySeriesInfo) &&
 			ComparisonUtil.equal(myUids, other.myUids);
 	}
 
@@ -222,11 +219,6 @@ public final class DbBook extends AbstractBook {
 		if (!MiscUtil.listsEquals(myTags, other.myTags) &&
 			MiscUtil.listsEquals(myTags, base.myTags)) {
 			myTags = other.myTags != null ? new ArrayList<Tag>(other.myTags) : null;
-			mySaveState = SaveState.NotSaved;
-		}
-		if (!ComparisonUtil.equal(mySeriesInfo, other.mySeriesInfo) &&
-			ComparisonUtil.equal(mySeriesInfo, base.mySeriesInfo)) {
-			mySeriesInfo = other.mySeriesInfo;
 			mySaveState = SaveState.NotSaved;
 		}
 		if (!MiscUtil.listsEquals(myUids, other.myUids) &&

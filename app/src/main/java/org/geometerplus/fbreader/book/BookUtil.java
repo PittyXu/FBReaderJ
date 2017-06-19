@@ -137,7 +137,6 @@ public abstract class BookUtil {
 		book.setTitle(null);
 		book.myAuthors = null;
 		book.myTags = null;
-		book.mySeriesInfo = null;
 		book.myUids = null;
 
 		book.mySaveState = AbstractBook.SaveState.NotSaved;

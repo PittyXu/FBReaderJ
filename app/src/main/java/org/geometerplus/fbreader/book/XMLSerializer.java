@@ -96,11 +96,6 @@ class XMLSerializer extends AbstractSerializer {
 				"type", "label",
 				"name", ((Filter.ByLabel)filter).Label
 			);
-		} else if (filter instanceof Filter.BySeries) {
-			appendTag(buffer, "filter", true,
-				"type", "series",
-				"title", ((Filter.BySeries)filter).Series.getTitle()
-			);
 		} else if (filter instanceof Filter.ByPattern) {
 			appendTag(buffer, "filter", true,
 				"type", "pattern",
@@ -214,14 +209,6 @@ class XMLSerializer extends AbstractSerializer {
 				"uid", label.Uid,
 				"name", label.Name
 			);
-		}
-
-		final SeriesInfo seriesInfo = book.getSeriesInfo();
-		if (seriesInfo != null) {
-			appendTagWithContent(buffer, "calibre:series", seriesInfo.Series.getTitle());
-			if (seriesInfo.Index != null) {
-				appendTagWithContent(buffer, "calibre:series_index", seriesInfo.Index.toPlainString());
-			}
 		}
 
 		if (book.HasBookmark) {
@@ -604,7 +591,6 @@ class XMLSerializer extends AbstractSerializer {
 			for (UID uid : myUidList) {
 				myBook.addUidWithNoCheck(uid);
 			}
-			myBook.setSeriesInfoWithNoCheck(string(mySeriesTitle), string(mySeriesIndex));
 			myBook.setProgressWithNoCheck(myProgress);
 			myBook.HasBookmark = myHasBookmark;
 		}
@@ -814,10 +800,10 @@ class XMLSerializer extends AbstractSerializer {
 						myFilter = new Filter.ByTag(Tag.getTag(names.toArray(new String[names.size()])));
 					} else if ("label".equals(type)) {
 						myFilter = new Filter.ByLabel(attributes.getValue("name"));
-					} else if ("series".equals(type)) {
-						myFilter = new Filter.BySeries(new Series(
-							attributes.getValue("title")
-						));
+//					} else if ("series".equals(type)) {
+//						myFilter = new Filter.BySeries(new Series(
+//							attributes.getValue("title")
+//						));
 					} else if ("pattern".equals(type)) {
 						myFilter = new Filter.ByPattern(attributes.getValue("pattern"));
 					} else if ("title-prefix".equals(type)) {

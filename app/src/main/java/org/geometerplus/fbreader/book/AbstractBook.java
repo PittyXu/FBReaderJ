@@ -38,7 +38,7 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 	protected volatile List<Author> myAuthors;
 	protected volatile List<Tag> myTags;
 	protected volatile List<Label> myLabels;
-	protected volatile SeriesInfo mySeriesInfo;
+//	protected volatile SeriesInfo mySeriesInfo;
 	protected volatile List<UID> myUids;
 	protected volatile RationalNumber myProgress;
 
@@ -78,10 +78,6 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 		}
 		if (!MiscUtil.listsEquals(myLabels, book.myLabels)) {
 			myLabels = book.myLabels != null ? new ArrayList<Label>(book.myLabels) : null;
-			mySaveState = SaveState.NotSaved;
-		}
-		if (!ComparisonUtil.equal(mySeriesInfo, book.mySeriesInfo)) {
-			mySeriesInfo = book.mySeriesInfo;
 			mySaveState = SaveState.NotSaved;
 		}
 		if (!MiscUtil.listsEquals(myUids, book.myUids)) {
@@ -170,33 +166,6 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 		}
 		if (!getTitle().equals(title)) {
 			super.setTitle(title);
-			mySaveState = SaveState.NotSaved;
-		}
-	}
-
-	public SeriesInfo getSeriesInfo() {
-		return mySeriesInfo;
-	}
-
-	void setSeriesInfoWithNoCheck(String name, String index) {
-		mySeriesInfo = SeriesInfo.createSeriesInfo(name, index);
-	}
-
-	public void setSeriesInfo(String name, String index) {
-		setSeriesInfo(name, SeriesInfo.createIndex(index));
-	}
-
-	public void setSeriesInfo(String name, BigDecimal index) {
-		if (mySeriesInfo == null) {
-			if (name != null) {
-				mySeriesInfo = new SeriesInfo(name, index);
-				mySaveState = SaveState.NotSaved;
-			}
-		} else if (name == null) {
-			mySeriesInfo = null;
-			mySaveState = SaveState.NotSaved;
-		} else if (!name.equals(mySeriesInfo.Series.getTitle()) || mySeriesInfo.Index != index) {
-			mySeriesInfo = new SeriesInfo(name, index);
 			mySaveState = SaveState.NotSaved;
 		}
 	}
@@ -377,9 +346,6 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 
 	public boolean matches(String pattern) {
 		if (MiscUtil.matchesIgnoreCase(getTitle(), pattern)) {
-			return true;
-		}
-		if (mySeriesInfo != null && MiscUtil.matchesIgnoreCase(mySeriesInfo.Series.getTitle(), pattern)) {
 			return true;
 		}
 		if (myAuthors != null) {

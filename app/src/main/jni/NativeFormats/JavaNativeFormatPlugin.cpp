@@ -57,12 +57,6 @@ static void fillMetaInfo(JNIEnv* env, jobject javaBook, Book &book) {
 		AndroidUtil::Method_Book_setEncoding->call(javaBook, encoding.j());
 	}
 
-	JString seriesTitle(env, book.seriesTitle());
-	if (seriesTitle.j() != 0) {
-		JString indexString(env, book.indexInSeries());
-		AndroidUtil::Method_Book_setSeriesInfo->call(javaBook, seriesTitle.j(), indexString.j());
-	}
-
 	const AuthorList &authors = book.authors();
 	for (std::size_t i = 0; i < authors.size(); ++i) {
 		const Author &author = *authors[i];

@@ -83,16 +83,6 @@ void OEBMetaInfoReader::startElementHandler(const char *tag, const char **attrib
 				const char *scheme = attributeValue(attributes, schemePredicate);
 				myIdentifierScheme = scheme != 0 ? scheme : "EPUB-NOSCHEME";
 			} else if (testTag(ZLXMLNamespace::OpenPackagingFormat, META, tagString)) {
-				const char *name = attributeValue(attributes, "name");
-				const char *content = attributeValue(attributes, "content");
-				if (name != 0 && content != 0) {
-					std::string sName = name;
-					if (sName == "calibre:series" || isNSName(sName, "series", ZLXMLNamespace::CalibreMetadata)) {
-						myBook.setSeries(content, myBook.indexInSeries());
-					} else if (sName == "calibre:series_index" || isNSName(sName, "series_index", ZLXMLNamespace::CalibreMetadata)) {
-						myBook.setSeries(myBook.seriesTitle(), content);
-					}
-				}
 			}
 			break;
 	}
