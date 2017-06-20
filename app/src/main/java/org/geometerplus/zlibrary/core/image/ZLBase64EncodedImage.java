@@ -19,7 +19,11 @@
 
 package org.geometerplus.zlibrary.core.image;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public abstract class ZLBase64EncodedImage implements ZLStreamImage {
 	private boolean myIsDecoded;

@@ -22,21 +22,22 @@ package org.geometerplus.android.fbreader;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.*;
-import android.widget.*;
-
-import org.geometerplus.zlibrary.core.application.ZLApplication;
-import org.geometerplus.zlibrary.core.resources.ZLResource;
-import org.geometerplus.zlibrary.core.tree.ZLTree;
-
-import org.geometerplus.zlibrary.ui.android.R;
-
-import org.geometerplus.zlibrary.text.view.ZLTextWordCursor;
-import org.geometerplus.fbreader.bookmodel.TOCTree;
-import org.geometerplus.fbreader.fbreader.FBReaderApp;
+import android.view.ContextMenu;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.AdapterView;
 
 import org.geometerplus.android.util.OrientationUtil;
 import org.geometerplus.android.util.ViewUtil;
+import org.geometerplus.fbreader.bookmodel.TOCTree;
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
+import org.geometerplus.zlibrary.core.application.ZLApplication;
+import org.geometerplus.zlibrary.core.resources.ZLResource;
+import org.geometerplus.zlibrary.core.tree.ZLTree;
+import org.geometerplus.zlibrary.ui.android.R;
 
 public class TOCActivity extends ListActivity {
 	private TOCAdapter myAdapter;

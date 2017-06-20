@@ -62,8 +62,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import yuku.ambilwarna.widget.MyAmbilWarnaPrefWidgetView;
-
 public class BookmarksActivity extends Activity implements IBookCollection.Listener<Book> {
 	private static final int OPEN_ITEM_ID = 0;
 	private static final int EDIT_ITEM_ID = 1;
@@ -420,8 +418,7 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 				LayoutInflater.from(parent.getContext()).inflate(R.layout.bookmark_item, parent, false);
 			final ImageView imageView = ViewUtil.findImageView(view, R.id.bookmark_item_icon);
 			final View colorContainer = ViewUtil.findView(view, R.id.bookmark_item_color_container);
-			final MyAmbilWarnaPrefWidgetView colorView =
-				(MyAmbilWarnaPrefWidgetView)ViewUtil.findView(view, R.id.bookmark_item_color);
+			final TextView colorView = (TextView) ViewUtil.findView(view, R.id.bookmark_item_color);
 			final TextView textView = ViewUtil.findTextView(view, R.id.bookmark_item_text);
 			final TextView bookTitleView = ViewUtil.findTextView(view, R.id.bookmark_item_booktitle);
 

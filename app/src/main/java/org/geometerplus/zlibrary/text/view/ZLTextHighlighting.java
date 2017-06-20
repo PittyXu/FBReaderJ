@@ -19,10 +19,11 @@
 
 package org.geometerplus.zlibrary.text.view;
 
-import java.util.List;
+import android.support.annotation.ColorInt;
 
-import org.geometerplus.zlibrary.core.util.ZLColor;
 import org.geometerplus.zlibrary.core.view.Hull;
+
+import java.util.List;
 
 public abstract class ZLTextHighlighting implements Comparable<ZLTextHighlighting> {
 	public abstract boolean isEmpty();
@@ -32,9 +33,12 @@ public abstract class ZLTextHighlighting implements Comparable<ZLTextHighlightin
 	public abstract ZLTextElementArea getStartArea(ZLTextPage page);
 	public abstract ZLTextElementArea getEndArea(ZLTextPage page);
 
-	public abstract ZLColor getForegroundColor();
-	public abstract ZLColor getBackgroundColor();
-	public abstract ZLColor getOutlineColor();
+	@ColorInt
+	public abstract Integer getForegroundColor();
+	@ColorInt
+	public abstract Integer getBackgroundColor();
+	@ColorInt
+	public abstract Integer getOutlineColor();
 
 	boolean intersects(ZLTextPage page) {
 		return

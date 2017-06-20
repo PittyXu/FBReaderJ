@@ -19,11 +19,15 @@
 
 package org.geometerplus.fbreader.fbreader;
 
-import org.geometerplus.zlibrary.core.util.ZLColor;
+import android.support.annotation.ColorInt;
 
-import org.geometerplus.zlibrary.text.view.*;
-
-import org.geometerplus.fbreader.book.*;
+import org.geometerplus.fbreader.book.Bookmark;
+import org.geometerplus.fbreader.book.HighlightingStyle;
+import org.geometerplus.fbreader.book.IBookCollection;
+import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
+import org.geometerplus.zlibrary.text.view.ZLTextPosition;
+import org.geometerplus.zlibrary.text.view.ZLTextSimpleHighlighting;
+import org.geometerplus.zlibrary.text.view.ZLTextView;
 
 public final class BookmarkHighlighting extends ZLTextSimpleHighlighting {
 	final IBookCollection Collection;
@@ -48,20 +52,23 @@ public final class BookmarkHighlighting extends ZLTextSimpleHighlighting {
 		Bookmark = bookmark;
 	}
 
+	@ColorInt
 	@Override
-	public ZLColor getBackgroundColor() {
+	public Integer getBackgroundColor() {
 		final HighlightingStyle bmStyle = Collection.getHighlightingStyle(Bookmark.getStyleId());
 		return bmStyle != null ? bmStyle.getBackgroundColor() : null;
 	}
 
+	@ColorInt
 	@Override
-	public ZLColor getForegroundColor() {
+	public Integer getForegroundColor() {
 		final HighlightingStyle bmStyle = Collection.getHighlightingStyle(Bookmark.getStyleId());
 		return bmStyle != null ? bmStyle.getForegroundColor() : null;
 	}
 
+	@ColorInt
 	@Override
-	public ZLColor getOutlineColor() {
+	public Integer getOutlineColor() {
 		return null;
 	}
 }

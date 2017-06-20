@@ -19,21 +19,23 @@
 
 package org.geometerplus.zlibrary.core.application;
 
-import java.util.*;
-
-import android.view.KeyEvent;
-
+import org.geometerplus.android.util.DeviceType;
+import org.geometerplus.fbreader.Paths;
+import org.geometerplus.zlibrary.core.filesystem.ZLFile;
+import org.geometerplus.zlibrary.core.options.Config;
+import org.geometerplus.zlibrary.core.options.ZLStringListOption;
+import org.geometerplus.zlibrary.core.options.ZLStringOption;
+import org.geometerplus.zlibrary.core.util.XmlUtil;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import org.geometerplus.zlibrary.core.options.*;
-import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.util.XmlUtil;
-
-import org.geometerplus.fbreader.Paths;
-
-import org.geometerplus.android.util.DeviceType;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public final class ZLKeyBindings {
 	private static final String ACTION = "Action";

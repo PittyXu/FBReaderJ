@@ -19,11 +19,17 @@
 
 package org.geometerplus.fbreader.book;
 
-import java.util.*;
-
 import org.geometerplus.fbreader.util.Pair;
+import org.geometerplus.zlibrary.core.filesystem.ZLArchiveEntryFile;
+import org.geometerplus.zlibrary.core.filesystem.ZLFile;
+import org.geometerplus.zlibrary.core.filesystem.ZLPhysicalFile;
 
-import org.geometerplus.zlibrary.core.filesystem.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 public final class FileInfoSet {
 	private final HashMap<ZLFile,FileInfo> myInfosByFile = new HashMap<ZLFile,FileInfo>();

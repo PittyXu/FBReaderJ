@@ -20,13 +20,11 @@
 package org.geometerplus.android.fbreader.preferences;
 
 import android.content.Context;
+import android.support.annotation.ColorInt;
 
-import org.geometerplus.zlibrary.core.util.ZLColor;
 import org.geometerplus.zlibrary.core.options.ZLColorOption;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
-
 import org.geometerplus.zlibrary.ui.android.R;
-import org.geometerplus.zlibrary.ui.android.util.ZLAndroidColorUtil;
 
 class ZLColorPreference extends ColorPreference {
 	private final ZLColorOption myOption;
@@ -45,13 +43,15 @@ class ZLColorPreference extends ColorPreference {
 		return myTitle;
 	}
 
+	@ColorInt
 	@Override
-	protected ZLColor getSavedColor() {
-		return myOption.getValue();
+	protected Integer getSavedColor() {
+		Integer color = myOption.getValue();
+		return color == null ? -1 : color;
 	}
 
 	@Override
-	protected void saveColor(ZLColor color) {
+	protected void saveColor(@ColorInt Integer color) {
 		myOption.setValue(color);
 	}
 }

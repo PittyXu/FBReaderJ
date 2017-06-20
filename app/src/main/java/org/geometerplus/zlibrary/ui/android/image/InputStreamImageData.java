@@ -19,12 +19,14 @@
 
 package org.geometerplus.zlibrary.ui.android.image;
 
-import java.io.InputStream;
-import java.io.IOException;
-
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 
 import org.geometerplus.zlibrary.core.image.ZLStreamImage;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 final class InputStreamImageData extends ZLAndroidImageData {
 	private final ZLStreamImage myImage;

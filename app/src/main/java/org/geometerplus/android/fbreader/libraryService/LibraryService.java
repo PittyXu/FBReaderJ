@@ -19,28 +19,34 @@
 
 package org.geometerplus.android.fbreader.libraryService;
 
-import java.util.*;
-
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.IBinder;
 import android.os.FileObserver;
-
-import org.geometerplus.zlibrary.core.options.Config;
-
-import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
-import org.geometerplus.zlibrary.text.view.ZLTextPosition;
-
-import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
-import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
-
-import org.geometerplus.fbreader.Paths;
-import org.geometerplus.fbreader.book.*;
+import android.os.IBinder;
 
 import org.geometerplus.android.fbreader.api.FBReaderIntents;
 import org.geometerplus.android.fbreader.httpd.DataService;
 import org.geometerplus.android.fbreader.httpd.DataUtil;
+import org.geometerplus.fbreader.Paths;
+import org.geometerplus.fbreader.book.Author;
+import org.geometerplus.fbreader.book.BookCollection;
+import org.geometerplus.fbreader.book.BookEvent;
+import org.geometerplus.fbreader.book.BookUtil;
+import org.geometerplus.fbreader.book.Bookmark;
+import org.geometerplus.fbreader.book.BooksDatabase;
+import org.geometerplus.fbreader.book.DbBook;
+import org.geometerplus.fbreader.book.IBookCollection;
+import org.geometerplus.fbreader.book.SerializerUtil;
+import org.geometerplus.fbreader.book.Tag;
+import org.geometerplus.fbreader.book.UID;
+import org.geometerplus.zlibrary.core.options.Config;
+import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
+import org.geometerplus.zlibrary.text.view.ZLTextPosition;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class LibraryService extends Service {
 	private static SQLiteBooksDatabase ourDatabase;

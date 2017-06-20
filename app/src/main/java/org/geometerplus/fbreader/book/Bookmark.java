@@ -19,13 +19,13 @@
 
 package org.geometerplus.fbreader.book;
 
-import java.util.*;
-
 import org.geometerplus.fbreader.util.ComparisonUtil;
-
-import org.geometerplus.zlibrary.text.view.*;
-
 import org.geometerplus.fbreader.util.TextSnippet;
+import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
+import org.geometerplus.zlibrary.text.view.ZLTextPosition;
+
+import java.util.Comparator;
+import java.util.UUID;
 
 public final class Bookmark extends ZLTextFixedPosition {
 	public enum DateType {

@@ -21,7 +21,11 @@ package org.geometerplus.android.fbreader.api;
 
 import android.content.Intent;
 
-import org.geometerplus.fbreader.book.*;
+import org.geometerplus.fbreader.book.AbstractBook;
+import org.geometerplus.fbreader.book.AbstractSerializer;
+import org.geometerplus.fbreader.book.Book;
+import org.geometerplus.fbreader.book.Bookmark;
+import org.geometerplus.fbreader.book.SerializerUtil;
 
 public abstract class FBReaderIntents {
 	public static final String DEFAULT_PACKAGE = "org.geometerplus.zlibrary.ui.android";

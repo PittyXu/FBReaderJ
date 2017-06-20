@@ -19,7 +19,9 @@
 
 package org.geometerplus.zlibrary.core.view;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class UnionHull implements Hull {
 	private final List<Hull> myComponents;

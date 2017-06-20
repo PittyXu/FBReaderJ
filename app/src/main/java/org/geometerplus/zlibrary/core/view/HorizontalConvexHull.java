@@ -19,9 +19,12 @@
 
 package org.geometerplus.zlibrary.core.view;
 
-import java.util.*;
-
 import android.graphics.Rect;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 public final class HorizontalConvexHull implements Hull {
 	private final LinkedList<Rect> myRectangles = new LinkedList<Rect>();

@@ -19,9 +19,6 @@
 
 package org.geometerplus.android.util;
 
-import java.util.Queue;
-import java.util.LinkedList;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -29,9 +26,11 @@ import android.os.Handler;
 import android.os.Message;
 
 import org.geometerplus.fbreader.util.Pair;
-
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 public abstract class UIUtil {
 	private static final Object ourMonitor = new Object();

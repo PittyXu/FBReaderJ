@@ -19,46 +19,51 @@
 
 package org.geometerplus.fbreader.book;
 
-import org.geometerplus.zlibrary.core.util.ZLColor;
+import android.support.annotation.ColorInt;
 
 public class HighlightingStyle {
-	public final int Id;
-	public final long LastUpdateTimestamp;
 
-	private String myName;
-	private ZLColor myBackgroundColor;
-	private ZLColor myForegroundColor;
+  public final int Id;
+  public final long LastUpdateTimestamp;
 
-	HighlightingStyle(int id, long timestamp, String name, ZLColor bgColor, ZLColor fgColor) {
-		Id = id;
-		LastUpdateTimestamp = timestamp;
+  private String myName;
+  @ColorInt
+  private Integer myBackgroundColor;
+  @ColorInt
+  private Integer myForegroundColor;
 
-		myName = name;
-		myBackgroundColor = bgColor;
-		myForegroundColor = fgColor;
-	}
+  HighlightingStyle(int id, long timestamp, String name, @ColorInt Integer bgColor,
+      @ColorInt Integer fgColor) {
+    Id = id;
+    LastUpdateTimestamp = timestamp;
+    myName = name;
+    myBackgroundColor = bgColor;
+    myForegroundColor = fgColor;
+  }
 
-	public String getNameOrNull() {
-		return "".equals(myName) ? null : myName;
-	}
+  public String getNameOrNull() {
+    return "".equals(myName) ? null : myName;
+  }
 
-	void setName(String name) {
-		myName = name;
-	}
+  void setName(String name) {
+    myName = name;
+  }
 
-	public ZLColor getBackgroundColor() {
-		return myBackgroundColor;
-	}
+  @ColorInt
+  public Integer getBackgroundColor() {
+    return myBackgroundColor;
+  }
 
-	public void setBackgroundColor(ZLColor bgColor) {
-		myBackgroundColor = bgColor;
-	}
+  public void setBackgroundColor(@ColorInt Integer bgColor) {
+    myBackgroundColor = bgColor;
+  }
 
-	public ZLColor getForegroundColor() {
-		return myForegroundColor;
-	}
+  @ColorInt
+  public Integer getForegroundColor() {
+    return myForegroundColor;
+  }
 
-	public void setForegroundColor(ZLColor fgColor) {
-		myForegroundColor = fgColor;
-	}
+  public void setForegroundColor(@ColorInt int fgColor) {
+    myForegroundColor = fgColor;
+  }
 }

@@ -20,7 +20,6 @@
 package org.geometerplus.android.fbreader.preferences;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.view.KeyEvent;
 
 import org.geometerplus.android.fbreader.FBReader;
@@ -38,7 +37,6 @@ import org.geometerplus.fbreader.fbreader.options.ViewOptions;
 import org.geometerplus.zlibrary.core.application.ZLKeyBindings;
 import org.geometerplus.zlibrary.core.options.Config;
 import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
-import org.geometerplus.zlibrary.core.options.ZLStringOption;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.text.view.style.ZLTextBaseStyle;
 import org.geometerplus.zlibrary.text.view.style.ZLTextNGStyleDescription;

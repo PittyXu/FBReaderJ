@@ -19,11 +19,15 @@
 
 package org.geometerplus.zlibrary.text.view;
 
-import java.util.*;
-
 import android.graphics.Rect;
 
-import org.geometerplus.zlibrary.core.view.*;
+import org.geometerplus.zlibrary.core.view.HorizontalConvexHull;
+import org.geometerplus.zlibrary.core.view.Hull;
+import org.geometerplus.zlibrary.core.view.UnionHull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 abstract class HullUtil {
 	static Hull hull(ZLTextElementArea[] areas) {

@@ -19,25 +19,40 @@
 
 package org.geometerplus.android.fbreader.libraryService;
 
-import java.util.*;
-import java.math.BigDecimal;
-
 import android.content.Context;
-import android.database.sqlite.*;
-import android.database.SQLException;
 import android.database.Cursor;
-
-import org.geometerplus.zlibrary.core.options.Config;
-import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.options.ZLIntegerOption;
-import org.geometerplus.zlibrary.core.util.RationalNumber;
-import org.geometerplus.zlibrary.core.util.ZLColor;
-import org.geometerplus.zlibrary.text.view.ZLTextPosition;
-import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
-
-import org.geometerplus.fbreader.book.*;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDoneException;
+import android.database.sqlite.SQLiteStatement;
 
 import org.geometerplus.android.util.SQLiteUtil;
+import org.geometerplus.fbreader.book.Author;
+import org.geometerplus.fbreader.book.Bookmark;
+import org.geometerplus.fbreader.book.BookmarkQuery;
+import org.geometerplus.fbreader.book.BooksDatabase;
+import org.geometerplus.fbreader.book.DbBook;
+import org.geometerplus.fbreader.book.FileInfo;
+import org.geometerplus.fbreader.book.FileInfoSet;
+import org.geometerplus.fbreader.book.HighlightingStyle;
+import org.geometerplus.fbreader.book.Label;
+import org.geometerplus.fbreader.book.Tag;
+import org.geometerplus.fbreader.book.UID;
+import org.geometerplus.zlibrary.core.filesystem.ZLFile;
+import org.geometerplus.zlibrary.core.options.Config;
+import org.geometerplus.zlibrary.core.options.ZLIntegerOption;
+import org.geometerplus.zlibrary.core.util.RationalNumber;
+import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
+import org.geometerplus.zlibrary.text.view.ZLTextPosition;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
+import java.util.UUID;
 
 final class SQLiteBooksDatabase extends BooksDatabase {
 	private final SQLiteDatabase myDatabase;
@@ -878,8 +893,8 @@ final class SQLiteBooksDatabase extends BooksDatabase {
 				(int)cursor.getLong(0),
 				cursor.getLong(1),
 				name.length() > 0 ? name : null,
-				bgColor != -1 ? new ZLColor(bgColor) : null,
-				fgColor != -1 ? new ZLColor(fgColor) : null
+				bgColor != -1 ? bgColor : null,
+				fgColor != -1 ? fgColor : null
 			));
 		}
 		cursor.close();
@@ -894,10 +909,10 @@ final class SQLiteBooksDatabase extends BooksDatabase {
 			statement.bindLong(1, style.Id);
 			final String name = style.getNameOrNull();
 			statement.bindString(2, name != null ? name : "");
-			final ZLColor bgColor = style.getBackgroundColor();
-			statement.bindLong(3, bgColor != null ? bgColor.intValue() : -1);
-			final ZLColor fgColor = style.getForegroundColor();
-			statement.bindLong(4, fgColor != null ? fgColor.intValue() : -1);
+			final Integer bgColor = style.getBackgroundColor();
+			statement.bindLong(3, bgColor != null ? bgColor : -1);
+			final Integer fgColor = style.getForegroundColor();
+			statement.bindLong(4, fgColor != null ? fgColor : -1);
 			statement.bindLong(5, System.currentTimeMillis());
 			statement.execute();
 		}

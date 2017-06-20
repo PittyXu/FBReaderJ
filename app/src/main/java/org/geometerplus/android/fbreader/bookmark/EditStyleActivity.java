@@ -19,20 +19,20 @@
 
 package org.geometerplus.android.fbreader.bookmark;
 
-import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
+import android.support.annotation.ColorInt;
 import android.view.Window;
 
-import org.geometerplus.zlibrary.core.resources.ZLResource;
-import org.geometerplus.zlibrary.core.util.ZLColor;
-
+import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
+import org.geometerplus.android.fbreader.preferences.ColorPreference;
+import org.geometerplus.android.fbreader.preferences.ZLCheckBoxPreference;
+import org.geometerplus.android.fbreader.preferences.ZLStringPreference;
 import org.geometerplus.fbreader.book.BookmarkUtil;
 import org.geometerplus.fbreader.book.HighlightingStyle;
-
-import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
-import org.geometerplus.android.fbreader.preferences.*;
+import org.geometerplus.zlibrary.core.resources.ZLResource;
 
 public class EditStyleActivity extends PreferenceActivity {
 	static final String STYLE_ID_KEY = "style.id";
@@ -88,7 +88,8 @@ public class EditStyleActivity extends PreferenceActivity {
 	}
 
 	private class InvisiblePreference extends ZLCheckBoxPreference {
-		private ZLColor mySavedBgColor;
+		@ColorInt
+		private Integer mySavedBgColor;
 
 		InvisiblePreference() {
 			super(EditStyleActivity.this, myRootResource.getResource("invisible"));
@@ -104,7 +105,7 @@ public class EditStyleActivity extends PreferenceActivity {
 				myBgColorPreference.setEnabled(false);
 			} else {
 				myStyle.setBackgroundColor(
-					mySavedBgColor != null ? mySavedBgColor : new ZLColor(127, 127, 127)
+					mySavedBgColor != null ? mySavedBgColor : Color.rgb(127, 127, 127)
 				);
 				myBgColorPreference.setEnabled(true);
 			}
@@ -123,13 +124,14 @@ public class EditStyleActivity extends PreferenceActivity {
 			return myRootResource.getResource("bgColor").getValue();
 		}
 
+		@ColorInt
 		@Override
-		protected ZLColor getSavedColor() {
+		protected Integer getSavedColor() {
 			return myStyle.getBackgroundColor();
 		}
 
 		@Override
-		protected void saveColor(ZLColor color) {
+		protected void saveColor(@ColorInt Integer color) {
 			myStyle.setBackgroundColor(color);
 			myCollection.saveHighlightingStyle(myStyle);
 		}

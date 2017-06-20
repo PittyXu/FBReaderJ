@@ -19,8 +19,9 @@
 
 package org.geometerplus.zlibrary.core.view;
 
+import android.support.annotation.ColorInt;
+
 import org.geometerplus.zlibrary.core.library.ZLibrary;
-import org.geometerplus.zlibrary.core.util.ZLColor;
 
 public abstract class SelectionCursor {
 	public enum Which {
@@ -28,7 +29,7 @@ public abstract class SelectionCursor {
 		Right
 	}
 
-	public static void draw(ZLPaintContext context, Which which, int x, int y, ZLColor color) {
+	public static void draw(ZLPaintContext context, Which which, int x, int y, @ColorInt Integer color) {
 		context.setFillColor(color);
 		final int dpi = ZLibrary.Instance().getDisplayDPI();
 		final int unit = dpi / 120;

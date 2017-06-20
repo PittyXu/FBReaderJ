@@ -20,17 +20,13 @@
 package org.geometerplus.android.fbreader.preferences;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.preference.Preference;
+import android.support.annotation.ColorInt;
 import android.view.View;
 import android.widget.TextView;
 
-import org.geometerplus.zlibrary.core.resources.ZLResource;
-import org.geometerplus.zlibrary.core.util.ZLColor;
 import org.geometerplus.zlibrary.ui.android.R;
-import org.geometerplus.zlibrary.ui.android.util.ZLAndroidColorUtil;
-
-import yuku.ambilwarna.AmbilWarnaDialog;
-import yuku.ambilwarna.MyAmbilWarnaDialog;
 
 public abstract class ColorPreference extends Preference {
 	protected ColorPreference(Context context) {
@@ -39,41 +35,19 @@ public abstract class ColorPreference extends Preference {
 	}
 
 	public abstract String getTitle();
-	protected abstract ZLColor getSavedColor();
-	protected abstract void saveColor(ZLColor color);
+	@ColorInt
+	protected abstract Integer getSavedColor();
+	protected abstract void saveColor(@ColorInt Integer color);
 
 	@Override
 	protected void onBindView(View view) {
 		super.onBindView(view);
 
 		((TextView)view.findViewById(R.id.color_preference_title)).setText(getTitle());
-		view.findViewById(R.id.color_preference_widget).setBackgroundColor(
-			ZLAndroidColorUtil.rgb(getSavedColor())
-		);
+		view.findViewById(R.id.color_preference_widget).setBackgroundColor(getSavedColor());
 	}
 
 	@Override
 	protected void onClick() {
-		final ZLResource buttonResource = ZLResource.resource("dialog").getResource("button");
-		new MyAmbilWarnaDialog(
-			getContext(),
-			ZLAndroidColorUtil.rgb(getSavedColor()),
-			new AmbilWarnaDialog.OnAmbilWarnaListener() {
-				@Override
-				public void onOk(AmbilWarnaDialog dialog, int color) {
-					if (!callChangeListener(color)) {
-						return;
-					}
-					saveColor(new ZLColor(color));
-					notifyChanged();
-				}
-
-				@Override
-				public void onCancel(AmbilWarnaDialog dialog) {
-				}
-			},
-			buttonResource.getResource("ok").getValue(),
-			buttonResource.getResource("cancel").getValue()
-		).show();
 	}
 }

@@ -21,7 +21,11 @@ package org.geometerplus.zlibrary.core.util;
 
 import org.geometerplus.fbreader.util.ComparisonUtil;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public final class MimeType {
 	private static Map<String,MimeType> ourSimpleTypesMap = new HashMap<String,MimeType>();

@@ -19,11 +19,18 @@
 
 package org.geometerplus.fbreader.fbreader.options;
 
-import java.util.*;
+import android.graphics.Color;
 
-import org.geometerplus.zlibrary.core.util.ZLColor;
-import org.geometerplus.zlibrary.core.options.*;
+import org.geometerplus.zlibrary.core.options.ZLColorOption;
+import org.geometerplus.zlibrary.core.options.ZLEnumOption;
+import org.geometerplus.zlibrary.core.options.ZLIntegerOption;
+import org.geometerplus.zlibrary.core.options.ZLStringOption;
 import org.geometerplus.zlibrary.core.view.ZLPaintContext;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 public class ColorProfile {
 	public static final String DAY = "defaultLight";
@@ -92,7 +99,7 @@ public class ColorProfile {
 	}
 
 	private static ZLColorOption createOption(String profileName, String optionName, int r, int g, int b) {
-		return new ZLColorOption("Colors", profileName + ':' + optionName, new ZLColor(r, g, b));
+		return new ZLColorOption("Colors", profileName + ':' + optionName, Color.rgb(r, g, b));
 	}
 
 	private static ZLColorOption createNullOption(String profileName, String optionName) {

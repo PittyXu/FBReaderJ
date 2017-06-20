@@ -21,9 +21,8 @@ package org.geometerplus.zlibrary.ui.android.library;
 
 import android.app.Application;
 
-import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
-
 import org.geometerplus.android.fbreader.config.ConfigShadow;
+import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 
 public abstract class ZLAndroidApplication extends Application {
 	private ZLAndroidLibrary myLibrary;

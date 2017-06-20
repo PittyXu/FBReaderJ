@@ -165,7 +165,7 @@ public final class CurlAnimationProvider extends AnimationProvider {
 		drawBitmapFrom(canvas, 0, 0, myPaint);
 		canvas.restore();
 
-		myEdgePaint.setColor(ZLAndroidColorUtil.rgb(ZLAndroidColorUtil.getAverageColor(getBitmapFrom())));
+		myEdgePaint.setColor(ZLAndroidColorUtil.getAverageColor(getBitmapFrom()));
 
 		myEdgePath.rewind();
 		myEdgePath.moveTo(x, y);

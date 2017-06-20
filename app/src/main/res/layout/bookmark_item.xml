@@ -17,7 +17,7 @@
 		android:layout_width="37dp"
 		android:layout_height="fill_parent"
 	>
-		<yuku.ambilwarna.widget.MyAmbilWarnaPrefWidgetView
+		<TextView
 			android:id="@+id/bookmark_item_color"
 			android:layout_marginTop="12dp"
 			android:layout_marginBottom="12dp"

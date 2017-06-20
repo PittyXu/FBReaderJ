@@ -19,8 +19,6 @@
 
 package org.geometerplus.fbreader.formats;
 
-import java.io.IOException;
-
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 

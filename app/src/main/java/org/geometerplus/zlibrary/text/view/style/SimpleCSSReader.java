@@ -19,11 +19,16 @@
 
 package org.geometerplus.zlibrary.text.view.style;
 
-import java.io.*;
-import java.util.*;
-
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.util.MiscUtil;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 class SimpleCSSReader {
 	private enum State {

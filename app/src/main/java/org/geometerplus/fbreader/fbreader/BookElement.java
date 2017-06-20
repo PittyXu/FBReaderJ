@@ -20,12 +20,11 @@
 package org.geometerplus.fbreader.fbreader;
 
 import org.geometerplus.zlibrary.core.image.ZLImageData;
-import org.geometerplus.zlibrary.core.image.ZLImageManager;
 import org.geometerplus.zlibrary.core.library.ZLibrary;
-import org.geometerplus.zlibrary.core.util.ZLColor;
 import org.geometerplus.zlibrary.core.view.ZLPaintContext;
-
-import org.geometerplus.zlibrary.text.view.*;
+import org.geometerplus.zlibrary.text.view.ExtensionElement;
+import org.geometerplus.zlibrary.text.view.ZLTextElementArea;
+import org.geometerplus.zlibrary.text.view.ZLTextHyperlink;
 
 public final class BookElement extends ExtensionElement {
 	private final FBView myView;
@@ -67,7 +66,7 @@ public final class BookElement extends ExtensionElement {
 				ZLPaintContext.ColorAdjustingMode.NONE
 			);
 		} else {
-			final ZLColor color = myView.getTextColor(ZLTextHyperlink.NO_LINK);
+			final Integer color = myView.getTextColor(ZLTextHyperlink.NO_LINK);
 			context.setLineColor(color);
 			context.setFillColor(color, 0x33);
 			final int xStart = area.XStart + hMargin;

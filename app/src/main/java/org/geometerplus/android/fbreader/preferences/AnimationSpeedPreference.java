@@ -21,15 +21,20 @@ package org.geometerplus.android.fbreader.preferences;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.*;
-import android.graphics.drawable.*;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.preference.DialogPreference;
 import android.view.View;
 import android.widget.SeekBar;
 
 import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
-
 import org.geometerplus.zlibrary.ui.android.R;
 
 class AnimationSpeedPreference extends DialogPreference {

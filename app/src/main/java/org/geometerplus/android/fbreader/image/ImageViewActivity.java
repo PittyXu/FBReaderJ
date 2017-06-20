@@ -23,29 +23,28 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 
 import org.geometerplus.android.util.OrientationUtil;
 import org.geometerplus.zlibrary.core.image.ZLFileImage;
 import org.geometerplus.zlibrary.core.image.ZLImageData;
 import org.geometerplus.zlibrary.core.image.ZLImageManager;
-import org.geometerplus.zlibrary.core.util.ZLColor;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
-import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
-import org.geometerplus.zlibrary.ui.android.util.ZLAndroidColorUtil;
 
 public class ImageViewActivity extends Activity {
 	public static final String URL_KEY = "fbreader.imageview.url";
 	public static final String BACKGROUND_COLOR_KEY = "fbreader.imageview.background";
 
 	private Bitmap myBitmap;
-	private ZLColor myBgColor;
+	@ColorInt
+	private Integer myBgColor;
 
 	@Override
 	protected void onCreate(Bundle icicle) {
@@ -57,9 +56,7 @@ public class ImageViewActivity extends Activity {
 
 		final Intent intent = getIntent();
 
-		myBgColor = new ZLColor(
-			intent.getIntExtra(BACKGROUND_COLOR_KEY, new ZLColor(127, 127, 127).intValue())
-		);
+		myBgColor = intent.getIntExtra(BACKGROUND_COLOR_KEY, Color.rgb(127, 127, 127));
 
 		final String url = intent.getStringExtra(URL_KEY);
 		final String prefix = ZLFileImage.SCHEME + "://";
@@ -116,7 +113,7 @@ public class ImageViewActivity extends Activity {
 
 		@Override
 		protected void onDraw(final Canvas canvas) {
-			myPaint.setColor(ZLAndroidColorUtil.rgb(myBgColor));
+			myPaint.setColor(myBgColor);
 			final int w = getWidth();
 			final int h = getHeight();
 			canvas.drawRect(0, 0, w, h, myPaint);

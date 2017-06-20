@@ -19,7 +19,8 @@
 
 package org.geometerplus.zlibrary.text.view;
 
-import org.geometerplus.zlibrary.core.util.ZLColor;
+import android.support.annotation.ColorInt;
+
 import org.geometerplus.zlibrary.core.view.SelectionCursor;
 
 class ZLTextSelection extends ZLTextHighlighting {
@@ -283,18 +284,21 @@ class ZLTextSelection extends ZLTextHighlighting {
 		return cmp > 0 || (cmp == 0 && !lastPageArea.isLastInElement());
 	}
 
+	@ColorInt
 	@Override
-	public ZLColor getBackgroundColor() {
+	public Integer getBackgroundColor() {
 		return myView.getSelectionBackgroundColor();
 	}
 
+	@ColorInt
 	@Override
-	public ZLColor getForegroundColor() {
+	public Integer getForegroundColor() {
 		return myView.getSelectionForegroundColor();
 	}
 
+	@ColorInt
 	@Override
-	public ZLColor getOutlineColor() {
+	public Integer getOutlineColor() {
 		return null;
 	}
 

@@ -19,16 +19,18 @@
 
 package org.geometerplus.zlibrary.text.view;
 
+import android.support.annotation.ColorInt;
+
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.library.ZLibrary;
-import org.geometerplus.zlibrary.core.util.ZLColor;
-import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.view.ZLPaintContext;
-
+import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.text.model.ZLTextMetrics;
-
-import org.geometerplus.zlibrary.text.view.style.*;
+import org.geometerplus.zlibrary.text.view.style.ZLTextExplicitlyDecoratedStyle;
+import org.geometerplus.zlibrary.text.view.style.ZLTextNGStyle;
+import org.geometerplus.zlibrary.text.view.style.ZLTextNGStyleDescription;
+import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
 
 abstract class ZLTextViewBase extends ZLView {
 	public static enum ImageFitting {
@@ -95,12 +97,18 @@ abstract class ZLTextViewBase extends ZLView {
 
 	public abstract ZLFile getWallpaperFile();
 	public abstract ZLPaintContext.FillMode getFillMode();
-	public abstract ZLColor getBackgroundColor();
-	public abstract ZLColor getSelectionBackgroundColor();
-	public abstract ZLColor getSelectionForegroundColor();
-	public abstract ZLColor getHighlightingBackgroundColor();
-	public abstract ZLColor getHighlightingForegroundColor();
-	public abstract ZLColor getTextColor(ZLTextHyperlink hyperlink);
+	@ColorInt
+	public abstract Integer getBackgroundColor();
+	@ColorInt
+	public abstract Integer getSelectionBackgroundColor();
+	@ColorInt
+	public abstract Integer getSelectionForegroundColor();
+	@ColorInt
+	public abstract Integer getHighlightingBackgroundColor();
+	@ColorInt
+	public abstract Integer getHighlightingForegroundColor();
+	@ColorInt
+	public abstract Integer getTextColor(ZLTextHyperlink hyperlink);
 
 	ZLPaintContext.Size getTextAreaSize() {
 		return new ZLPaintContext.Size(getTextColumnWidth(), getTextAreaHeight());
@@ -300,7 +308,7 @@ abstract class ZLTextViewBase extends ZLView {
 		return 0;
 	}
 
-	final void drawWord(int x, int y, ZLTextWord word, int start, int length, boolean addHyphenationSign, ZLColor color) {
+	final void drawWord(int x, int y, ZLTextWord word, int start, int length, boolean addHyphenationSign, @ColorInt Integer color) {
 		final ZLPaintContext context = getContext();
 		if (start == 0 && length == -1) {
 			drawString(context, x, y, word.Data, word.Offset, word.Length, word.getMark(), color, 0);
@@ -323,7 +331,7 @@ abstract class ZLTextViewBase extends ZLView {
 		}
 	}
 
-	private final void drawString(ZLPaintContext context, int x, int y, char[] str, int offset, int length, ZLTextWord.Mark mark, ZLColor color, int shift) {
+	private final void drawString(ZLPaintContext context, int x, int y, char[] str, int offset, int length, ZLTextWord.Mark mark, @ColorInt Integer color, int shift) {
 		if (mark == null) {
 			context.setTextColor(color);
 			context.drawString(x, y, str, offset, length);

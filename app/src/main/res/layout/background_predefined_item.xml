@@ -6,7 +6,7 @@
 	android:orientation="horizontal"
 	android:paddingLeft="18dip"
 >
-	<yuku.ambilwarna.widget.MyAmbilWarnaPrefWidgetView
+	<TextView
 		android:id="@+id/background_predefined_item_preview"
 		android:layout_width="24dp"
 		android:layout_height="24dp"

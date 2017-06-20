@@ -19,20 +19,31 @@
 
 package org.geometerplus.zlibrary.ui.android.view;
 
-import java.util.List;
-
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.CornerPathEffect;
+import android.graphics.EmbossMaskFilter;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.support.annotation.ColorInt;
 
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.fonts.FontEntry;
 import org.geometerplus.zlibrary.core.image.ZLImageData;
 import org.geometerplus.zlibrary.core.options.ZLBooleanOption;
-import org.geometerplus.zlibrary.core.util.ZLColor;
 import org.geometerplus.zlibrary.core.util.SystemInfo;
 import org.geometerplus.zlibrary.core.view.ZLPaintContext;
-
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
 import org.geometerplus.zlibrary.ui.android.util.ZLAndroidColorUtil;
+
+import java.util.List;
 
 public final class ZLAndroidPaintContext extends ZLPaintContext {
 	public static ZLBooleanOption AntiAliasOption = new ZLBooleanOption("Fonts", "AntiAlias", true);
@@ -63,7 +74,8 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
 	private final Geometry myGeometry;
 	private final int myScrollbarWidth;
 
-	private ZLColor myBackgroundColor = new ZLColor(0, 0, 0);
+	@ColorInt
+	private Integer myBackgroundColor = Color.rgb(0, 0, 0);
 
 	public ZLAndroidPaintContext(SystemInfo systemInfo, Canvas canvas, Geometry geometry, int scrollbarWidth) {
 		super(systemInfo);
@@ -213,19 +225,20 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
 				}
 			}
 		} else {
-			clear(new ZLColor(128, 128, 128));
+			clear(Color.rgb(128, 128, 128));
 		}
 	}
 
 	@Override
-	public void clear(ZLColor color) {
+	public void clear(@ColorInt Integer color) {
 		myBackgroundColor = color;
-		myFillPaint.setColor(ZLAndroidColorUtil.rgb(color));
+		myFillPaint.setColor(color);
 		myCanvas.drawRect(0, 0, myGeometry.AreaSize.Width, myGeometry.AreaSize.Height, myFillPaint);
 	}
 
+	@ColorInt
 	@Override
-	public ZLColor getBackgroundColor() {
+	public Integer getBackgroundColor() {
 		return myBackgroundColor;
 	}
 
@@ -298,17 +311,17 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
 	}
 
 	@Override
-	public void setTextColor(ZLColor color) {
+	public void setTextColor(@ColorInt Integer color) {
 		if (color != null) {
-			myTextPaint.setColor(ZLAndroidColorUtil.rgb(color));
+			myTextPaint.setColor(color);
 		}
 	}
 
 	@Override
-	public void setLineColor(ZLColor color) {
+	public void setLineColor(@ColorInt Integer color) {
 		if (color != null) {
-			myLinePaint.setColor(ZLAndroidColorUtil.rgb(color));
-			myOutlinePaint.setColor(ZLAndroidColorUtil.rgb(color));
+			myLinePaint.setColor(color);
+			myOutlinePaint.setColor(color);
 		}
 	}
 
@@ -318,9 +331,9 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
 	}
 
 	@Override
-	public void setFillColor(ZLColor color, int alpha) {
+	public void setFillColor(@ColorInt Integer color, int alpha) {
 		if (color != null) {
-			myFillPaint.setColor(ZLAndroidColorUtil.rgba(color, alpha));
+			myFillPaint.setColor(Color.argb(Color.red(color), Color.green(color), Color.blue(color), alpha));
 		}
 	}
 

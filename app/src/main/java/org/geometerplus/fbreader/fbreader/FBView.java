@@ -19,26 +19,44 @@
 
 package org.geometerplus.fbreader.fbreader;
 
-import java.util.*;
-
-import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.filesystem.ZLResourceFile;
-import org.geometerplus.zlibrary.core.fonts.FontEntry;
-import org.geometerplus.zlibrary.core.library.ZLibrary;
-import org.geometerplus.zlibrary.core.util.ZLColor;
-import org.geometerplus.zlibrary.core.view.SelectionCursor;
-import org.geometerplus.zlibrary.core.view.ZLPaintContext;
-
-import org.geometerplus.zlibrary.text.model.ZLTextModel;
-import org.geometerplus.zlibrary.text.view.*;
-import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
+import android.support.annotation.ColorInt;
 
 import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.bookmodel.FBHyperlinkType;
 import org.geometerplus.fbreader.bookmodel.TOCTree;
-import org.geometerplus.fbreader.fbreader.options.*;
+import org.geometerplus.fbreader.fbreader.options.ColorProfile;
+import org.geometerplus.fbreader.fbreader.options.FooterOptions;
+import org.geometerplus.fbreader.fbreader.options.ImageOptions;
+import org.geometerplus.fbreader.fbreader.options.MiscOptions;
+import org.geometerplus.fbreader.fbreader.options.PageTurningOptions;
+import org.geometerplus.fbreader.fbreader.options.ViewOptions;
 import org.geometerplus.fbreader.util.FixedTextSnippet;
 import org.geometerplus.fbreader.util.TextSnippet;
+import org.geometerplus.zlibrary.core.filesystem.ZLFile;
+import org.geometerplus.zlibrary.core.filesystem.ZLResourceFile;
+import org.geometerplus.zlibrary.core.fonts.FontEntry;
+import org.geometerplus.zlibrary.core.library.ZLibrary;
+import org.geometerplus.zlibrary.core.view.SelectionCursor;
+import org.geometerplus.zlibrary.core.view.ZLPaintContext;
+import org.geometerplus.zlibrary.text.model.ZLTextModel;
+import org.geometerplus.zlibrary.text.view.ExtensionElementManager;
+import org.geometerplus.zlibrary.text.view.ZLTextHighlighting;
+import org.geometerplus.zlibrary.text.view.ZLTextHyperlink;
+import org.geometerplus.zlibrary.text.view.ZLTextHyperlinkRegionSoul;
+import org.geometerplus.zlibrary.text.view.ZLTextImageRegionSoul;
+import org.geometerplus.zlibrary.text.view.ZLTextPosition;
+import org.geometerplus.zlibrary.text.view.ZLTextRegion;
+import org.geometerplus.zlibrary.text.view.ZLTextVideoRegionSoul;
+import org.geometerplus.zlibrary.text.view.ZLTextView;
+import org.geometerplus.zlibrary.text.view.ZLTextWordRegionSoul;
+import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 
 public final class FBView extends ZLTextView {
 	private final FBReaderApp myReader;
@@ -403,23 +421,27 @@ public final class FBView extends ZLTextView {
 			: myViewOptions.getColorProfile().FillModeOption.getValue();
 	}
 
+	@ColorInt
 	@Override
-	public ZLColor getBackgroundColor() {
+	public Integer getBackgroundColor() {
 		return myViewOptions.getColorProfile().BackgroundOption.getValue();
 	}
 
+	@ColorInt
 	@Override
-	public ZLColor getSelectionBackgroundColor() {
+	public Integer getSelectionBackgroundColor() {
 		return myViewOptions.getColorProfile().SelectionBackgroundOption.getValue();
 	}
 
+	@ColorInt
 	@Override
-	public ZLColor getSelectionForegroundColor() {
+	public Integer getSelectionForegroundColor() {
 		return myViewOptions.getColorProfile().SelectionForegroundOption.getValue();
 	}
 
+	@ColorInt
 	@Override
-	public ZLColor getTextColor(ZLTextHyperlink hyperlink) {
+	public Integer getTextColor(ZLTextHyperlink hyperlink) {
 		final ColorProfile profile = myViewOptions.getColorProfile();
 		switch (hyperlink.Type) {
 			default:
@@ -435,13 +457,15 @@ public final class FBView extends ZLTextView {
 		}
 	}
 
+	@ColorInt
 	@Override
-	public ZLColor getHighlightingBackgroundColor() {
+	public Integer getHighlightingBackgroundColor() {
 		return myViewOptions.getColorProfile().HighlightingBackgroundOption.getValue();
 	}
 
+	@ColorInt
 	@Override
-	public ZLColor getHighlightingForegroundColor() {
+	public Integer getHighlightingForegroundColor() {
 		return myViewOptions.getColorProfile().HighlightingForegroundOption.getValue();
 	}
 
@@ -570,8 +594,8 @@ public final class FBView extends ZLTextView {
 
 			//final ZLColor bgColor = getBackgroundColor();
 			// TODO: separate color option for footer color
-			final ZLColor fgColor = getTextColor(ZLTextHyperlink.NO_LINK);
-			final ZLColor fillColor = myViewOptions.getColorProfile().FooterFillOption.getValue();
+			final Integer fgColor = getTextColor(ZLTextHyperlink.NO_LINK);
+			final Integer fillColor = myViewOptions.getColorProfile().FooterFillOption.getValue();
 
 			final int left = getLeftMargin();
 			final int right = context.getWidth() - getRightMargin();
@@ -632,9 +656,9 @@ public final class FBView extends ZLTextView {
 				return;
 			}
 
-			final ZLColor textColor = cProfile.FooterNGForegroundOption.getValue();
-			final ZLColor readColor = cProfile.FooterNGForegroundOption.getValue();
-			final ZLColor unreadColor = cProfile.FooterNGForegroundUnreadOption.getValue();
+			final Integer textColor = cProfile.FooterNGForegroundOption.getValue();
+			final Integer readColor = cProfile.FooterNGForegroundOption.getValue();
+			final Integer unreadColor = cProfile.FooterNGForegroundUnreadOption.getValue();
 
 			final int left = getLeftMargin();
 			final int right = context.getWidth() - getRightMargin();

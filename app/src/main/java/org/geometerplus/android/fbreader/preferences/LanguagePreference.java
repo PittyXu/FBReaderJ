@@ -19,12 +19,12 @@
 
 package org.geometerplus.android.fbreader.preferences;
 
-import java.util.*;
-
 import android.content.Context;
 
 import org.geometerplus.zlibrary.core.language.Language;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
+
+import java.util.List;
 
 abstract class LanguagePreference extends ZLStringListPreference {
 	LanguagePreference(

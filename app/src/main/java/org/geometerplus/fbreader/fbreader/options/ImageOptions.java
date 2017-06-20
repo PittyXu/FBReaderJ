@@ -19,10 +19,12 @@
 
 package org.geometerplus.fbreader.fbreader.options;
 
-import org.geometerplus.zlibrary.core.options.*;
-import org.geometerplus.zlibrary.core.util.ZLColor;
+import android.graphics.Color;
 
 import org.geometerplus.fbreader.fbreader.FBView;
+import org.geometerplus.zlibrary.core.options.ZLBooleanOption;
+import org.geometerplus.zlibrary.core.options.ZLColorOption;
+import org.geometerplus.zlibrary.core.options.ZLEnumOption;
 
 public class ImageOptions {
 	public final ZLColorOption ImageViewBackground;
@@ -36,7 +38,7 @@ public class ImageOptions {
 
 	public ImageOptions() {
 		ImageViewBackground =
-			new ZLColorOption("Colors", "ImageViewBackground", new ZLColor(255, 255, 255));
+			new ZLColorOption("Colors", "ImageViewBackground", Color.rgb(255, 255, 255));
 		FitToScreen =
 			new ZLEnumOption<FBView.ImageFitting>("Options", "FitImagesToScreen", FBView.ImageFitting.covers);
 		TapAction =

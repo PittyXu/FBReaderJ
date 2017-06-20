@@ -21,21 +21,11 @@ package org.geometerplus.zlibrary.ui.android.util;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-
-import org.geometerplus.zlibrary.core.util.ZLColor;
+import android.support.annotation.ColorInt;
 
 public abstract class ZLAndroidColorUtil {
-	public static int rgba(ZLColor color, int alpha) {
-		return color != null
-			? Color.argb(alpha, color.Red, color.Green, color.Blue)
-			: Color.argb(alpha, 0, 0, 0);
-	}
-
-	public static int rgb(ZLColor color) {
-		return color != null ? Color.rgb(color.Red, color.Green, color.Blue) : 0;
-	}
-
-	public static ZLColor getAverageColor(Bitmap bitmap) {
+	@ColorInt
+	public static int getAverageColor(Bitmap bitmap) {
 		final int w = Math.min(bitmap.getWidth(), 7);
 		final int h = Math.min(bitmap.getHeight(), 7);
 		long r = 0, g = 0, b = 0;
@@ -52,6 +42,6 @@ public abstract class ZLAndroidColorUtil {
 		b /= w * h;
 		r >>= 16;
 		g >>= 8;
-		return new ZLColor((int)(r & 0xFF), (int)(g & 0xFF), (int)(b & 0xFF));
+		return Color.rgb((int)(r & 0xFF), (int)(g & 0xFF), (int)(b & 0xFF));
 	}
 }

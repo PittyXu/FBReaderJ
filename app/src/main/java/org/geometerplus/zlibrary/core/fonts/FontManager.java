@@ -19,7 +19,11 @@
 
 package org.geometerplus.zlibrary.core.fonts;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FontManager {
 	private final ArrayList<List<String>> myFamilyLists = new ArrayList<List<String>>();

@@ -19,25 +19,29 @@
 
 package org.geometerplus.zlibrary.text.view;
 
-import org.geometerplus.zlibrary.core.util.ZLColor;
+
+import android.support.annotation.ColorInt;
 
 class ZLTextManualHighlighting extends ZLTextSimpleHighlighting {
 	ZLTextManualHighlighting(ZLTextView view, ZLTextPosition start, ZLTextPosition end) {
 		super(view, start, end);
 	}
 
+	@ColorInt
 	@Override
-	public ZLColor getBackgroundColor() {
+	public Integer getBackgroundColor() {
 		return View.getHighlightingBackgroundColor();
 	}
 
+	@ColorInt
 	@Override
-	public ZLColor getForegroundColor() {
+	public Integer getForegroundColor() {
 		return View.getHighlightingForegroundColor();
 	}
 
+	@ColorInt
 	@Override
-	public ZLColor getOutlineColor() {
+	public Integer getOutlineColor() {
 		return null;
 	}
 }

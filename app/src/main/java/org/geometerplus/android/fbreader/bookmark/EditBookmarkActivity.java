@@ -19,9 +19,6 @@
 
 package org.geometerplus.android.fbreader.bookmark;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,19 +26,33 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.TabHost;
+import android.widget.TextView;
 
-import yuku.ambilwarna.widget.MyAmbilWarnaPrefWidgetView;
-
+import org.geometerplus.android.fbreader.api.FBReaderIntents;
+import org.geometerplus.android.util.ViewUtil;
+import org.geometerplus.fbreader.book.Book;
+import org.geometerplus.fbreader.book.BookEvent;
+import org.geometerplus.fbreader.book.Bookmark;
+import org.geometerplus.fbreader.book.BookmarkUtil;
+import org.geometerplus.fbreader.book.HighlightingStyle;
+import org.geometerplus.fbreader.book.IBookCollection;
 import org.geometerplus.zlibrary.core.options.ZLStringOption;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.ui.android.R;
 
-import org.geometerplus.fbreader.book.*;
-
-import org.geometerplus.android.fbreader.api.FBReaderIntents;
-import org.geometerplus.android.util.ViewUtil;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EditBookmarkActivity extends Activity implements IBookCollection.Listener<Book> {
 	private final ZLResource myResource = ZLResource.resource("editBookmark");
@@ -178,8 +189,7 @@ public class EditBookmarkActivity extends Activity implements IBookCollection.Li
 			final HighlightingStyle style = getItem(position);
 
 			final CheckBox checkBox = (CheckBox)ViewUtil.findView(view, R.id.style_item_checkbox);
-			final MyAmbilWarnaPrefWidgetView colorView =
-				(MyAmbilWarnaPrefWidgetView)ViewUtil.findView(view, R.id.style_item_color);
+			final TextView colorView = (TextView) ViewUtil.findView(view, R.id.style_item_color);
 			final TextView titleView = ViewUtil.findTextView(view, R.id.style_item_title);
 			final Button button = (Button)ViewUtil.findView(view, R.id.style_item_edit_button);
 

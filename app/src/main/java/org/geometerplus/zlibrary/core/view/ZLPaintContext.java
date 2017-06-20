@@ -19,13 +19,17 @@
 
 package org.geometerplus.zlibrary.core.view;
 
-import java.util.*;
+import android.support.annotation.ColorInt;
 
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.fonts.FontEntry;
 import org.geometerplus.zlibrary.core.image.ZLImageData;
 import org.geometerplus.zlibrary.core.util.SystemInfo;
-import org.geometerplus.zlibrary.core.util.ZLColor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 abstract public class ZLPaintContext {
 	private final SystemInfo mySystemInfo;
@@ -49,8 +53,9 @@ abstract public class ZLPaintContext {
 	}
 
 	abstract public void clear(ZLFile wallpaperFile, FillMode mode);
-	abstract public void clear(ZLColor color);
-	abstract public ZLColor getBackgroundColor();
+	abstract public void clear(@ColorInt Integer color);
+	@ColorInt
+	abstract public Integer getBackgroundColor();
 
 	private boolean myResetFont = true;
 	private List<FontEntry> myFontEntries;
@@ -97,14 +102,14 @@ abstract public class ZLPaintContext {
 
 	abstract protected void setFontInternal(List<FontEntry> entries, int size, boolean bold, boolean italic, boolean underline, boolean strikeThrough);
 
-	abstract public void setTextColor(ZLColor color);
-	abstract public void setLineColor(ZLColor color);
+	abstract public void setTextColor(@ColorInt Integer color);
+	abstract public void setLineColor(@ColorInt Integer color);
 	abstract public void setLineWidth(int width);
 
-	final public void setFillColor(ZLColor color) {
+	final public void setFillColor(@ColorInt Integer color) {
 		setFillColor(color, 0xFF);
 	}
-	abstract public void setFillColor(ZLColor color, int alpha);
+	abstract public void setFillColor(@ColorInt Integer color, int alpha);
 
 	abstract public int getWidth();
 	abstract public int getHeight();

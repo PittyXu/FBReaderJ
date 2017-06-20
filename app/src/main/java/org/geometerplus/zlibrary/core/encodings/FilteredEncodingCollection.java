@@ -19,14 +19,18 @@
 
 package org.geometerplus.zlibrary.core.encodings;
 
-import java.util.*;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 import android.util.Xml;
 
 import org.geometerplus.zlibrary.core.filesystem.ZLResourceFile;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 abstract class FilteredEncodingCollection extends EncodingCollection {
 	private final List<Encoding> myEncodings = new ArrayList<Encoding>();

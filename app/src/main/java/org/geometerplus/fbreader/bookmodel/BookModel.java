@@ -19,15 +19,21 @@
 
 package org.geometerplus.fbreader.bookmodel;
 
-import java.util.*;
-
-import org.geometerplus.zlibrary.core.fonts.*;
-import org.geometerplus.zlibrary.core.image.ZLImage;
-import org.geometerplus.zlibrary.text.model.*;
-
 import org.geometerplus.fbreader.book.Book;
-import org.geometerplus.fbreader.book.BookUtil;
-import org.geometerplus.fbreader.formats.*;
+import org.geometerplus.fbreader.formats.BookReadingException;
+import org.geometerplus.fbreader.formats.BuiltinFormatPlugin;
+import org.geometerplus.fbreader.formats.FormatPlugin;
+import org.geometerplus.zlibrary.core.fonts.FileInfo;
+import org.geometerplus.zlibrary.core.fonts.FontEntry;
+import org.geometerplus.zlibrary.core.fonts.FontManager;
+import org.geometerplus.zlibrary.core.image.ZLImage;
+import org.geometerplus.zlibrary.text.model.CachedCharStorage;
+import org.geometerplus.zlibrary.text.model.ZLTextModel;
+import org.geometerplus.zlibrary.text.model.ZLTextPlainModel;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public final class BookModel {
 	public static BookModel createModel(Book book, FormatPlugin plugin) throws BookReadingException {

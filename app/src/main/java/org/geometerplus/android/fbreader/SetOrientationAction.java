@@ -22,10 +22,9 @@ package org.geometerplus.android.fbreader;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 
-import org.geometerplus.fbreader.util.Boolean3;
-
-import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
+import org.geometerplus.fbreader.util.Boolean3;
+import org.geometerplus.zlibrary.core.library.ZLibrary;
 
 class SetScreenOrientationAction extends FBAndroidAction {
 	static void setOrientation(Activity activity, String optionValue) {

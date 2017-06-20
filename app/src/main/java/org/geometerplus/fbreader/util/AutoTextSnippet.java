@@ -19,10 +19,13 @@
 
 package org.geometerplus.fbreader.util;
 
-import java.util.*;
-
-import org.geometerplus.zlibrary.text.view.*;
 import org.geometerplus.fbreader.bookmodel.FBTextKind;
+import org.geometerplus.zlibrary.text.view.ZLTextControlElement;
+import org.geometerplus.zlibrary.text.view.ZLTextElement;
+import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
+import org.geometerplus.zlibrary.text.view.ZLTextPosition;
+import org.geometerplus.zlibrary.text.view.ZLTextWord;
+import org.geometerplus.zlibrary.text.view.ZLTextWordCursor;
 
 public final class AutoTextSnippet implements TextSnippet {
 	private final ZLTextPosition myStart;

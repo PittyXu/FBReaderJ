@@ -19,27 +19,20 @@
 
 package org.geometerplus.android.fbreader.bookmark;
 
-import yuku.ambilwarna.widget.MyAmbilWarnaPrefWidgetView;
+import android.widget.TextView;
 
-import org.geometerplus.zlibrary.core.util.ZLColor;
-import org.geometerplus.zlibrary.ui.android.util.ZLAndroidColorUtil;
 import org.geometerplus.fbreader.book.HighlightingStyle;
 
 abstract class BookmarksUtil {
-	static void setupColorView(MyAmbilWarnaPrefWidgetView colorView, HighlightingStyle style) {
+	static void setupColorView(TextView colorView, HighlightingStyle style) {
 		Integer rgb = null;
 		if (style != null) {
-			final ZLColor color = style.getBackgroundColor();
-			if (color != null) {
-				rgb = ZLAndroidColorUtil.rgb(color);
-			}
+			rgb = style.getBackgroundColor();
 		}
 
 		if (rgb != null) {
-			colorView.showCross(false);
 			colorView.setBackgroundColor(rgb);
 		} else {
-			colorView.showCross(true);
 			colorView.setBackgroundColor(0);
 		}
 	}

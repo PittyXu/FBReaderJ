@@ -19,9 +19,11 @@
 
 package org.geometerplus.zlibrary.core.filesystem;
 
-import java.util.*;
-
 import org.geometerplus.zlibrary.core.library.ZLibrary;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class ZLResourceFile extends ZLFile {
 	private static Map<String,ZLResourceFile> ourCache =

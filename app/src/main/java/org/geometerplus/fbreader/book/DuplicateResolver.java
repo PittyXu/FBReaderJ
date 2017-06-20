@@ -19,12 +19,16 @@
 
 package org.geometerplus.fbreader.book;
 
-import java.util.*;
-
 import org.geometerplus.fbreader.util.ComparisonUtil;
-
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.filesystem.ZLPhysicalFile;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 class DuplicateResolver {
 	private final Map<String,List<ZLFile>> myMap =

@@ -19,14 +19,16 @@
 
 package org.geometerplus.fbreader.book;
 
-import java.util.*;
+import android.support.annotation.ColorInt;
 
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.util.RationalNumber;
-import org.geometerplus.zlibrary.core.util.ZLColor;
-
 import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
 import org.geometerplus.zlibrary.text.view.ZLTextPosition;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public abstract class BooksDatabase {
 	protected interface HistoryEvent {
@@ -126,7 +128,7 @@ public abstract class BooksDatabase {
 	protected abstract List<String> deletedBookmarkUids();
 	protected abstract void purgeBookmarks(List<String> uids);
 
-	protected HighlightingStyle createStyle(int id, long timestamp, String name, ZLColor bgColor, ZLColor fgColor) {
+	protected HighlightingStyle createStyle(int id, long timestamp, String name, @ColorInt Integer bgColor, @ColorInt Integer fgColor) {
 		return new HighlightingStyle(id, timestamp, name, bgColor, fgColor);
 	}
 	protected abstract List<HighlightingStyle> loadStyles();

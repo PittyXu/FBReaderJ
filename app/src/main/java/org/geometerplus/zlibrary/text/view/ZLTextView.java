@@ -19,19 +19,30 @@
 
 package org.geometerplus.zlibrary.text.view;
 
-import java.util.*;
+import android.graphics.Color;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.image.ZLImageData;
-import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.core.util.RationalNumber;
-import org.geometerplus.zlibrary.core.util.ZLColor;
-import org.geometerplus.zlibrary.core.view.*;
+import org.geometerplus.zlibrary.core.view.Hull;
+import org.geometerplus.zlibrary.core.view.SelectionCursor;
+import org.geometerplus.zlibrary.core.view.ZLPaintContext;
+import org.geometerplus.zlibrary.text.hyphenation.ZLTextHyphenationInfo;
+import org.geometerplus.zlibrary.text.hyphenation.ZLTextHyphenator;
+import org.geometerplus.zlibrary.text.model.ZLTextAlignmentType;
+import org.geometerplus.zlibrary.text.model.ZLTextMark;
+import org.geometerplus.zlibrary.text.model.ZLTextModel;
+import org.geometerplus.zlibrary.text.model.ZLTextParagraph;
 
-import org.geometerplus.zlibrary.text.model.*;
-import org.geometerplus.zlibrary.text.hyphenation.*;
-import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public abstract class ZLTextView extends ZLTextViewBase {
 	public interface ScrollingMode {
@@ -499,13 +510,13 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		for (ZLTextHighlighting h : hilites) {
 			int mode = Hull.DrawMode.None;
 
-			final ZLColor bgColor = h.getBackgroundColor();
+			final Integer bgColor = h.getBackgroundColor();
 			if (bgColor != null) {
 				context.setFillColor(bgColor, 128);
 				mode |= Hull.DrawMode.Fill;
 			}
 
-			final ZLColor outlineColor = h.getOutlineColor();
+			final Integer outlineColor = h.getOutlineColor();
 			if (outlineColor != null) {
 				context.setLineColor(outlineColor);
 				mode |= Hull.DrawMode.Outline;
@@ -848,7 +859,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 					final ZLTextPosition pos =
 						new ZLTextFixedPosition(info.ParagraphCursor.Index, wordIndex, 0);
 					final ZLTextHighlighting hl = getWordHilite(pos, hilites);
-					final ZLColor hlColor = hl != null ? hl.getForegroundColor() : null;
+					final Integer hlColor = hl != null ? hl.getForegroundColor() : null;
 					drawWord(
 						areaX, areaY, (ZLTextWord)element, charIndex, -1, false,
 						hlColor != null ? hlColor : getTextColor(getTextStyle().Hyperlink)
@@ -865,7 +876,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 				} else if (element instanceof ZLTextVideoElement) {
 					// TODO: draw
 					context.setLineColor(getTextColor(ZLTextHyperlink.NO_LINK));
-					context.setFillColor(new ZLColor(127, 127, 127));
+					context.setFillColor(Color.rgb(127, 127, 127));
 					final int xStart = area.XStart + 10;
 					final int xEnd = area.XEnd - 10;
 					final int yStart = area.YStart + 10;
@@ -880,7 +891,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 					final int t = yStart + (yEnd - yStart) * 2 / 6;
 					final int b = yStart + (yEnd - yStart) * 4 / 6;
 					final int c = yStart + (yEnd - yStart) / 2;
-					context.setFillColor(new ZLColor(196, 196, 196));
+					context.setFillColor(Color.rgb(196, 196, 196));
 					context.fillPolygon(new int[] { l, l, r }, new int[] { t, b, c });
 				} else if (element instanceof ExtensionElement) {
 					((ExtensionElement)element).draw(context, area);
@@ -904,7 +915,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 			final ZLTextPosition pos =
 				new ZLTextFixedPosition(info.ParagraphCursor.Index, info.EndElementIndex, 0);
 			final ZLTextHighlighting hl = getWordHilite(pos, hilites);
-			final ZLColor hlColor = hl != null ? hl.getForegroundColor() : null;
+			final Integer hlColor = hl != null ? hl.getForegroundColor() : null;
 			drawWord(
 				area.XStart, area.YEnd - context.getDescent() - getTextStyle().getVerticalAlign(metrics()),
 				word, start, len, area.AddHyphenationSign,

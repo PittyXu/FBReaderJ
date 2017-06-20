@@ -19,13 +19,15 @@
 
 package org.geometerplus.zlibrary.core.view;
 
-import java.util.List;
+import android.graphics.Color;
+import android.support.annotation.ColorInt;
 
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.fonts.FontEntry;
 import org.geometerplus.zlibrary.core.image.ZLImageData;
 import org.geometerplus.zlibrary.core.util.SystemInfo;
-import org.geometerplus.zlibrary.core.util.ZLColor;
+
+import java.util.List;
 
 final class DummyPaintContext extends ZLPaintContext {
 	DummyPaintContext() {
@@ -45,12 +47,13 @@ final class DummyPaintContext extends ZLPaintContext {
 	}
 
 	@Override
-	public void clear(ZLColor color) {
+	public void clear(@ColorInt Integer color) {
 	}
 
+	@ColorInt
 	@Override
-	public ZLColor getBackgroundColor() {
-		return new ZLColor(0, 0, 0);
+	public Integer getBackgroundColor() {
+		return Color.rgb(0, 0, 0);
 	}
 
 	@Override
@@ -58,18 +61,18 @@ final class DummyPaintContext extends ZLPaintContext {
 	}
 
 	@Override
-	public void setTextColor(ZLColor color) {
+	public void setTextColor(@ColorInt Integer color) {
 	}
 
 	@Override
-	public void setLineColor(ZLColor color) {
+	public void setLineColor(@ColorInt Integer color) {
 	}
 	@Override
 	public void setLineWidth(int width) {
 	}
 
 	@Override
-	public void setFillColor(ZLColor color, int alpha) {
+	public void setFillColor(@ColorInt Integer color, int alpha) {
 	}
 
 	@Override
