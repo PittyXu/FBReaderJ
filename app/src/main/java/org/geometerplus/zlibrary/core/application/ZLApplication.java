@@ -19,13 +19,17 @@
 
 package org.geometerplus.zlibrary.core.application;
 
-import java.util.*;
-
 import org.fbreader.util.Boolean3;
-
+import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.zlibrary.core.util.SystemInfo;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.view.ZLViewWidget;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public abstract class ZLApplication {
 	public static ZLApplication Instance() {
@@ -170,7 +174,7 @@ public abstract class ZLApplication {
 		return action != null ? action.isChecked() : Boolean3.UNDEFINED;
 	}
 
-	public final void runAction(String actionId, Object ... params) {
+	public void runAction(String actionId, Object... params) {
 		final ZLAction action = myIdToActionMap.get(actionId);
 		if (action != null) {
 			action.checkAndRun(params);

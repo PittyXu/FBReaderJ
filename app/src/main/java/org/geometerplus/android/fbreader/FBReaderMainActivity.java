@@ -111,6 +111,4 @@ public abstract class FBReaderMainActivity extends Activity {
 		});
 	}
 	/* ------ SUPER TOAST ------ */
-
-	public abstract void hideDictionarySelection();
 }

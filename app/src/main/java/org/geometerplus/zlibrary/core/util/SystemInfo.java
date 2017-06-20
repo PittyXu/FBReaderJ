@@ -21,5 +21,4 @@ package org.geometerplus.zlibrary.core.util;
 
 public interface SystemInfo {
 	String tempDirectory();
-	String networkCacheDirectory();
 }

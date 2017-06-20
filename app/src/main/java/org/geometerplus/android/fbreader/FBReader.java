@@ -24,7 +24,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -356,7 +355,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	protected void onResume() {
 		super.onResume();
 
-		myStartTimer = true;
 		Config.Instance().runOnConnect(new Runnable() {
 			public void run() {
 				final int brightnessLevel =
@@ -631,45 +629,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		getWindow().setAttributes(attrs);
 	}
 
-	private PowerManager.WakeLock myWakeLock;
-	private boolean myWakeLockToCreate;
-	private boolean myStartTimer;
-
-	public final void createWakeLock() {
-		if (myWakeLockToCreate) {
-			synchronized (this) {
-				if (myWakeLockToCreate) {
-					myWakeLockToCreate = false;
-					myWakeLock =
-						((PowerManager)getSystemService(POWER_SERVICE))
-							.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "FBReader");
-					myWakeLock.acquire();
-				}
-			}
-		}
-		if (myStartTimer) {
-			myFBReaderApp.startTimer();
-			myStartTimer = false;
-		}
-	}
-
-	private final void switchWakeLock(boolean on) {
-		if (on) {
-			if (myWakeLock == null) {
-				myWakeLockToCreate = true;
-			}
-		} else {
-			if (myWakeLock != null) {
-				synchronized (this) {
-					if (myWakeLock != null) {
-						myWakeLock.release();
-						myWakeLock = null;
-					}
-				}
-			}
-		}
-	}
-
 	private BookCollectionShadow getCollection() {
 		return (BookCollectionShadow)myFBReaderApp.Collection;
 	}
@@ -748,12 +707,5 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 				setTitle(title);
 			}
 		});
-	}
-
-	public void hideDictionarySelection() {
-		myFBReaderApp.getTextView().hideOutline();
-		myFBReaderApp.getTextView().removeHighlightings(DictionaryHighlighting.class);
-		myFBReaderApp.getViewWidget().reset();
-		myFBReaderApp.getViewWidget().repaint();
 	}
 }

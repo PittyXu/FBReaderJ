@@ -19,24 +19,47 @@
 
 package org.geometerplus.fbreader.fbreader;
 
-import java.util.*;
-
 import org.fbreader.util.ComparisonUtil;
-
-import org.geometerplus.zlibrary.core.application.*;
-import org.geometerplus.zlibrary.core.drm.FileEncryptionInfo;
+import org.geometerplus.fbreader.book.Author;
+import org.geometerplus.fbreader.book.Book;
+import org.geometerplus.fbreader.book.BookEvent;
+import org.geometerplus.fbreader.book.BookUtil;
+import org.geometerplus.fbreader.book.Bookmark;
+import org.geometerplus.fbreader.book.BookmarkQuery;
+import org.geometerplus.fbreader.book.BookmarkUtil;
+import org.geometerplus.fbreader.book.IBookCollection;
+import org.geometerplus.fbreader.bookmodel.BookModel;
+import org.geometerplus.fbreader.bookmodel.TOCTree;
+import org.geometerplus.fbreader.fbreader.options.ImageOptions;
+import org.geometerplus.fbreader.fbreader.options.MiscOptions;
+import org.geometerplus.fbreader.fbreader.options.PageTurningOptions;
+import org.geometerplus.fbreader.fbreader.options.ViewOptions;
+import org.geometerplus.fbreader.formats.BookReadingException;
+import org.geometerplus.fbreader.formats.ExternalFormatPlugin;
+import org.geometerplus.fbreader.formats.FormatPlugin;
+import org.geometerplus.fbreader.formats.PluginCollection;
+import org.geometerplus.fbreader.util.AutoTextSnippet;
+import org.geometerplus.fbreader.util.EmptyTextSnippet;
+import org.geometerplus.fbreader.util.TextSnippet;
+import org.geometerplus.zlibrary.core.application.ZLApplication;
+import org.geometerplus.zlibrary.core.application.ZLKeyBindings;
 import org.geometerplus.zlibrary.core.drm.EncryptionMethod;
-import org.geometerplus.zlibrary.core.util.*;
-
+import org.geometerplus.zlibrary.core.drm.FileEncryptionInfo;
+import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
+import org.geometerplus.zlibrary.core.util.RationalNumber;
+import org.geometerplus.zlibrary.core.util.SystemInfo;
 import org.geometerplus.zlibrary.text.hyphenation.ZLTextHyphenator;
 import org.geometerplus.zlibrary.text.model.ZLTextModel;
-import org.geometerplus.zlibrary.text.view.*;
+import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
+import org.geometerplus.zlibrary.text.view.ZLTextParagraphCursor;
+import org.geometerplus.zlibrary.text.view.ZLTextPosition;
+import org.geometerplus.zlibrary.text.view.ZLTextView;
+import org.geometerplus.zlibrary.text.view.ZLTextWordCursor;
 
-import org.geometerplus.fbreader.book.*;
-import org.geometerplus.fbreader.bookmodel.*;
-import org.geometerplus.fbreader.fbreader.options.*;
-import org.geometerplus.fbreader.formats.*;
-import org.geometerplus.fbreader.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 public final class FBReaderApp extends ZLApplication {
 	public interface ExternalFileOpener {
@@ -636,5 +659,29 @@ public final class FBReaderApp extends ZLApplication {
 			clearTextCaches();
 			getViewWidget().repaint();
 		}
+	}
+
+	@Override
+	public void runAction(final String actionId, final Object... params) {
+		if (ActionCode.INCREASE_FONT.equals(actionId)) {
+			actionChangeFontSize(2);
+		} else if (ActionCode.DECREASE_FONT.equals(actionId)) {
+			actionChangeFontSize(-2);
+		} else {
+			super.runAction(actionId, params);
+		}
+	}
+
+	/**
+	 * 改变字体大小
+	 *
+	 * @param delta
+	 *     改变范围
+	 */
+	public void actionChangeFontSize(int delta) {
+		final ZLIntegerRangeOption option = ViewOptions.getTextStyleCollection().getBaseStyle().FontSizeOption;
+		option.setValue(option.getValue() + delta);
+		clearTextCaches();
+		getViewWidget().repaint();
 	}
 }

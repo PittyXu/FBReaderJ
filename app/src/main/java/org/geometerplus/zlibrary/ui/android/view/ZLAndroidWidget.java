@@ -29,6 +29,7 @@ import android.view.*;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.application.ZLKeyBindings;
+import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 import org.geometerplus.zlibrary.core.util.SystemInfo;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.view.ZLViewWidget;
@@ -86,12 +87,6 @@ public class ZLAndroidWidget extends MainView implements ZLViewWidget, View.OnLo
 
 	@Override
 	protected void onDraw(final Canvas canvas) {
-		final Context context = getContext();
-		if (context instanceof FBReader) {
-			((FBReader)context).createWakeLock();
-		} else {
-			System.err.println("A surprise: view's context is not an FBReader");
-		}
 		super.onDraw(canvas);
 
 //		final int w = getWidth();

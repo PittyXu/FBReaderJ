@@ -216,9 +216,6 @@ public abstract class Paths {
 				return internalTempDirectoryValue(appContext);
 			}
 
-			public String networkCacheDirectory() {
-				return tempDirectory() + "/cache";
-			}
 		};
 	}
 
