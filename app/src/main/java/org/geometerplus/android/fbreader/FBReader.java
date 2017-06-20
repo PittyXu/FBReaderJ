@@ -27,7 +27,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,7 +51,6 @@ import org.geometerplus.fbreader.book.BookUtil;
 import org.geometerplus.fbreader.book.Bookmark;
 import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.fbreader.ActionCode;
-import org.geometerplus.fbreader.fbreader.DictionaryHighlighting;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.fbreader.options.ColorProfile;
 import org.geometerplus.fbreader.formats.ExternalFormatPlugin;
@@ -96,7 +94,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	private RelativeLayout myRootView;
 	private ZLAndroidWidget myMainView;
 
-	private volatile boolean myShowStatusBarFlag;
 	private String myMenuLanguage;
 
 	final DataService.Connection DataConnection = new DataService.Connection();
@@ -181,7 +178,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		});
 
 		final ZLAndroidLibrary zlibrary = getZLibrary();
-		myShowStatusBarFlag = zlibrary.ShowStatusBarOption.getValue();
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
@@ -199,11 +195,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		myFBReaderApp.initWindow();
 
 		myFBReaderApp.setExternalFileOpener(new ExternalFileOpener(this));
-
-		getWindow().setFlags(
-			WindowManager.LayoutParams.FLAG_FULLSCREEN,
-			myShowStatusBarFlag ? 0 : WindowManager.LayoutParams.FLAG_FULLSCREEN
-		);
 
 		if (myFBReaderApp.getPopupById(TextSearchPopup.ID) == null) {
 			new TextSearchPopup(myFBReaderApp);
@@ -248,26 +239,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		myFBReaderApp.addAction(ActionCode.SWITCH_TO_NIGHT_PROFILE, new SwitchProfileAction(this, myFBReaderApp, ColorProfile.NIGHT));
 
 		myOpenBookIntent = getIntent();
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		setStatusBarVisibility(true);
-		setupMenu(menu);
-
-		return super.onPrepareOptionsMenu(menu);
-	}
-
-	@Override
-	public void onOptionsMenuClosed(Menu menu) {
-		super.onOptionsMenuClosed(menu);
-		setStatusBarVisibility(false);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		setStatusBarVisibility(false);
-		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -335,12 +306,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 
 		Config.Instance().runOnConnect(new Runnable() {
 			public void run() {
-				final boolean showStatusBar = zlibrary.ShowStatusBarOption.getValue();
-				if (showStatusBar != myShowStatusBarFlag) {
-					finish();
-					startActivity(new Intent(FBReader.this, FBReader.class));
-				}
-				zlibrary.ShowStatusBarOption.saveSpecialValue();
 				myFBReaderApp.ViewOptions.ColorProfileName.saveSpecialValue();
 				SetScreenOrientationAction.setOrientation(FBReader.this, zlibrary.getOrientationOption().getValue());
 			}
@@ -594,16 +559,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 				}
 			}
 		});
-	}
-
-	private void setStatusBarVisibility(boolean visible) {
-		if (DeviceType.Instance() != DeviceType.KINDLE_FIRE_1ST_GENERATION && !myShowStatusBarFlag) {
-			if (visible) {
-				getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-			} else {
-				getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-			}
-		}
 	}
 
 	@Override

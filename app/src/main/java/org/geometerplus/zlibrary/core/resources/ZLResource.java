@@ -29,35 +29,6 @@ import org.geometerplus.zlibrary.core.options.ZLStringOption;
 abstract public class ZLResource {
 	public final String Name;
 
-	private static final List<String> ourLanguageCodes = new LinkedList<String>();
-	public static List<String> languageCodes() {
-		synchronized (ourLanguageCodes) {
-			if (ourLanguageCodes.isEmpty()) {
-				final ZLFile dir = ZLResourceFile.createResourceFile("resources/application");
-				final List<ZLFile> children = dir.children();
-				for (ZLFile file : children) {
-					final String name = file.getShortName();
-					final String postfix = ".xml";
-					if (name.endsWith(postfix) && !"neutral.xml".equals(name)) {
-						ourLanguageCodes.add(name.substring(0, name.length() - postfix.length()));
-					}
-				}
-			}
-		}
-		return Collections.unmodifiableList(ourLanguageCodes);
-	}
-
-	public static List<Language> interfaceLanguages() {
-		final List<Language> allLanguages = new LinkedList<Language>();
-		final ZLResource resource = ZLResource.resource("language-self");
-		for (String c : languageCodes()) {
-			allLanguages.add(new Language(c, resource));
-		}
-		Collections.sort(allLanguages);
-		allLanguages.add(0, new Language(Language.SYSTEM_CODE));
-		return allLanguages;
-	}
-
 	private static final ZLStringOption ourLanguageOption =
 		new ZLStringOption("LookNFeel", "Language", Language.SYSTEM_CODE);
 	public static ZLStringOption getLanguageOption() {

@@ -78,110 +78,6 @@
 		<node name="uploadAgain" value="重新上传"/>
 		<node name="tryAgain" value="重新尝试"/>
 	</node>
-	<node name="networkLibrary" value="FBReader 网络书库">
-		<node name="sync" value="FBReader® 书籍网络">
-			<node name="summary" value="我的个人类目"/>
-		</node>
-		<node name="byAuthor" value="作者">
-			<node name="summary" value="按作者排序"/>
-		</node>
-		<node name="byTitle" value="按书名">
-			<node name="summary" value="按书名排序"/>
-		</node>
-		<node name="byDate" value="按日期">
-			<node name="summary" value="按购买日期排序"/>
-		</node>
-		<node name="bySeries" value="按系列">
-			<node name="summary" value="按系列排序"/>
-		</node>
-		<node name="search" value="搜索">
-			<node name="summary" value="在 %s 上搜索图书"/>
-			<node name="summaryAllCatalogs" value="搜索书库"/>
-			<node name="summaryInProgress" value="搜索中…"/>
-		</node>
-		<node name="found" value="搜索结果">
-			<node name="summary" value="搜索结果: %s"/>
-		</node>
-		<node name="recent" value="最近书库">
-			<node name="summary" value="你最近访问过的书库"/>
-		</node>
-		<node name="openCatalog" value="打开书库"/>
-		<node name="networkSearch" value="搜索"/>
-		<node name="showResults" value="显示结果"/>
-		<node name="showBooks" value="显示书籍"/>
-		<node name="download" value="下载"/>
-		<node name="read" value="阅读"/>
-		<node name="delete" value="删除"/>
-		<node name="readDemo" value="试读"/>
-		<node name="deleteDemo" value="删除试读本"/>
-		<node name="downloadDemo" value="下载试读本"/>
-		<node name="buy" value="购买(%s)"/>
-		<node name="addToBasket" value="添加到购物篮"/>
-		<node name="removeFromBasket" value="从购物篮中删除"/>
-		<node name="openBasket" value="打开购物篮"/>
-		<node name="clearBasket" value="清空购物篮"/>
-		<node name="buyAllBooks" value="购买所有书籍"/>
-		<node name="openInBrowser" value="在浏览器中打开"/>
-		<node name="stopLoading" value="停止加载"/>
-		<node name="stopSearching" value="停止搜索"/>
-		<node name="signIn" value="登录"/>
-		<node name="signOut" value="退出 (%s)"/>
-		<node name="signUp" value="注册"/>
-		<node name="quickBuy" value="快速购买"/>
-		<node name="topup" value="重新输入账号(目前: %s)"/>
-		<node name="topupTitle" value="重新输入账号"/>
-		<node name="topupViaBrowser" value="在浏览器中打开页面"/>
-		<node name="authorisationMenuTitle" value="选择操作"/>
-		<node name="topupSummary" value="当前: %s"/>
-		<node name="basket" value="购物篮"/>
-		<node name="basketSummaryEmpty" value="没有书籍"/>
-		<node name="basketSummaryCountOnly" value="%0 本书"/>
-		<node name="basketSummary" value="%0 本书 (%1)"/>
-		<node name="alreadyDownloading" value="正在下载"/>
-		<node name="alreadyDownloadingDemo" value="正在下载试读本"/>
-		<node name="stoppingCatalogLoading" value="停止加载"/>
-		<node name="stoppingNetworkSearch" value="停止搜索"/>
-		<node name="editCustomCatalog" value="编辑书库目录"/>
-		<node name="removeCustomCatalog" value="移除书库"/>
-		<node name="addCustomCatalog" value="增加书库"/>
-		<node name="addCustomCatalogSummary" value="手工添加自有的OPDS书库"/>
-		<node name="disableCatalog" value="停用书库"/>
-		<node name="confirmQuestions">
-			<node name="read" value="是否本地阅读"/>
-			<node name="download" value="是否下载本图书?"/>
-			<node name="readDemo" value="是否试读?"/>
-			<node name="downloadDemo" value="是否下载试读本?"/>
-			<node name="buy" value="是否购买本书? (%s)"/>
-			<node name="openInBrowser" value="是否在浏览器中打开?"/>
-		</node>
-		<node name="downloadingCatalogs" value="书库目录下载"/>
-		<!-- used as notification title -->
-		<node name="searchingNetwork" value="搜索书库"/>
-		<!-- used as notification title -->
-		<node name="addCatalog">
-			<node name="title" value="添加书库"/>
-			<node name="editUrl" value="手动输入URL"/>
-		</node>
-		<node name="manageCatalogs" value="管理书库">
-			<node name="summary" value="配置你的书库列表"/>
-			<node name="enabled" value="启用"/>
-			<node name="disabled" value="停用"/>
-		</node>
-		<node name="menu">
-			<node name="openRoot" value="根书库"/>
-			<node name="networkSearch" value="网络搜索"/>
-			<node name="reload" value="重新加载"/>
-			<node name="signIn" value="登录"/>
-			<node name="signUp" value="注册"/>
-			<node name="signOut" value="退出 (%s)"/>
-			<node name="topup" value="重新输入账号"/>
-			<node name="addCustomCatalog" value="添加书库"/>
-			<node name="refreshCatalogsList" value="刷新书库"/>
-			<node name="manageCatalogs" value="管理书库"/>
-			<node name="clearBasket" value="清空购物篮"/>
-			<node name="buyAllBooks" value="购买所有图书"/>
-		</node>
-	</node>
 	<node name="buyBook">
 		<node name="title" value="购买书籍"/>
 		<node name="titleSeveralBooks" value="购买书籍"/>
@@ -319,8 +215,6 @@
 		<node name="changeFontSize" value="缩放"/>
 		<node name="toggleFullscreen" value="全屏"/>
 		<node name="bookmarks" value="我的书签"/>
-		<node name="help" value="帮助"/>
-		<node name="plugins" value="安装插件"/>
 		<node name="gotoPageNumber" value="翻到页码"/>
 	</node>
 	<node name="BookInfo">
@@ -768,35 +662,6 @@
 				<node name="custom" value="定制…"/>
 			</node>
 		</node>
-		<node name="dictionary" value="词典 &amp; 译者">
-			<node name="summary" value="翻译设定"/>
-			<node name="dictionary" value="查找单个词汇于"/>
-			<node name="translator" value="翻译短语通过"/>
-			<node name="translateOffline" value="Google 翻译: 使用离线翻译 (如果已安装)">
-				<node name="always" value="总是"/>
-				<node name="onError" value="自动, 如果在线翻译失败"/>
-				<node name="ask" value="寻问, 如果在线翻译失败"/>
-				<node name="never" value="永不"/>
-			</node>
-			<node name="translationToastDuration" value="显示翻译弹出时长"/>
-			<node name="errorToastDuration" value="显示错误消息时长"/>
-			<node name="sourceLanguage" value="译自语言">
-				<node name="detect" value="自动检测语言"/>
-			</node>
-			<node name="targetLanguage" value="翻译为">
-				<node name="any" value="所有语言"/>
-			</node>
-			<node name="longTapAction" value="长按动作设定">
-				<node name="doNothing" value="长按不做任何事"/>
-				<node name="selectSingleWord" value="长按选择词语"/>
-				<node name="startSelecting" value="长按选择内容"/>
-				<node name="openDictionary" value="长按选择词语，放开后打开字典"/>
-			</node>
-			<node name="navigateOverAllWords" value="导航键访问词句设定">
-				<node name="summaryOn" value="导航键访问所有的词句"/>
-				<node name="summaryOff" value="导航键仅访问超链接词句"/>
-			</node>
-		</node>
 		<node name="images" value="图像设定">
 			<node name="summary" value="图像显示选项"/>
 			<node name="backgroundColor" value="图像显示时的背景颜色"/>
@@ -864,33 +729,6 @@
 				<node name="cancelMenu" value="显示取消菜单"/>
 				<node name="none" value="不做任何事"/>
 			</node>
-		</node>
-		<node name="tips" value="小提示">
-			<node name="summary" value="每日提示设置"/>
-			<node name="showTips" value="显示提示">
-				<node name="summaryOn" value="显示每日提示"/>
-				<node name="summaryOff" value="不显示"/>
-			</node>
-		</node>
-		<node name="about" value="关于FBReader">
-			<node name="summary" value="版本信息, 联系人"/>
-			<node name="version" value="版本"/>
-			<node name="site" value="访问我们的网站">
-				<node name="url" value="https://fbreader.org/"/>
-			</node>
-			<node name="email" value="给我们发送邮件">
-				<node name="url" value="mailto:contact@fbreader.org"/>
-			</node>
-			<node name="googleplus" value="加入 FBReader Google+ 社区">
-				<node name="url" value="https://plus.google.com/communities/115894899404862312312"/>
-			</node>
-			<node name="twitter" value="关注我们的twitter">
-				<node name="url" value="https://twitter.com/fbreader"/>
-			</node>
-			<node name="facebook" value="关注我们的Facebook">
-				<node name="url" value="https://facebook.com/fbreader"/>
-			</node>
-			<node name="thirdParty" value="第三方库"/>
 		</node>
 		<node name="eink" value="电子墨水屏">
 			<node name="summary" value="电子墨水屏的具体选项"/>

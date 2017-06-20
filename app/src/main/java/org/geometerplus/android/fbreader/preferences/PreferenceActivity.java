@@ -89,26 +89,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
         String.valueOf(new DecimalFormatSymbols(Locale.getDefault()).getDecimalSeparator());
 
     final Screen appearanceScreen = createPreferenceScreen("appearance");
-    appearanceScreen.addPreference(new LanguagePreference(
-        this, appearanceScreen.Resource.getResource("language"), ZLResource.interfaceLanguages()
-    ) {
-      @Override
-      protected void init() {
-        setInitialValue(ZLResource.getLanguageOption().getValue());
-      }
-
-      @Override
-      protected void setLanguage(String code) {
-        final ZLStringOption languageOption = ZLResource.getLanguageOption();
-        if (!code.equals(languageOption.getValue())) {
-          languageOption.setValue(code);
-          finish();
-          startActivity(new Intent(
-              Intent.ACTION_VIEW, Uri.parse("fbreader-action:preferences#appearance")
-          ));
-        }
-      }
-    });
     appearanceScreen.addPreference(new ZLStringChoicePreference(
         this, appearanceScreen.Resource.getResource("screenOrientation"),
         androidLibrary.getOrientationOption(), androidLibrary.allOrientations()
@@ -131,7 +111,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
         androidLibrary.ScreenBrightnessLevelOption.setValue(isChecked() ? myLevel : 0);
       }
     });
-    appearanceScreen.addOption(androidLibrary.ShowStatusBarOption, "showStatusBar");
     appearanceScreen.addOption(androidLibrary.DisableButtonLightsOption, "disableButtonLights");
 
     if (DeviceType.Instance().isEInk()) {

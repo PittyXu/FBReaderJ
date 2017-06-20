@@ -42,15 +42,9 @@ import org.geometerplus.zlibrary.core.options.*;
 import org.geometerplus.android.util.DeviceType;
 
 public final class ZLAndroidLibrary extends ZLibrary {
-	public final ZLBooleanOption ShowStatusBarOption = new ZLBooleanOption("LookNFeel", "ShowStatusBar", false);
-	public final ZLBooleanOption OldShowActionBarOption = new ZLBooleanOption("LookNFeel", "ShowActionBar", true);
-	public final ZLBooleanOption ShowActionBarOption = new ZLBooleanOption("LookNFeel", "ShowActionBarNew", false);
 	public final ZLBooleanOption EnableFullscreenModeOption = new ZLBooleanOption("LookNFeel", "FullscreenMode", true);
 	public final ZLBooleanOption DisableButtonLightsOption = new ZLBooleanOption("LookNFeel", "DisableButtonLights", !DeviceType.Instance().hasButtonLightsBug());
 	{
-		ShowStatusBarOption.setSpecialName("statusBar");
-		OldShowActionBarOption.setSpecialName("actionBar");
-		ShowActionBarOption.setSpecialName("actionBarNew");
 		EnableFullscreenModeOption.setSpecialName("enableFullscreen");
 		DisableButtonLightsOption.setSpecialName("disableButtonLights");
 	}
