@@ -513,15 +513,6 @@ public final class FBView extends ZLTextView {
 				info.append("%");
 			}
 
-			if (footerOptions.ShowClock.getValue()) {
-				maybeAddSeparator(info, separator);
-				info.append(ZLibrary.Instance().getCurrentTimeString());
-			}
-			if (footerOptions.ShowBattery.getValue()) {
-				maybeAddSeparator(info, separator);
-				info.append(myReader.getBatteryLevel());
-				info.append("%");
-			}
 			return info.toString();
 		}
 

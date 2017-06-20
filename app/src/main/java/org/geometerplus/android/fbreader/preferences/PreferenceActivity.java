@@ -131,18 +131,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
         androidLibrary.ScreenBrightnessLevelOption.setValue(isChecked() ? myLevel : 0);
       }
     });
-    appearanceScreen.addPreference(new BatteryLevelToTurnScreenOffPreference(
-        this,
-        androidLibrary.BatteryLevelToTurnScreenOffOption,
-        appearanceScreen.Resource.getResource("dontTurnScreenOff")
-    ));
-    /*
-		appearanceScreen.addPreference(new ZLBooleanPreference(
-			this,
-			androidLibrary.DontTurnScreenOffDuringChargingOption,
-			appearanceScreen.Resource.getResource("dontTurnScreenOffDuringCharging")
-		));
-		 */
     appearanceScreen.addOption(androidLibrary.ShowStatusBarOption, "showStatusBar");
     appearanceScreen.addOption(androidLibrary.DisableButtonLightsOption, "disableButtonLights");
 
@@ -427,8 +415,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
     }));
     tocPreferences.add(statusLineScreen.addOption(footerOptions.MaxTOCMarks, "tocMarksMaxNumber"));
     footerPreferences.add(statusLineScreen.addOption(footerOptions.ShowProgress, "showProgress"));
-    footerPreferences.add(statusLineScreen.addOption(footerOptions.ShowClock, "showClock"));
-    footerPreferences.add(statusLineScreen.addOption(footerOptions.ShowBattery, "showBattery"));
     footerPreferences.add(statusLineScreen.addPreference(new FontPreference(
         this, statusLineScreen.Resource.getResource("font"),
         footerOptions.Font, false

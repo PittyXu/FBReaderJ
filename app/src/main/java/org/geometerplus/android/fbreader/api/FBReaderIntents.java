@@ -36,8 +36,6 @@ public abstract class FBReaderIntents {
 		String BOOKMARKS                        = "android.fbreader.action.BOOKMARKS";
 		String EXTERNAL_BOOKMARKS               = "android.fbreader.action.EXTERNAL_BOOKMARKS";
 		String PREFERENCES                      = "android.fbreader.action.PREFERENCES";
-		String PLUGIN                           = "android.fbreader.action.PLUGIN";
-		String PLUGIN_CRASH                     = "android.fbreader.action.PLUGIN_CRASH";
 		String EDIT_STYLES                      = "android.fbreader.action.EDIT_STYLES";
 		String EDIT_BOOKMARK                    = "android.fbreader.action.EDIT_BOOKMARK";
 		String SWITCH_YOTA_SCREEN               = "android.fbreader.action.SWITCH_YOTA_SCREEN";

@@ -21,7 +21,6 @@ package org.geometerplus.android.fbreader;
 
 import android.annotation.TargetApi;
 import android.app.SearchManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,7 +40,6 @@ import org.geometerplus.android.fbreader.api.ApiListener;
 import org.geometerplus.android.fbreader.api.ApiServerImplementation;
 import org.geometerplus.android.fbreader.api.FBReaderIntents;
 import org.geometerplus.android.fbreader.api.MenuNode;
-import org.geometerplus.android.fbreader.api.PluginApi;
 import org.geometerplus.android.fbreader.formatPlugin.PluginUtil;
 import org.geometerplus.android.fbreader.httpd.DataService;
 import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
@@ -66,16 +64,13 @@ import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.core.options.Config;
 import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.core.view.ZLViewWidget;
-import org.geometerplus.zlibrary.text.view.ZLTextRegion;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 import org.geometerplus.zlibrary.ui.android.view.AndroidFontUtil;
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -108,36 +103,9 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	final DataService.Connection DataConnection = new DataService.Connection();
 
 	volatile boolean IsPaused = false;
-	private volatile long myResumeTimestamp;
 	volatile Runnable OnResumeAction = null;
 
 	private Intent myOpenBookIntent = null;
-
-	private static final String PLUGIN_ACTION_PREFIX = "___";
-	private final List<PluginApi.ActionInfo> myPluginActions =
-		new LinkedList<PluginApi.ActionInfo>();
-	private final BroadcastReceiver myPluginInfoReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			final ArrayList<PluginApi.ActionInfo> actions = getResultExtras(true).<PluginApi.ActionInfo>getParcelableArrayList(PluginApi.PluginInfo.KEY);
-			if (actions != null) {
-				synchronized (myPluginActions) {
-					int index = 0;
-					while (index < myPluginActions.size()) {
-						myFBReaderApp.removeAction(PLUGIN_ACTION_PREFIX + index++);
-					}
-					myPluginActions.addAll(actions);
-					index = 0;
-					for (PluginApi.ActionInfo info : myPluginActions) {
-						myFBReaderApp.addAction(
-							PLUGIN_ACTION_PREFIX + index++,
-							new RunPluginAction(FBReader.this, myFBReaderApp, info.getId())
-						);
-					}
-				}
-			}
-		}
-	};
 
 	private synchronized void openBook(Intent intent, final Runnable action, boolean force) {
 		if (!force && myBook != null) {
@@ -189,21 +157,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 			}
 		}
 		return null;
-	}
-
-	private Runnable getPostponedInitAction() {
-		return new Runnable() {
-			public void run() {
-				runOnUiThread(new Runnable() {
-					public void run() {
-						final Intent intent = getIntent();
-						if (intent != null && FBReaderIntents.Action.PLUGIN.equals(intent.getAction())) {
-							new RunPluginAction(FBReader.this, myFBReaderApp, intent.getData()).run();
-						}
-					}
-				});
-			}
-		};
 	}
 
 	@Override
@@ -295,21 +248,7 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		myFBReaderApp.addAction(ActionCode.SWITCH_TO_DAY_PROFILE, new SwitchProfileAction(this, myFBReaderApp, ColorProfile.DAY));
 		myFBReaderApp.addAction(ActionCode.SWITCH_TO_NIGHT_PROFILE, new SwitchProfileAction(this, myFBReaderApp, ColorProfile.NIGHT));
 
-		final Intent intent = getIntent();
-		final String action = intent.getAction();
-
-		myOpenBookIntent = intent;
-		if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0) {
-			if (FBReaderIntents.Action.PLUGIN_CRASH.equals(action)) {
-				myFBReaderApp.ExternalBook = null;
-				myOpenBookIntent = null;
-				getCollection().bindToService(this, new Runnable() {
-					public void run() {
-						myFBReaderApp.openBook(null, null, null);
-					}
-				});
-			}
-		}
+		myOpenBookIntent = getIntent();
 	}
 
 	@Override
@@ -360,8 +299,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 					}
 				}
 			}
-		} else if (FBReaderIntents.Action.PLUGIN.equals(action)) {
-			new RunPluginAction(this, myFBReaderApp, data).run();
 		} else if (Intent.ACTION_SEARCH.equals(action)) {
 			final String pattern = intent.getStringExtra(SearchManager.QUERY);
 			final Runnable runnable = new Runnable() {
@@ -386,20 +323,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 				}
 			};
 			UIUtil.wait("search", runnable, this);
-		} else if (FBReaderIntents.Action.PLUGIN_CRASH.equals(intent.getAction())) {
-			final Book book = FBReaderIntents.getBookExtra(intent, myFBReaderApp.Collection);
-			myFBReaderApp.ExternalBook = null;
-			myOpenBookIntent = null;
-			getCollection().bindToService(this, new Runnable() {
-				public void run() {
-					final BookCollectionShadow collection = getCollection();
-					Book b = collection.getRecentBook(0);
-					if (collection.sameBook(b, book)) {
-						b = collection.getRecentBook(1);
-					}
-					myFBReaderApp.openBook(b, null, null);
-				}
-			});
 		} else {
 			super.onNewIntent(intent);
 		}
@@ -408,20 +331,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	@Override
 	protected void onStart() {
 		super.onStart();
-
-		getCollection().bindToService(this, new Runnable() {
-			public void run() {
-				new Thread() {
-					public void run() {
-						getPostponedInitAction().run();
-					}
-				}.start();
-
-				myFBReaderApp.getViewWidget().repaint();
-			}
-		});
-
-		initPluginActions();
 
 		final ZLAndroidLibrary zlibrary = getZLibrary();
 
@@ -441,35 +350,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		((PopupPanel)myFBReaderApp.getPopupById(TextSearchPopup.ID)).setPanelInfo(this, myRootView);
 		((NavigationPopup)myFBReaderApp.getPopupById(NavigationPopup.ID)).setPanelInfo(this, myRootView);
 		((PopupPanel)myFBReaderApp.getPopupById(SelectionPopup.ID)).setPanelInfo(this, myRootView);
-	}
-
-	@Override
-	public void onWindowFocusChanged(boolean hasFocus) {
-		super.onWindowFocusChanged(hasFocus);
-		switchWakeLock(hasFocus &&
-			getZLibrary().BatteryLevelToTurnScreenOffOption.getValue() <
-			myFBReaderApp.getBatteryLevel()
-		);
-	}
-
-	private void initPluginActions() {
-		synchronized (myPluginActions) {
-			int index = 0;
-			while (index < myPluginActions.size()) {
-				myFBReaderApp.removeAction(PLUGIN_ACTION_PREFIX + index++);
-			}
-			myPluginActions.clear();
-		}
-
-		sendOrderedBroadcast(
-			new Intent(PluginApi.ACTION_REGISTER),
-			null,
-			myPluginInfoReceiver,
-			null,
-			RESULT_OK,
-			null,
-			null
-		);
 	}
 
 	@Override
@@ -502,9 +382,7 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 			}
 		});
 
-		registerReceiver(myBatteryInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 		IsPaused = false;
-		myResumeTimestamp = System.currentTimeMillis();
 		if (OnResumeAction != null) {
 			final Runnable action = OnResumeAction;
 			OnResumeAction = null;
@@ -541,12 +419,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	protected void onPause() {
 
 		IsPaused = true;
-
-		try {
-			unregisterReceiver(myBatteryInfoReceiver);
-		} catch (IllegalArgumentException e) {
-			// do nothing, this exception means that myBatteryInfoReceiver was not registered
-		}
 
 		myFBReaderApp.stopTimer();
 		if (getZLibrary().DisableButtonLightsOption.getValue()) {
@@ -667,10 +539,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		myMenuItemMap.put(menuItem, actionId);
 	}
 
-	private void addMenuItem(Menu menu, String actionId, String name) {
-		addMenuItem(menu, actionId, null, name);
-	}
-
 	private void addMenuItem(Menu menu, String actionId, int iconId) {
 		addMenuItem(menu, actionId, iconId, null);
 	}
@@ -704,19 +572,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 
 		menu.clear();
 		fillMenu(menu, MenuData.topLevelNodes());
-		synchronized (myPluginActions) {
-			int index = 0;
-			for (PluginApi.ActionInfo info : myPluginActions) {
-				if (info instanceof PluginApi.MenuActionInfo) {
-					addMenuItem(
-						menu,
-						PLUGIN_ACTION_PREFIX + index++,
-						((PluginApi.MenuActionInfo)info).MenuItemName
-					);
-				}
-			}
-		}
-
 		refresh();
 	}
 
@@ -744,7 +599,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	}
 
 	private void setStatusBarVisibility(boolean visible) {
-		final ZLAndroidLibrary zlibrary = getZLibrary();
 		if (DeviceType.Instance() != DeviceType.KINDLE_FIRE_1ST_GENERATION && !myShowStatusBarFlag) {
 			if (visible) {
 				getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
@@ -816,17 +670,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		}
 	}
 
-	private BroadcastReceiver myBatteryInfoReceiver = new BroadcastReceiver() {
-		public void onReceive(Context context, Intent intent) {
-			final int level = intent.getIntExtra("level", 100);
-			setBatteryLevel(level);
-			switchWakeLock(
-				hasWindowFocus() &&
-				getZLibrary().BatteryLevelToTurnScreenOffOption.getValue() < level
-			);
-		}
-	};
-
 	private BookCollectionShadow getCollection() {
 		return (BookCollectionShadow)myFBReaderApp.Collection;
 	}
@@ -845,15 +688,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	@Override
 	public FBReaderApp.SynchronousExecutor createExecutor(String key) {
 		return UIUtil.createExecutor(this, key);
-	}
-
-	private int myBatteryLevel;
-	@Override
-	public int getBatteryLevel() {
-		return myBatteryLevel;
-	}
-	private void setBatteryLevel(int percent) {
-		myBatteryLevel = percent;
 	}
 
 	@Override
@@ -914,16 +748,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 				setTitle(title);
 			}
 		});
-	}
-
-	public void outlineRegion(ZLTextRegion.Soul soul) {
-		myFBReaderApp.getTextView().outlineRegion(soul);
-		myFBReaderApp.getViewWidget().repaint();
-	}
-
-	public void hideOutline() {
-		myFBReaderApp.getTextView().hideOutline();
-		myFBReaderApp.getViewWidget().repaint();
 	}
 
 	public void hideDictionarySelection() {

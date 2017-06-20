@@ -54,8 +54,6 @@ public final class ZLAndroidLibrary extends ZLibrary {
 		EnableFullscreenModeOption.setSpecialName("enableFullscreen");
 		DisableButtonLightsOption.setSpecialName("disableButtonLights");
 	}
-	public final ZLIntegerRangeOption BatteryLevelToTurnScreenOffOption = new ZLIntegerRangeOption("LookNFeel", "BatteryLevelToTurnScreenOff", 0, 100, 50);
-	public final ZLBooleanOption DontTurnScreenOffDuringChargingOption = new ZLBooleanOption("LookNFeel", "DontTurnScreenOffDuringCharging", true);
 	public final ZLIntegerRangeOption ScreenBrightnessLevelOption = new ZLIntegerRangeOption("LookNFeel", "ScreenBrightnessLevel", 0, 100, 0);
 
 	private final Application myApplication;
