@@ -177,8 +177,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 			}
 		});
 
-		final ZLAndroidLibrary zlibrary = getZLibrary();
-
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
 		myRootView = (RelativeLayout)findViewById(R.id.root_view);
@@ -322,17 +320,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 
 		Config.Instance().runOnConnect(new Runnable() {
 			public void run() {
-				final int brightnessLevel =
-					getZLibrary().ScreenBrightnessLevelOption.getValue();
-				if (brightnessLevel != 0) {
-					getViewWidget().setScreenBrightness(brightnessLevel);
-				} else {
-					setScreenBrightnessAuto();
-				}
-				if (getZLibrary().DisableButtonLightsOption.getValue()) {
-					setButtonLight(false);
-				}
-
 				getCollection().bindToService(FBReader.this, new Runnable() {
 					public void run() {
 						final BookModel model = myFBReaderApp.Model;
@@ -384,9 +371,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		IsPaused = true;
 
 		myFBReaderApp.stopTimer();
-		if (getZLibrary().DisableButtonLightsOption.getValue()) {
-			setButtonLight(true);
-		}
 		myFBReaderApp.onWindowClosing();
 
 		super.onPause();
@@ -569,19 +553,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		return (myMainView != null && myMainView.onKeyUp(keyCode, event)) || super.onKeyUp(keyCode, event);
-	}
-
-	private void setButtonLight(boolean enabled) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-			setButtonLightInternal(enabled);
-		}
-	}
-
-	@TargetApi(Build.VERSION_CODES.FROYO)
-	private void setButtonLightInternal(boolean enabled) {
-		final WindowManager.LayoutParams attrs = getWindow().getAttributes();
-		attrs.buttonBrightness = enabled ? -1.0f : 0.0f;
-		getWindow().setAttributes(attrs);
 	}
 
 	private BookCollectionShadow getCollection() {

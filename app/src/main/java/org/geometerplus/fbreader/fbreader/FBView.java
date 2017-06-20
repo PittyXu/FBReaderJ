@@ -77,10 +77,6 @@ public final class FBView extends ZLTextView {
 		}
 	}
 
-	private int myStartY;
-	private boolean myIsBrightnessAdjustmentInProgress;
-	private int myStartBrightness;
-
 	private TapZoneMap myZoneMap;
 
 	private TapZoneMap getZoneMap() {
@@ -171,13 +167,6 @@ public final class FBView extends ZLTextView {
 			return;
 		}
 
-		if (myReader.MiscOptions.AllowScreenBrightnessAdjustment.getValue() && x < getContextWidth() / 10) {
-			myIsBrightnessAdjustmentInProgress = true;
-			myStartY = y;
-			myStartBrightness = myReader.getViewWidget().getScreenBrightness();
-			return;
-		}
-
 		startManualScrolling(x, y);
 	}
 
@@ -208,15 +197,8 @@ public final class FBView extends ZLTextView {
 		}
 
 		synchronized (this) {
-			if (myIsBrightnessAdjustmentInProgress) {
-				if (x >= getContextWidth() / 5) {
-					myIsBrightnessAdjustmentInProgress = false;
-					startManualScrolling(x, y);
-				} else {
-					final int delta = (myStartBrightness + 30) * (myStartY - y) / getContextHeight();
-					myReader.getViewWidget().setScreenBrightness(myStartBrightness + delta);
-					return;
-				}
+			if (x >= getContextWidth() / 5) {
+				startManualScrolling(x, y);
 			}
 
 			if (isFlickScrollingEnabled()) {
@@ -230,8 +212,6 @@ public final class FBView extends ZLTextView {
 		final SelectionCursor.Which cursor = getSelectionCursorInMovement();
 		if (cursor != null) {
 			releaseSelectionCursor();
-		} else if (myIsBrightnessAdjustmentInProgress) {
-			myIsBrightnessAdjustmentInProgress = false;
 		} else if (isFlickScrollingEnabled()) {
 			myReader.getViewWidget().startAnimatedScrolling(
 				x, y, myReader.PageTurningOptions.AnimationSpeed.getValue()

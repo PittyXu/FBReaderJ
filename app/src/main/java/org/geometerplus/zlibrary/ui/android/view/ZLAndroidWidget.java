@@ -562,9 +562,4 @@ public class ZLAndroidWidget extends MainView implements ZLViewWidget, View.OnLo
 		final ZLView.FooterArea footer = ZLApplication.Instance().getCurrentView().getFooterArea();
 		return footer != null ? getHeight() - footer.getHeight() : getHeight();
 	}
-
-	@Override
-	protected void updateColorLevel() {
-		ViewUtil.setColorLevel(myPaint, myColorLevel);
-	}
 }

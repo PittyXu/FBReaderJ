@@ -47,12 +47,9 @@ import java.util.TreeSet;
 
 public final class ZLAndroidLibrary extends ZLibrary {
 	public final ZLBooleanOption EnableFullscreenModeOption = new ZLBooleanOption("LookNFeel", "FullscreenMode", true);
-	public final ZLBooleanOption DisableButtonLightsOption = new ZLBooleanOption("LookNFeel", "DisableButtonLights", !DeviceType.Instance().hasButtonLightsBug());
 	{
 		EnableFullscreenModeOption.setSpecialName("enableFullscreen");
-		DisableButtonLightsOption.setSpecialName("disableButtonLights");
 	}
-	public final ZLIntegerRangeOption ScreenBrightnessLevelOption = new ZLIntegerRangeOption("LookNFeel", "ScreenBrightnessLevel", 0, 100, 0);
 
 	private final Application myApplication;
 

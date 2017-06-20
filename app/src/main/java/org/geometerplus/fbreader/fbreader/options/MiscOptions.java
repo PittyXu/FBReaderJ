@@ -26,7 +26,6 @@ import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 import org.geometerplus.zlibrary.core.options.ZLStringOption;
 
 public class MiscOptions {
-	public final ZLBooleanOption AllowScreenBrightnessAdjustment;
 	public final ZLStringOption TextSearchPattern;
 
 	public final ZLBooleanOption EnableDoubleTap;
@@ -45,8 +44,6 @@ public class MiscOptions {
 	public final ZLEnumOption<DurationEnum> FootnoteToastDuration;
 
 	public MiscOptions() {
-		AllowScreenBrightnessAdjustment =
-			new ZLBooleanOption("LookNFeel", "AllowScreenBrightnessAdjustment", true);
 		TextSearchPattern =
 			new ZLStringOption("TextSearch", "Pattern", "");
 

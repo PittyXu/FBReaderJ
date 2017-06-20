@@ -96,20 +96,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
         viewOptions.TwoColumnView,
         appearanceScreen.Resource.getResource("twoColumnView")
     ));
-    appearanceScreen.addPreference(new ZLBooleanPreference(
-        this,
-        miscOptions.AllowScreenBrightnessAdjustment,
-        appearanceScreen.Resource.getResource("allowScreenBrightnessAdjustment")
-    ) {
-      private final int myLevel = androidLibrary.ScreenBrightnessLevelOption.getValue();
-
-      @Override
-      protected void onClick() {
-        super.onClick();
-        androidLibrary.ScreenBrightnessLevelOption.setValue(isChecked() ? myLevel : 0);
-      }
-    });
-    appearanceScreen.addOption(androidLibrary.DisableButtonLightsOption, "disableButtonLights");
 
     if (DeviceType.Instance().isEInk()) {
       final EInkOptions einkOptions = new EInkOptions();

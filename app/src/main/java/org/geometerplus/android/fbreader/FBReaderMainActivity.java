@@ -47,25 +47,6 @@ public abstract class FBReaderMainActivity extends Activity {
 		return ((ZLAndroidApplication)getApplication()).library();
 	}
 
-	/* ++++++ SCREEN BRIGHTNESS ++++++ */
-	protected void setScreenBrightnessAuto() {
-		final WindowManager.LayoutParams attrs = getWindow().getAttributes();
-		attrs.screenBrightness = -1.0f;
-		getWindow().setAttributes(attrs);
-	}
-
-	public void setScreenBrightnessSystem(float level) {
-		final WindowManager.LayoutParams attrs = getWindow().getAttributes();
-		attrs.screenBrightness = level;
-		getWindow().setAttributes(attrs);
-	}
-
-	public float getScreenBrightnessSystem() {
-		final float level = getWindow().getAttributes().screenBrightness;
-		return level >= 0 ? level : .5f;
-	}
-	/* ------ SCREEN BRIGHTNESS ------ */
-
 	/* ++++++ SUPER TOAST ++++++ */
 	public boolean isToastShown() {
 		final SuperActivityToast toast = myToast;
