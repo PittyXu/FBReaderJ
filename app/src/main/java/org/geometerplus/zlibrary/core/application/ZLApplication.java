@@ -19,8 +19,7 @@
 
 package org.geometerplus.zlibrary.core.application;
 
-import org.fbreader.util.Boolean3;
-import org.geometerplus.fbreader.fbreader.ActionCode;
+import org.geometerplus.fbreader.util.Boolean3;
 import org.geometerplus.zlibrary.core.util.SystemInfo;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.view.ZLViewWidget;

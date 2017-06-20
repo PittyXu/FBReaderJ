@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2015 FBReader.ORG Limited <contact@fbreader.org>
+ * Copyright (C) 2007-2015 FBReader.ORG Limited <contact@fbreader.org>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,29 +17,10 @@
  * 02110-1301, USA.
  */
 
-#ifndef __FB2TAGMANAGER_H__
-#define __FB2TAGMANAGER_H__
+package org.geometerplus.fbreader.util;
 
-#include <string>
-#include <map>
-#include <vector>
-
-class FB2TagManager {
-
-private:
-	static FB2TagManager *ourInstance;
-
-public:
-	static const FB2TagManager &Instance();
-
-private:
-	FB2TagManager();
-
-public:
-	const std::vector<std::string> &humanReadableTags(const std::string &id) const;
-
-private:
-	std::map<std::string,std::vector<std::string> > myTagMap;
-};
-
-#endif /* __FB2TAGMANAGER_H__ */
+public enum Boolean3 {
+	FALSE,
+	TRUE,
+	UNDEFINED
+}

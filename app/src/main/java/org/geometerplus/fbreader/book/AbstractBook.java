@@ -19,10 +19,9 @@
 
 package org.geometerplus.fbreader.book;
 
-import java.math.BigDecimal;
 import java.util.*;
 
-import org.fbreader.util.ComparisonUtil;
+import org.geometerplus.fbreader.util.ComparisonUtil;
 
 import org.geometerplus.zlibrary.core.util.MiscUtil;
 import org.geometerplus.zlibrary.core.util.RationalNumber;

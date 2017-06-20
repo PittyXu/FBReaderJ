@@ -21,7 +21,7 @@ package org.geometerplus.fbreader.book;
 
 import java.util.*;
 
-import org.fbreader.util.ComparisonUtil;
+import org.geometerplus.fbreader.util.ComparisonUtil;
 
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.filesystem.ZLPhysicalFile;

@@ -2,14 +2,6 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE                  := DeflatingDecompressor-v3
-LOCAL_SRC_FILES               := DeflatingDecompressor/DeflatingDecompressor.cpp
-LOCAL_LDLIBS                  := -lz
-
-include $(BUILD_SHARED_LIBRARY)
-
-include $(CLEAR_VARS)
-
 LOCAL_MODULE                  := LineBreak-v2
 LOCAL_SRC_FILES               := LineBreak/LineBreaker.cpp LineBreak/liblinebreak-2.0/linebreak.c LineBreak/liblinebreak-2.0/linebreakdata.c LineBreak/liblinebreak-2.0/linebreakdef.c
 
@@ -97,13 +89,6 @@ LOCAL_SRC_FILES               := \
 	NativeFormats/fbreader/src/formats/EncodedTextReader.cpp \
 	NativeFormats/fbreader/src/formats/FormatPlugin.cpp \
 	NativeFormats/fbreader/src/formats/PluginCollection.cpp \
-	NativeFormats/fbreader/src/formats/fb2/FB2BookReader.cpp \
-	NativeFormats/fbreader/src/formats/fb2/FB2CoverReader.cpp \
-	NativeFormats/fbreader/src/formats/fb2/FB2MetaInfoReader.cpp \
-	NativeFormats/fbreader/src/formats/fb2/FB2Plugin.cpp \
-	NativeFormats/fbreader/src/formats/fb2/FB2Reader.cpp \
-	NativeFormats/fbreader/src/formats/fb2/FB2TagManager.cpp \
-	NativeFormats/fbreader/src/formats/fb2/FB2UidReader.cpp \
 	NativeFormats/fbreader/src/formats/css/CSSInputStream.cpp \
 	NativeFormats/fbreader/src/formats/css/CSSSelector.cpp \
 	NativeFormats/fbreader/src/formats/css/StringInputStream.cpp \

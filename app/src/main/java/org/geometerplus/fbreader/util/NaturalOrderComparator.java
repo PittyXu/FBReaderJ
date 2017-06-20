@@ -1,4 +1,4 @@
-package org.fbreader.util;
+package org.geometerplus.fbreader.util;
 
 /*
  NaturalOrderComparator.java -- Perform 'natural order' comparisons of strings in Java.

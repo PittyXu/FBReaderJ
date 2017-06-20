@@ -19,24 +19,29 @@
 
 package org.geometerplus.zlibrary.core.filesystem;
 
-import java.io.*;
-import java.util.*;
-
-import org.amse.ys.zip.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 final class ZLZipEntryFile extends ZLArchiveEntryFile {
 	static List<ZLFile> archiveEntries(ZLFile archive) {
 		try {
 			final ZipFile zf = ZLZipEntryFile.getZipFile(archive);
-			final Collection<LocalFileHeader> headers = zf.headers();
-			if (!headers.isEmpty()) {
-				ArrayList<ZLFile> entries = new ArrayList<ZLFile>(headers.size());
-				for (LocalFileHeader h : headers) {
-					entries.add(new ZLZipEntryFile(archive, h.FileName));
-				}
-				return entries;
+			Enumeration<? extends ZipEntry> e = zf.entries();
+			ArrayList<ZLFile> entries = new ArrayList<ZLFile>(zf.size());
+			while (e.hasMoreElements()) {
+				ZipEntry entry = e.nextElement();
+				entries.add(new ZLZipEntryFile(archive, entry.getName()));
 			}
+			return entries;
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return Collections.emptyList();
 	}
@@ -47,7 +52,7 @@ final class ZLZipEntryFile extends ZLArchiveEntryFile {
 		synchronized (ourZipFileMap) {
 			ZipFile zf = file.isCached() ? ourZipFileMap.get(file) : null;
 			if (zf == null) {
-				zf = new ZipFile(file);
+				zf = new ZipFile(file.getPhysicalFile().javaFile());
 				if (file.isCached()) {
 					ourZipFileMap.put(file, zf);
 				}
@@ -67,7 +72,7 @@ final class ZLZipEntryFile extends ZLArchiveEntryFile {
 	@Override
 	public boolean exists() {
 		try {
-			return myParent.exists() && getZipFile(myParent).entryExists(myName);
+			return myParent.exists() && getZipFile(myParent).getEntry(myName) != null;
 		} catch (IOException e) {
 			return false;
 		}
@@ -76,7 +81,7 @@ final class ZLZipEntryFile extends ZLArchiveEntryFile {
 	@Override
 	public long size() {
 		try {
-			return getZipFile(myParent).getEntrySize(myName);
+			return getZipFile(myParent).getEntry(myName).getSize();
 		} catch (IOException e) {
 			return 0;
 		}
@@ -84,6 +89,8 @@ final class ZLZipEntryFile extends ZLArchiveEntryFile {
 
 	@Override
 	public InputStream getInputStream() throws IOException {
-		return getZipFile(myParent).getInputStream(myName);
+		ZipFile zipFile = getZipFile(myParent);
+		ZipEntry zipEntry = zipFile.getEntry(myName);
+		return zipFile.getInputStream(zipEntry);
 	}
 }

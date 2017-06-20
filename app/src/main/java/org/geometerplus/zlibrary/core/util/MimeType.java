@@ -19,7 +19,7 @@
 
 package org.geometerplus.zlibrary.core.util;
 
-import org.fbreader.util.ComparisonUtil;
+import org.geometerplus.fbreader.util.ComparisonUtil;
 
 import java.util.*;
 
@@ -73,15 +73,7 @@ public final class MimeType {
 	// ???
 	//public static final MimeType APP_MOBI = get("application/mobi");
 	// unofficial, used by Calibre server
-	public static final MimeType APP_FB2 = get("application/fb2");
-	// ???
-	public static final MimeType APP_XFB2 = get("application/x-fb2");
-	// ???
-	public static final MimeType APP_FICTIONBOOK = get("application/x-fictionbook");
-	// ???
-	public static final MimeType APP_FICTIONBOOK_XML = get("application/x-fictionbook+xml");
 	// unofficial, used by FBReder book network
-	public static final MimeType APP_FB2_XML = get("application/fb2+xml");
 	// http://www.iana.org/assignments/media-types/application/index.html
 	public static final MimeType APP_PDF = get("application/pdf");
 	// ???
@@ -95,8 +87,6 @@ public final class MimeType {
 	// unofficial, used by flibusta catalog
 	public static final MimeType APP_TXT = get("application/txt");
 	// unofficial, used by flibusta catalog
-	public static final MimeType APP_DJVU = get("application/djvu");
-	// unofficial, used by flibusta catalog
 	public static final MimeType APP_HTML = get("application/html");
 	// unofficial, used by flibusta catalog
 	public static final MimeType APP_HTMLHTM = get("application/html+htm");
@@ -105,7 +95,6 @@ public final class MimeType {
 	// http://www.iana.org/assignments/media-types/application/index.html
 	public static final MimeType APP_MSWORD = get("application/msword");
 	// unofficial, used by data.fbreader.org LitRes catalog & FBReader book nework
-	public static final MimeType APP_FB2_ZIP = get("application/fb2+zip");
 	// http://www.iana.org/assignments/media-types/application/index.html
 	public static final MimeType APP_ATOM_XML = get("application/atom+xml");
 	public static final MimeType APP_ATOM_XML_ENTRY = get("application/atom+xml;type=entry");
@@ -132,7 +121,6 @@ public final class MimeType {
 	// http://www.iana.org/assignments/media-types/text/index.html
 	public static final MimeType TEXT_RTF = get("text/rtf");
 	// unofficial, used by Calibre OPDS server
-	public static final MimeType TEXT_FB2 = get("text/fb2+xml");
 
 	// MIME images
 	public static final String IMAGE_PREFIX = "image/";
@@ -145,10 +133,7 @@ public final class MimeType {
 	// ???
 	public static final MimeType IMAGE_PALM = get("image/palm");
 	// http://www.iana.org/assignments/media-types/image/index.html
-	public static final MimeType IMAGE_VND_DJVU = get("image/vnd.djvu");
 	// ???
-	public static final MimeType IMAGE_XDJVU = get("image/x-djvu");
-
 	// video
 	public static final MimeType VIDEO_MP4 = get("video/mp4");
 	public static final MimeType VIDEO_WEBM = get("video/webm");
@@ -160,8 +145,6 @@ public final class MimeType {
 	public static final List<MimeType> TYPES_VIDEO
 		 = Arrays.asList(VIDEO_WEBM, VIDEO_OGG, VIDEO_MP4);
 
-	public static final List<MimeType> TYPES_FB2
-		 = Arrays.asList(APP_FICTIONBOOK, APP_FICTIONBOOK_XML, APP_FB2, APP_XFB2, APP_FB2_XML, TEXT_FB2);
 	public static final List<MimeType> TYPES_EPUB
 		 = Arrays.asList(APP_EPUB_ZIP, APP_EPUB);
 	public static final List<MimeType> TYPES_MOBIPOCKET
@@ -174,14 +157,10 @@ public final class MimeType {
 		 = Arrays.asList(TEXT_HTML, APP_HTML, APP_HTMLHTM);
 	public static final List<MimeType> TYPES_PDF
 		 = Arrays.asList(APP_PDF, APP_XPDF, TEXT_PDF, APP_VND_PDF);
-	public static final List<MimeType> TYPES_DJVU
-		 = Arrays.asList(IMAGE_VND_DJVU, IMAGE_XDJVU, APP_DJVU);
 	public static final List<MimeType> TYPES_COMIC_BOOK
 		 = Arrays.asList(APP_CBZ, APP_CBR);
 	public static final List<MimeType> TYPES_DOC
 		 = Arrays.asList(APP_MSWORD, APP_DOC);
-	public static final List<MimeType> TYPES_FB2_ZIP
-		 = Arrays.asList(APP_FB2_ZIP);
 
 	public final String Name;
 

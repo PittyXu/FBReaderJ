@@ -19,7 +19,7 @@
 
 package org.geometerplus.zlibrary.core.drm;
 
-import org.fbreader.util.ComparisonUtil;
+import org.geometerplus.fbreader.util.ComparisonUtil;
 
 public class FileEncryptionInfo {
 	public final String Uri;

@@ -28,7 +28,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
-import org.fbreader.util.Pair;
+import org.geometerplus.fbreader.util.Pair;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.resources.ZLResource;

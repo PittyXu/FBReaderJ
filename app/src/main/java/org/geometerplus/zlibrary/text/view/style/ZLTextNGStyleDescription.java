@@ -22,7 +22,7 @@ package org.geometerplus.zlibrary.text.view.style;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.fbreader.util.Boolean3;
+import org.geometerplus.fbreader.util.Boolean3;
 
 import org.geometerplus.zlibrary.core.options.ZLStringOption;
 import org.geometerplus.zlibrary.text.model.*;

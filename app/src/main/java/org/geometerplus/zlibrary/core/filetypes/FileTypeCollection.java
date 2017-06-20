@@ -30,7 +30,6 @@ public class FileTypeCollection {
 	private final TreeMap<String,FileType> myTypes = new TreeMap<String,FileType>();
 
 	private FileTypeCollection() {
-		addType(new FileTypeFB2());
 		addType(new FileTypeEpub());
 		addType(new FileTypeMobipocket());
 		addType(new FileTypeHtml());

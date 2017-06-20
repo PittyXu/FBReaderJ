@@ -22,7 +22,7 @@ package org.geometerplus.zlibrary.core.fonts;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fbreader.util.ComparisonUtil;
+import org.geometerplus.fbreader.util.ComparisonUtil;
 
 public final class FontEntry {
 	private static Map<String,FontEntry> ourSystemEntries = new HashMap<String,FontEntry>();

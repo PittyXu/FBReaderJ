@@ -19,10 +19,9 @@
 
 package org.geometerplus.zlibrary.text.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.fbreader.util.Boolean3;
+import org.geometerplus.fbreader.util.Boolean3;
 
 import org.geometerplus.zlibrary.core.fonts.FontEntry;
 import org.geometerplus.zlibrary.core.fonts.FontManager;

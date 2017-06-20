@@ -26,7 +26,7 @@ import java.util.Map;
 import android.annotation.TargetApi;
 import android.os.Build;
 
-import org.fbreader.util.NaturalOrderComparator;
+import org.geometerplus.fbreader.util.NaturalOrderComparator;
 
 public abstract class TitledEntity<T extends TitledEntity<T>> implements Comparable<T> {
 	private static final NaturalOrderComparator ourComparator = new NaturalOrderComparator();
