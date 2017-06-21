@@ -23,7 +23,6 @@ import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.util.MimeType;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.TreeMap;
 
 public class FileTypeCollection {
@@ -33,10 +32,6 @@ public class FileTypeCollection {
 
 	private FileTypeCollection() {
 		addType(new FileTypeEpub());
-		addType(new FileTypeHtml());
-		addType(new SimpleFileType("txt", "txt", MimeType.TYPES_TXT));
-		addType(new SimpleFileType("RTF", "rtf", MimeType.TYPES_RTF));
-		addType(new SimpleFileType("ZIP archive", "zip", Collections.singletonList(MimeType.APP_ZIP)));
 	}
 
 	private void addType(FileType type) {
@@ -45,10 +40,6 @@ public class FileTypeCollection {
 
 	public Collection<FileType> types() {
 		return myTypes.values();
-	}
-
-	public FileType typeById(String id) {
-		return myTypes.get(id.toLowerCase());
 	}
 
 	public FileType typeForFile(ZLFile file) {
@@ -60,32 +51,9 @@ public class FileTypeCollection {
 		return null;
 	}
 
-	public FileType typeForMime(MimeType mime) {
-		if (mime == null) {
-			return null;
-		}
-		mime = mime.clean();
-		for (FileType type : types()) {
-			if (type.mimeTypes().contains(mime)) {
-				return type;
-			}
-		}
-		return null;
-	}
-
 	public MimeType mimeType(ZLFile file) {
 		for (FileType type : types()) {
 			final MimeType mime = type.mimeType(file);
-			if (mime != MimeType.NULL) {
-				return mime;
-			}
-		}
-		return MimeType.UNKNOWN;
-	}
-
-	public MimeType rawMimeType(ZLFile file) {
-		for (FileType type : types()) {
-			final MimeType mime = type.rawMimeType(file);
 			if (mime != MimeType.NULL) {
 				return mime;
 			}

@@ -1118,7 +1118,6 @@
 		<node name="unsupportedEncryptionMethod" value="File %s encryption method is not supported by FBReader. Some pages are not readable" toBeTranslated="true"/>
 		<node name="opfFileNotFound" value="OPF is not found in %s" toBeTranslated="true"/>
 		<node name="unsupportedFileFormat" value="File format is not supported for '%s'" toBeTranslated="true"/>
-		<node name="errorParsingRtf" value="Rtf parsing error in: %s" toBeTranslated="true"/>
 		<node name="cannotRunAndroidMarket" value="無法啟動Android Market，請自行安裝 %s"/>
 		<node name="textNotFound" value="書內沒有找到符合的字詞"/>
 		<node name="bookNotFound" value="書庫內沒有找到符合的書藉"/>

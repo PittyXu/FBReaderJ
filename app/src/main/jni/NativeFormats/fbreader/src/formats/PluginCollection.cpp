@@ -18,29 +18,22 @@
  */
 
 #include <AndroidUtil.h>
-#include <JniEnvelope.h>
-
-#include <ZLibrary.h>
 #include <ZLFile.h>
 
 #include "FormatPlugin.h"
 
 #include "../library/Book.h"
 
-#include "html/HtmlPlugin.h"
-#include "txt/TxtPlugin.h"
 #include "oeb/OEBPlugin.h"
-#include "rtf/RtfPlugin.h"
 
 PluginCollection *PluginCollection::ourInstance = 0;
 
 PluginCollection &PluginCollection::Instance() {
 	if (ourInstance == 0) {
 		ourInstance = new PluginCollection();
-		ourInstance->myPlugins.push_back(new HtmlPlugin());
-		ourInstance->myPlugins.push_back(new TxtPlugin());
+//		ourInstance->myPlugins.push_back(new HtmlPlugin());
+//		ourInstance->myPlugins.push_back(new TxtPlugin());
 		ourInstance->myPlugins.push_back(new OEBPlugin());
-		ourInstance->myPlugins.push_back(new RtfPlugin());
 	}
 	return *ourInstance;
 }
@@ -53,15 +46,9 @@ void PluginCollection::deleteInstance() {
 }
 
 PluginCollection::PluginCollection() {
-	//JNIEnv *env = AndroidUtil::getEnv();
-	//jobject instance = AndroidUtil::StaticMethod_PluginCollection_Instance->call();
-	//myJavaInstance = env->NewGlobalRef(instance);
-	//env->DeleteLocalRef(instance);
 }
 
 PluginCollection::~PluginCollection() {
-	//JNIEnv *env = AndroidUtil::getEnv();
-	//env->DeleteGlobalRef(myJavaInstance);
 }
 
 shared_ptr<FormatPlugin> PluginCollection::pluginByType(const std::string &fileType) const {

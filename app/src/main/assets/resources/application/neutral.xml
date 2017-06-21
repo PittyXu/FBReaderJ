@@ -4,6 +4,5 @@
 		<node name="ePub" value="ePub"/>
 		<node name="txt" value="txt"/>
 		<node name="HTML" value="HTML"/>
-		<node name="RTF" value="RTF"/>
 	</node>
 </resources>

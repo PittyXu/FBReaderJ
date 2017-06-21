@@ -46,7 +46,7 @@ public final class MimeType {
 			final String[] pair = items[i].split("=");
 			if (pair.length == 2) {
 				if (parameters == null) {
-					parameters = new TreeMap<String,String>();
+					parameters = new TreeMap<>();
 				}
 				parameters.put(pair[0].trim(), pair[1].trim());
 			}
@@ -67,26 +67,10 @@ public final class MimeType {
 	// MIME types / application
 	// ???
 	public static final MimeType APP_ZIP = get("application/zip");
-	public static final MimeType APP_RAR = get("application/x-rar-compressed");
 	// unofficial, http://en.wikipedia.org/wiki/EPUB
 	public static final MimeType APP_EPUB_ZIP = get("application/epub+zip");
 	// unofficial, used by flibusta catalog
 	public static final MimeType APP_EPUB = get("application/epub");
-	// ???
-	// unofficial, used by Calibre server
-	// unofficial, used by FBReder book network
-	// http://www.iana.org/assignments/media-types/application/index.html
-	// http://www.iana.org/assignments/media-types/application/index.html
-	public static final MimeType APP_RTF = get("application/rtf");
-	// unofficial, used by flibusta catalog
-	public static final MimeType APP_TXT = get("application/txt");
-	// unofficial, used by flibusta catalog
-	public static final MimeType APP_HTML = get("application/html");
-	// unofficial, used by flibusta catalog
-	public static final MimeType APP_HTMLHTM = get("application/html+htm");
-	// unofficial, used by flibusta catalog
-	// http://www.iana.org/assignments/media-types/application/index.html
-	// MIME types / text
 	// ???
 	// http://www.iana.org/assignments/media-types/text/index.html
 	public static final MimeType TEXT_HTML = get("text/html");
@@ -94,8 +78,6 @@ public final class MimeType {
 	// http://www.iana.org/assignments/media-types/text/index.html
 	public static final MimeType TEXT_PLAIN = get("text/plain");
 	// http://www.iana.org/assignments/media-types/text/index.html
-	public static final MimeType TEXT_RTF = get("text/rtf");
-	// unofficial, used by Calibre OPDS server
 
 	// MIME images
 	// http://www.iana.org/assignments/media-types/image/index.html
@@ -117,12 +99,6 @@ public final class MimeType {
 
 	public static final List<MimeType> TYPES_EPUB
 		 = Arrays.asList(APP_EPUB_ZIP, APP_EPUB);
-	public static final List<MimeType> TYPES_TXT
-		 = Arrays.asList(TEXT_PLAIN, APP_TXT);
-	public static final List<MimeType> TYPES_RTF
-		 = Arrays.asList(APP_RTF, TEXT_RTF);
-	public static final List<MimeType> TYPES_HTML
-		 = Arrays.asList(TEXT_HTML, APP_HTML, APP_HTMLHTM);
 
 	public final String Name;
 
@@ -140,10 +116,6 @@ public final class MimeType {
 		return get(Name);
 	}
 
-	public String getParameter(String key) {
-		return myParameters != null ? myParameters.get(key) : null;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -156,10 +128,6 @@ public final class MimeType {
 		return
 			ComparisonUtil.equal(Name, type.Name) &&
 			MiscUtil.mapsEquals(myParameters, type.myParameters);
-	}
-
-	public boolean weakEquals(MimeType type) {
-		return ComparisonUtil.equal(Name, type.Name);
 	}
 
 	@Override

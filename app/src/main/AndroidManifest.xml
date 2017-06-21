@@ -58,9 +58,7 @@
                 <data android:host="" android:scheme="file" />
                 <data android:pathPattern=".*\\.epub" />
                 <data android:pathPattern=".*\\.oeb" />
-                <data android:pathPattern=".*\\.prc" />
                 <data android:pathPattern=".*\\.txt" />
-                <data android:pathPattern=".*\\.rtf" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -68,9 +66,7 @@
                 <data android:host="" android:scheme="file" android:mimeType="text/plain" />
                 <data android:pathPattern=".*\\.epub" />
                 <data android:pathPattern=".*\\.oeb" />
-                <data android:pathPattern=".*\\.prc" />
                 <data android:pathPattern=".*\\.txt" />
-                <data android:pathPattern=".*\\.rtf" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

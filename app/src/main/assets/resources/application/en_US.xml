@@ -1128,7 +1128,6 @@
 		<node name="unsupportedEncryptionMethod" value="File %s encryption method is not supported by FBReader. Some pages are not readable"/>
 		<node name="opfFileNotFound" value="OPF is not found in %s"/>
 		<node name="unsupportedFileFormat" value="File format is not supported for '%s'"/>
-		<node name="errorParsingRtf" value="Rtf parsing error in: %s"/>
 		<node name="cannotRunAndroidMarket" value="Cannot access Google Play. Please install %s manually"/>
 		<node name="textNotFound" value="Matching text not found"/>
 		<node name="bookNotFound" value="There are no matching books in the library"/>

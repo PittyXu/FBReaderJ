@@ -95,12 +95,6 @@ LOCAL_SRC_FILES               := \
 	NativeFormats/fbreader/src/formats/css/StyleSheetParser.cpp \
 	NativeFormats/fbreader/src/formats/css/StyleSheetTable.cpp \
 	NativeFormats/fbreader/src/formats/css/StyleSheetUtil.cpp \
-	NativeFormats/fbreader/src/formats/html/HtmlBookReader.cpp \
-	NativeFormats/fbreader/src/formats/html/HtmlDescriptionReader.cpp \
-	NativeFormats/fbreader/src/formats/html/HtmlEntityCollection.cpp \
-	NativeFormats/fbreader/src/formats/html/HtmlPlugin.cpp \
-	NativeFormats/fbreader/src/formats/html/HtmlReader.cpp \
-	NativeFormats/fbreader/src/formats/html/HtmlReaderStream.cpp \
 	NativeFormats/fbreader/src/formats/oeb/NCXReader.cpp \
 	NativeFormats/fbreader/src/formats/oeb/OEBBookReader.cpp \
 	NativeFormats/fbreader/src/formats/oeb/OEBCoverReader.cpp \
@@ -112,15 +106,7 @@ LOCAL_SRC_FILES               := \
 	NativeFormats/fbreader/src/formats/oeb/OEBUidReader.cpp \
 	NativeFormats/fbreader/src/formats/oeb/OPFReader.cpp \
 	NativeFormats/fbreader/src/formats/oeb/XHTMLImageFinder.cpp \
-	NativeFormats/fbreader/src/formats/rtf/RtfBookReader.cpp \
-	NativeFormats/fbreader/src/formats/rtf/RtfDescriptionReader.cpp \
-	NativeFormats/fbreader/src/formats/rtf/RtfPlugin.cpp \
-	NativeFormats/fbreader/src/formats/rtf/RtfReader.cpp \
-	NativeFormats/fbreader/src/formats/rtf/RtfReaderStream.cpp \
 	NativeFormats/fbreader/src/formats/txt/PlainTextFormat.cpp \
-	NativeFormats/fbreader/src/formats/txt/TxtBookReader.cpp \
-	NativeFormats/fbreader/src/formats/txt/TxtPlugin.cpp \
-	NativeFormats/fbreader/src/formats/txt/TxtReader.cpp \
 	NativeFormats/fbreader/src/formats/util/EntityFilesCollector.cpp \
 	NativeFormats/fbreader/src/formats/util/MergedStream.cpp \
 	NativeFormats/fbreader/src/formats/util/MiscUtil.cpp \
