@@ -34,7 +34,6 @@ import org.geometerplus.android.fbreader.api.ApiListener;
 import org.geometerplus.android.fbreader.api.ApiServerImplementation;
 import org.geometerplus.android.fbreader.api.FBReaderIntents;
 import org.geometerplus.android.fbreader.api.MenuNode;
-import org.geometerplus.android.fbreader.httpd.DataService;
 import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
 import org.geometerplus.android.util.UIMessageUtil;
 import org.geometerplus.android.util.UIUtil;
@@ -46,7 +45,6 @@ import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.fbreader.options.ColorProfile;
-import org.geometerplus.fbreader.formats.PluginCollection;
 import org.geometerplus.zlibrary.core.application.ZLApplicationWindow;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.library.ZLibrary;
@@ -87,8 +85,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	private ZLAndroidWidget myMainView;
 
 	private String myMenuLanguage;
-
-	final DataService.Connection DataConnection = new DataService.Connection();
 
 	volatile boolean IsPaused = false;
 	volatile Runnable OnResumeAction = null;
@@ -150,12 +146,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	@Override
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-
-		bindService(
-			new Intent(this, DataService.class),
-			DataConnection,
-			DataService.BIND_AUTO_CREATE
-		);
 
 		final Config config = Config.Instance();
 		config.runOnConnect(new Runnable() {
@@ -360,7 +350,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	@Override
 	protected void onDestroy() {
 		getCollection().unbind();
-		unbindService(DataConnection);
 		super.onDestroy();
 	}
 

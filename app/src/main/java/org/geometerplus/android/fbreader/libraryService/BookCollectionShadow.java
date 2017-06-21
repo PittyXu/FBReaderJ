@@ -403,18 +403,6 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> implement
 	}
 
 	@Override
-	public String getCoverUrl(Book book) {
-		if (myInterface == null) {
-			return null;
-		}
-		try {
-			return myInterface.getCoverUrl(book.getPath());
-		} catch (RemoteException e) {
-			return null;
-		}
-	}
-
-	@Override
 	public String getDescription(Book book) {
 		if (myInterface == null) {
 			return null;

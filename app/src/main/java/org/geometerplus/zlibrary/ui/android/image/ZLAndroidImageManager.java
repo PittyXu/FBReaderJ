@@ -27,9 +27,7 @@ import org.geometerplus.zlibrary.core.image.ZLStreamImage;
 public final class ZLAndroidImageManager extends ZLImageManager {
 	@Override
 	public ZLAndroidImageData getImageData(ZLImage image) {
-		if (image instanceof ZLImageProxy) {
-			return getImageData(((ZLImageProxy)image).getRealImage());
-		} else if (image instanceof ZLStreamImage) {
+		if (image instanceof ZLStreamImage) {
 			return new InputStreamImageData((ZLStreamImage)image);
 		} else if (image instanceof ZLBitmapImage) {
 			return BitmapImageData.get((ZLBitmapImage)image);
@@ -37,14 +35,5 @@ public final class ZLAndroidImageManager extends ZLImageManager {
 			// unknown image type or null
 			return null;
 		}
-	}
-
-	private ZLAndroidImageLoader myLoader;
-
-	public void startImageLoading(ZLImageProxy.Synchronizer syncronizer, ZLImageProxy image, Runnable postLoadingRunnable) {
-		if (myLoader == null) {
-			myLoader = new ZLAndroidImageLoader();
-		}
-		myLoader.startImageLoading(syncronizer, image, postLoadingRunnable);
 	}
 }

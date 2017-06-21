@@ -19,12 +19,6 @@
 
 package org.geometerplus.android.fbreader;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.net.Uri;
-
-import org.geometerplus.android.fbreader.httpd.DataUtil;
-import org.geometerplus.android.util.UIMessageUtil;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.zlibrary.core.util.MimeType;
 import org.geometerplus.zlibrary.text.view.ZLTextVideoElement;
@@ -42,30 +36,13 @@ class OpenVideoAction extends FBAndroidAction {
 		}
 
 		final ZLTextVideoElement element = ((ZLTextVideoRegionSoul)params[0]).VideoElement;
-		boolean playerNotFound = false;
 		for (MimeType mimeType : MimeType.TYPES_VIDEO) {
 			final String mime = mimeType.toString();
 			final String path = element.Sources.get(mime);
 			if (path == null) {
 				continue;
 			}
-			final Intent intent = new Intent(Intent.ACTION_VIEW);
-			final String url = DataUtil.buildUrl(BaseActivity.DataConnection, mime, path);
-			if (url == null) {
-				UIMessageUtil.showErrorMessage(BaseActivity, "videoServiceNotWorking");
-				return;
-			}
-			intent.setDataAndType(Uri.parse(url), mime);
-			try {
-				BaseActivity.startActivity(intent);
-				return;
-			} catch (ActivityNotFoundException e) {
-				playerNotFound = true;
-				continue;
-			}
-		}
-		if (playerNotFound) {
-			UIMessageUtil.showErrorMessage(BaseActivity, "videoPlayerNotFound");
+			// TODO play
 		}
 	}
 }

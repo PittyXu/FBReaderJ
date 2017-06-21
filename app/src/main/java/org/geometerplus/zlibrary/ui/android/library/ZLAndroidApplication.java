@@ -26,7 +26,6 @@ import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 
 public abstract class ZLAndroidApplication extends Application {
 	private ZLAndroidLibrary myLibrary;
-	private ConfigShadow myConfig;
 
 	@Override
 	public void onCreate() {
@@ -39,7 +38,7 @@ public abstract class ZLAndroidApplication extends Application {
 		} catch (Throwable t) {
 		}
 
-		myConfig = new ConfigShadow(this);
+		new ConfigShadow(this);
 		new ZLAndroidImageManager();
 		myLibrary = new ZLAndroidLibrary(this);
 	}

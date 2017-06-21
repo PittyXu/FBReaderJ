@@ -26,8 +26,6 @@ import android.os.FileObserver;
 import android.os.IBinder;
 
 import org.geometerplus.android.fbreader.api.FBReaderIntents;
-import org.geometerplus.android.fbreader.httpd.DataService;
-import org.geometerplus.android.fbreader.httpd.DataUtil;
 import org.geometerplus.fbreader.Paths;
 import org.geometerplus.fbreader.book.Author;
 import org.geometerplus.fbreader.book.BookCollection;
@@ -50,8 +48,6 @@ import java.util.List;
 public class LibraryService extends Service {
 	private static SQLiteBooksDatabase ourDatabase;
 	private static final Object ourDatabaseLock = new Object();
-
-	final DataService.Connection DataConnection = new DataService.Connection();
 
 	private static final class Observer extends FileObserver {
 		private static final int MASK =
@@ -276,11 +272,6 @@ public class LibraryService extends Service {
 		}
 
 		@Override
-		public String getCoverUrl(String path) {
-			return DataUtil.buildUrl(DataConnection, "cover", path);
-		}
-
-		@Override
 		public String getDescription(String book) {
 			return BookUtil.getAnnotation(SerializerUtil.deserializeBook(book, myCollection), myCollection.PluginCollection);
 		}
@@ -418,18 +409,10 @@ public class LibraryService extends Service {
 			}
 		}
 		myLibrary = new LibraryImplementation(ourDatabase);
-
-		bindService(
-			new Intent(this, DataService.class),
-			DataConnection,
-			DataService.BIND_AUTO_CREATE
-		);
 	}
 
 	@Override
 	public void onDestroy() {
-		unbindService(DataConnection);
-
 		if (myLibrary != null) {
 			final LibraryImplementation l = myLibrary;
 			myLibrary = null;

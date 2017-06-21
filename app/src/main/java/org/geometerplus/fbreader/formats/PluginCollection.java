@@ -49,7 +49,7 @@ public class PluginCollection implements IFormatPluginCollection {
 
 	private static synchronized void createInstance(SystemInfo systemInfo) {
 		if (ourInstance == null) {
-			ourInstance = new PluginCollection(systemInfo);
+			ourInstance = new PluginCollection();
 
 			// This code cannot be moved to constructor
 			// because nativePlugins() is a native method
@@ -66,7 +66,7 @@ public class PluginCollection implements IFormatPluginCollection {
 		}
 	}
 
-	private PluginCollection(SystemInfo systemInfo) {
+	private PluginCollection() {
 	}
 
 	public FormatPlugin getPlugin(ZLFile file) {

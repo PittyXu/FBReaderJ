@@ -83,7 +83,6 @@ public interface IBookCollection<B extends AbstractBook> extends AbstractSeriali
 	boolean isHyperlinkVisited(B book, String linkId);
 	void markHyperlinkAsVisited(B book, String linkId);
 
-	String getCoverUrl(B book);
 	String getDescription(B book);
 
 	List<Bookmark> bookmarks(BookmarkQuery query);

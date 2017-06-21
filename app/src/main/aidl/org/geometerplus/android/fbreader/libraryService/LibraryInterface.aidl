@@ -62,7 +62,6 @@ interface LibraryInterface {
 
 	void setHash(in String book, in String hash);
 
-	String getCoverUrl(in String bookPath);
 	String getDescription(in String book);
 
 	List<String> recentlyAddedBooks(in int count);

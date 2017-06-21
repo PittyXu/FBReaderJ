@@ -672,12 +672,6 @@ public class BookCollection extends AbstractBookCollection<DbBook> {
 	}
 
 	@Override
-	public String getCoverUrl(DbBook book) {
-		// not implemented in non-shadow collection
-		return null;
-	}
-
-	@Override
 	public String getDescription(DbBook book) {
 		// not implemented in non-shadow collection
 		return null;
