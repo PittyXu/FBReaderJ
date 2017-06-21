@@ -61,7 +61,6 @@ LOCAL_SRC_FILES               := \
 	NativeFormats/zlibrary/core/src/library/ZLibrary.cpp \
 	NativeFormats/zlibrary/core/src/logger/ZLLogger.cpp \
 	NativeFormats/zlibrary/core/src/util/ZLFileUtil.cpp \
-	NativeFormats/zlibrary/core/src/util/ZLLanguageUtil.cpp \
 	NativeFormats/zlibrary/core/src/util/ZLStringUtil.cpp \
 	NativeFormats/zlibrary/core/src/util/ZLUnicodeUtil.cpp \
 	NativeFormats/zlibrary/core/src/xml/ZLAsynchronousInputStream.cpp \
@@ -86,7 +85,6 @@ LOCAL_SRC_FILES               := \
 	NativeFormats/zlibrary/ui/src/android/library/ZLAndroidLibraryImplementation.cpp \
 	NativeFormats/fbreader/src/bookmodel/BookModel.cpp \
 	NativeFormats/fbreader/src/bookmodel/BookReader.cpp \
-	NativeFormats/fbreader/src/formats/EncodedTextReader.cpp \
 	NativeFormats/fbreader/src/formats/FormatPlugin.cpp \
 	NativeFormats/fbreader/src/formats/PluginCollection.cpp \
 	NativeFormats/fbreader/src/formats/css/CSSInputStream.cpp \

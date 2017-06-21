@@ -30,15 +30,9 @@ private:
 public:
 	static const std::string DublinCore;
 	static const std::string DublinCoreLegacy;
-	static const std::string DublinCoreTerms;
 	static const std::string XLink;
 	static const std::string XHTML;
 	static const std::string OpenPackagingFormat;
-	static const std::string Atom;
-	static const std::string OpenSearch;
-	static const std::string CalibreMetadata;
-	static const std::string Opds;
-	static const std::string DaisyNCX;
 	static const std::string Svg;
 	static const std::string MarlinEpub;
 	static const std::string XMLEncryption;

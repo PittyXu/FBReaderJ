@@ -37,10 +37,6 @@ public:
 
 	std::string toHexSequence() const;
 
-	// returns
-	//   an integer < 0 if the sequence is less than other
-	//   an integer > 0 if the sequence is greater than other
-	//   0 if the sequence is equal to other
 	int compareTo(const ZLCharSequence &other) const;
 
 private:

@@ -32,7 +32,6 @@ public:
 	static const std::string UNSUPPORTED;
 	static const std::string EMBEDDING;
 	static const std::string MARLIN;
-	static const std::string KINDLE;
 };
 
 class FileEncryptionInfo {

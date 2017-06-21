@@ -23,8 +23,6 @@
 #include <vector>
 #include <string>
 
-//#include <shared_ptr.h>
-
 class ZLStatisticsBasedMatcher;
 
 class ZLLanguageDetector {

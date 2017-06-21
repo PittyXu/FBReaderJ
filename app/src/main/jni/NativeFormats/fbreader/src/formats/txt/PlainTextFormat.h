@@ -21,9 +21,6 @@
 #define __PLAINTEXTFORMAT_H__
 
 #include <ZLInputStream.h>
-//#include <ZLOptions.h>
-//#include <optionEntries/ZLSimpleOptionEntry.h>
-//#include <ZLResource.h>
 
 #include "../FormatPlugin.h"
 
@@ -52,31 +49,9 @@ private:
 	int myEmptyLinesBeforeNewSection;
 	bool myCreateContentsTable;
 
-//	ZLBooleanOption InitializedOption;
-//	ZLIntegerOption BreakTypeOption;
-//	ZLIntegerRangeOption IgnoredIndentOption;
-//	ZLIntegerRangeOption EmptyLinesBeforeNewSectionOption;
-//	ZLBooleanOption CreateContentsTableOption;
-
 friend class PlainTextInfoPage;
 friend class PlainTextFormatDetector;
 };
-
-/*class PlainTextInfoPage : public FormatInfoPage {
-
-public:
-	PlainTextInfoPage(ZLOptionsDialog &dialog, const ZLFile &file, const ZLResourceKey &key, bool showContentsEntry);
-	~PlainTextInfoPage();
-
-private:
-	PlainTextFormat myFormat;
-
-	ZLSimpleSpinOptionEntry *myIgnoredIndentEntry;
-	ZLSimpleSpinOptionEntry *myEmptyLinesBeforeNewSectionEntry;
-
-friend class BreakTypeOptionEntry;
-friend class CreateContentsTableOptionEntry;
-};*/
 
 class PlainTextFormatDetector {
 
@@ -86,33 +61,5 @@ public:
 
 	void detect(ZLInputStream &stream, PlainTextFormat &format);
 };
-
-/*class BreakTypeOptionEntry : public ZLComboOptionEntry {
-
-public:
-	BreakTypeOptionEntry(PlainTextInfoPage &page, ZLIntegerOption &breakTypeOption);
-	~BreakTypeOptionEntry();
-
-	int initialIndex() const;
-	const std::string &initialValue() const;
-	const std::vector<std::string> &values() const;
-	void onAccept(const std::string &value);
-	void onValueSelected(int index);
-
-private:
-	PlainTextInfoPage &myPage;
-	ZLIntegerOption &myBreakTypeOption;
-};*/
-
-/*class CreateContentsTableOptionEntry : public ZLSimpleBooleanOptionEntry {
-
-public:
-	CreateContentsTableOptionEntry(PlainTextInfoPage &page, ZLBooleanOption &option);
-	~CreateContentsTableOptionEntry();
-	void onStateChanged(bool state);
-
-private:
-	PlainTextInfoPage &myPage;
-};*/
 
 #endif /* __PLAINTEXTFORMAT_H__ */

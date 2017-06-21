@@ -30,7 +30,6 @@
 #include <ZLHyperlinkType.h>
 #include <ZLTextParagraph.h>
 #include <ZLTextKind.h>
-//#include <ZLTextMark.h>
 #include <ZLCachedMemoryAllocator.h>
 
 class ZLTextStyleEntry;
@@ -55,18 +54,6 @@ public:
 	std::size_t paragraphsNumber() const;
 	ZLTextParagraph *operator [] (std::size_t index);
 	const ZLTextParagraph *operator [] (std::size_t index) const;
-/*
-	const std::vector<ZLTextMark> &marks() const;
-
-	virtual void search(const std::string &text, std::size_t startIndex, std::size_t endIndex, bool ignoreCase) const;
-	virtual void selectParagraph(std::size_t index) const;
-	void removeAllMarks();
-
-	ZLTextMark firstMark() const;
-	ZLTextMark lastMark() const;
-	ZLTextMark nextMark(ZLTextMark position) const;
-	ZLTextMark previousMark(ZLTextMark position) const;
-*/
 	void addControl(ZLTextKind textKind, bool isStart);
 	void addStyleEntry(const ZLTextStyleEntry &entry, unsigned char depth);
 	void addStyleEntry(const ZLTextStyleEntry &entry, const std::vector<std::string> &fontFamilies, unsigned char depth);

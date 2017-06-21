@@ -64,14 +64,6 @@ static int log10(long long number) {
 	return count;
 }
 
-//static int power10(unsigned int number) {
-//	int power = 1;
-//	while (number-- > 0) {
-//		power *= 10;
-//	}
-//	return power;
-//}
-
 int ZLStatistics::correlation(const ZLStatistics& candidate, const ZLStatistics& pattern) {
 	if (&candidate == &pattern) {
 		return 1000000;

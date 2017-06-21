@@ -22,11 +22,7 @@
 #include <algorithm>
 
 #include <ZLibrary.h>
-//#include <ZLSearchUtil.h>
-//#include <ZLLanguageUtil.h>
 #include <ZLUnicodeUtil.h>
-//#include <ZLStringUtil.h>
-//#include <ZLLogger.h>
 #include <FontManager.h>
 
 #include "ZLTextModel.h"
@@ -56,72 +52,6 @@ ZLTextModel::~ZLTextModel() {
 		delete *it;
 	}
 }
-
-/*
-bool ZLTextModel::isRtl() const {
-	return ZLLanguageUtil::isRTLLanguage(myLanguage);
-}
-
-void ZLTextModel::search(const std::string &text, std::size_t startIndex, std::size_t endIndex, bool ignoreCase) const {
-	ZLSearchPattern pattern(text, ignoreCase);
-	myMarks.clear();
-
-	std::vector<ZLTextParagraph*>::const_iterator start =
-		(startIndex < myParagraphs.size()) ? myParagraphs.begin() + startIndex : myParagraphs.end();
-	std::vector<ZLTextParagraph*>::const_iterator end =
-		(endIndex < myParagraphs.size()) ? myParagraphs.begin() + endIndex : myParagraphs.end();
-	for (std::vector<ZLTextParagraph*>::const_iterator it = start; it < end; ++it) {
-		int offset = 0;
-		for (ZLTextParagraph::Iterator jt = **it; !jt.isEnd(); jt.next()) {
-			if (jt.entryKind() == ZLTextParagraphEntry::TEXT_ENTRY) {
-				const ZLTextEntry& textEntry = (ZLTextEntry&)*jt.entry();
-				const char *str = textEntry.data();
-				const std::size_t len = textEntry.dataLength();
-				for (int pos = ZLSearchUtil::find(str, len, pattern); pos != -1; pos = ZLSearchUtil::find(str, len, pattern, pos + 1)) {
-					myMarks.push_back(ZLTextMark(it - myParagraphs.begin(), offset + pos, pattern.length()));
-				}
-				offset += len;
-			}
-		}
-	}
-}
-
-void ZLTextModel::selectParagraph(std::size_t index) const {
-	if (index < paragraphsNumber()) {
-		myMarks.push_back(ZLTextMark(index, 0, (*this)[index]->textDataLength()));
-	}
-}
-
-ZLTextMark ZLTextModel::firstMark() const {
-	return marks().empty() ? ZLTextMark() : marks().front();
-}
-
-ZLTextMark ZLTextModel::lastMark() const {
-	return marks().empty() ? ZLTextMark() : marks().back();
-}
-
-ZLTextMark ZLTextModel::nextMark(ZLTextMark position) const {
-	std::vector<ZLTextMark>::const_iterator it = std::upper_bound(marks().begin(), marks().end(), position);
-	return (it != marks().end()) ? *it : ZLTextMark();
-}
-
-ZLTextMark ZLTextModel::previousMark(ZLTextMark position) const {
-	if (marks().empty()) {
-		return ZLTextMark();
-	}
-	std::vector<ZLTextMark>::const_iterator it = std::lower_bound(marks().begin(), marks().end(), position);
-	if (it == marks().end()) {
-		--it;
-	}
-	if (*it >= position) {
-		if (it == marks().begin()) {
-			return ZLTextMark();
-		}
-		--it;
-	}
-	return *it;
-}
-*/
 
 void ZLTextModel::addParagraphInternal(ZLTextParagraph *paragraph) {
 	const std::size_t dataSize = myAllocator->blocksNumber();
@@ -236,9 +166,6 @@ void ZLTextModel::addControl(ZLTextKind textKind, bool isStart) {
 	++myParagraphLengths.back();
 }
 
-//static int EntryCount = 0;
-//static int EntryLen = 0;
-
 void ZLTextModel::addStyleEntry(const ZLTextStyleEntry &entry, unsigned char depth) {
 	addStyleEntry(entry, entry.fontFamilies(), depth);
 }
@@ -262,16 +189,6 @@ void ZLTextModel::addStyleEntry(const ZLTextStyleEntry &entry, const std::vector
 		len += 2;
 	}
 	// --- calculating entry size
-
-/*
-	EntryCount += 1;
-	EntryLen += len;
-	std::string debug = "style entry counter: ";
-	ZLStringUtil::appendNumber(debug, EntryCount);
-	debug += "/";
-	ZLStringUtil::appendNumber(debug, EntryLen);
-	ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, debug);
-*/
 
 	// +++ writing entry
 	myLastEntryStart = myAllocator->allocate(len);

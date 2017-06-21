@@ -30,20 +30,9 @@
 class Book;
 class BookModel;
 class FileEncryptionInfo;
-//class ZLOptionsDialog;
-//class ZLOptionsDialogTab;
 class ZLFile;
 class ZLInputStream;
 class ZLImage;
-
-/*class FormatInfoPage {
-
-protected:
-	FormatInfoPage();
-
-public:
-	virtual ~FormatInfoPage();
-};*/
 
 class FormatPlugin {
 
@@ -92,16 +81,11 @@ public:
 private:
 	static PluginCollection *ourInstance;
 
-	//jobject myJavaInstance;
-
 	std::vector<shared_ptr<FormatPlugin> > myPlugins;
 };
 
-//inline FormatInfoPage::FormatInfoPage() {}
-//inline FormatInfoPage::~FormatInfoPage() {}
 inline FormatPlugin::FormatPlugin() {}
 inline FormatPlugin::~FormatPlugin() {}
-//inline FormatInfoPage *FormatPlugin::createInfoPage(ZLOptionsDialog&, const ZLFile&) { return 0; }
 
 inline std::vector<shared_ptr<FormatPlugin> > PluginCollection::plugins() const {
 	return myPlugins;

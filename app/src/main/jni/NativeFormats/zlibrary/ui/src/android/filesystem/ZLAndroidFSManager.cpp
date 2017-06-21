@@ -128,13 +128,6 @@ ZLInputStream *ZLAndroidFSManager::createPlainInputStream(const std::string &pat
 	return new JavaInputStream(path);
 }
 
-/*ZLOutputStream *ZLAndroidFSManager::createOutputStream(const std::string &path) const {
-	if (useNativeImplementation(path)) {
-		return ZLUnixFSManager::createOutputStream(path);
-	}
-	return 0;
-}*/
-
 bool ZLAndroidFSManager::removeFile(const std::string &path) const {
 	if (useNativeImplementation(path)) {
 		return ZLUnixFSManager::removeFile(path);

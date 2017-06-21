@@ -31,10 +31,6 @@ std::string ZLLanguageList::patternsDirectoryPath() {
 	return ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "languagePatterns";
 }
 
-/*std::string ZLLanguageList::languageName(const std::string &code) {
-	return ZLResource::resource("language")[ZLResourceKey(code)].value();
-}*/
-
 const std::vector<std::string> &ZLLanguageList::languageCodes() {
 	if (ourLanguageCodes.empty()) {
 		std::set<std::string> codes;

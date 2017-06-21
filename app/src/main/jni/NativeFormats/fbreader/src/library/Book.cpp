@@ -32,7 +32,6 @@
 #include "UID.h"
 
 #include "../formats/FormatPlugin.h"
-//#include "../migration/BookInfo.h"
 
 const std::string Book::AutoEncoding = "auto";
 
@@ -55,34 +54,6 @@ shared_ptr<Book> Book::createBook(
 	book->setTitle(title);
 	return book;
 }
-
-/*
-shared_ptr<Book> Book::loadFromFile(const ZLFile &file) {
-	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(file, false);
-	if (plugin.isNull()) {
-		return 0;
-	}
-
-	shared_ptr<Book> book = new Book(file, 0);
-	if (!plugin->readMetainfo(*book)) {
-		return 0;
-	}
-
-	if (book->title().empty()) {
-		book->setTitle(ZLFile::fileNameToUtf8(file.name(true)));
-	}
-
-	if (book->encoding().empty()) {
-		book->setEncoding(AutoEncoding);
-	}
-
-	if (book->language().empty()) {
-		book->setLanguage(PluginCollection::Instance().defaultLanguage());
-	}
-
-	return book;
-}
-*/
 
 shared_ptr<Book> Book::loadFromJavaBook(JNIEnv *env, jobject javaBook) {
 	const std::string path = AndroidUtil::Method_Book_getPath->callForCppString(javaBook);

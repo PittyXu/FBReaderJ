@@ -67,7 +67,6 @@ jclass JavaClass::j() const {
 }
 
 Member::Member(const JavaClass &cls) : myClass(cls) {
-	//ZLLogger::Instance().registerClass(JNI_LOGGER_CLASS);
 }
 
 Member::~Member() {

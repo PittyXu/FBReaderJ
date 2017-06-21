@@ -31,8 +31,6 @@ PluginCollection *PluginCollection::ourInstance = 0;
 PluginCollection &PluginCollection::Instance() {
 	if (ourInstance == 0) {
 		ourInstance = new PluginCollection();
-//		ourInstance->myPlugins.push_back(new HtmlPlugin());
-//		ourInstance->myPlugins.push_back(new TxtPlugin());
 		ourInstance->myPlugins.push_back(new OEBPlugin());
 	}
 	return *ourInstance;

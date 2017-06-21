@@ -17,11 +17,6 @@
  * 02110-1301, USA.
  */
 
-//#include <locale.h>
-//#include <dlfcn.h>
-//#include <dirent.h>
-//#include <sys/stat.h>
-
 #include <algorithm>
 
 #include <ZLibrary.h>
@@ -34,27 +29,6 @@ const std::string ZLibrary::FileNameDelimiter("/");
 const std::string ZLibrary::PathDelimiter(":");
 const std::string ZLibrary::EndOfLine("\n");
 
-/*void ZLibrary::initLocale() {
-	const char *locale = setlocale(LC_MESSAGES, "");
-	if (locale != 0) {
-		std::string sLocale = locale;
-		const int dotIndex = sLocale.find('.');
-		if (dotIndex != -1) {
-			sLocale = sLocale.substr(0, dotIndex);
-		}
-		const int dashIndex = std::min(sLocale.find('_'), sLocale.find('-'));
-		if (dashIndex == -1) {
-			ourLanguage = sLocale;
-		} else {
-			ourLanguage = sLocale.substr(0, dashIndex);
-			ourCountry = sLocale.substr(dashIndex + 1);
-			if ((ourLanguage == "es") && (ourCountry != "ES")) {
-				ourCountry = "LA";
-			}
-		}
-	}
-}*/
-
 ZLibraryImplementation *ZLibraryImplementation::Instance = 0;
 
 ZLibraryImplementation::ZLibraryImplementation() {
@@ -63,15 +37,6 @@ ZLibraryImplementation::ZLibraryImplementation() {
 
 ZLibraryImplementation::~ZLibraryImplementation() {
 }
-
-/*static void *loadPlugin(const std::string &path) {
-	ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "loading " + path);
-	void *handle = dlopen(path.c_str(), RTLD_NOW);
-	if (handle == 0) {
-		ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, dlerror());
-	}
-	return handle;
-}*/
 
 bool ZLibrary::init(int &argc, char **&argv) {
 #ifdef ZLSHARED
@@ -142,11 +107,3 @@ bool ZLibrary::init(int &argc, char **&argv) {
 	ZLibraryImplementation::Instance->init(argc, argv);
 	return true;
 }
-
-/*ZLPaintContext *ZLibrary::createContext() {
-	return ZLibraryImplementation::Instance->createContext();
-}*/
-
-/*void ZLibrary::run(ZLApplication *application) {
-	ZLibraryImplementation::Instance->run(application);
-}*/
