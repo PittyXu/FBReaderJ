@@ -82,7 +82,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 	}
 
 	public synchronized void setModel(ZLTextModel model) {
-		myCursorManager = model != null ? new CursorManager(model, getExtensionManager()) : null;
+		myCursorManager = model != null ? new CursorManager(model) : null;
 
 		mySelection.clear();
 		myHighlightings.clear();
@@ -893,8 +893,6 @@ public abstract class ZLTextView extends ZLTextViewBase {
 					final int c = yStart + (yEnd - yStart) / 2;
 					context.setFillColor(Color.rgb(196, 196, 196));
 					context.fillPolygon(new int[] { l, l, r }, new int[] { t, b, c });
-				} else if (element instanceof ExtensionElement) {
-					((ExtensionElement)element).draw(context, area);
 				} else if (element == ZLTextElement.HSpace || element == ZLTextElement.NBSpace) {
 					final int cw = context.getSpaceWidth();
 					for (int len = 0; len < area.XEnd - area.XStart; len += cw) {
@@ -1109,9 +1107,6 @@ public abstract class ZLTextView extends ZLTextViewBase {
 			} else if (element instanceof ZLTextVideoElement) {
 				wordOccurred = true;
 				isVisible = true;
-			} else if (element instanceof ExtensionElement) {
-				wordOccurred = true;
-				isVisible = true;
 			} else if (isStyleChangeElement(element)) {
 				applyStyleChangeElement(element);
 			}
@@ -1315,7 +1310,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 					wordOccurred = false;
 					--spaceCounter;
 				}
-			} else if (element instanceof ZLTextWord || element instanceof ZLTextImageElement || element instanceof ZLTextVideoElement || element instanceof ExtensionElement) {
+			} else if (element instanceof ZLTextWord || element instanceof ZLTextImageElement || element instanceof ZLTextVideoElement) {
 				final int height = getElementHeight(element);
 				final int descent = getElementDescent(element);
 				final int length = element instanceof ZLTextWord ? ((ZLTextWord)element).Length : 0;
@@ -1817,6 +1812,4 @@ public abstract class ZLTextView extends ZLTextViewBase {
 	ZLTextParagraphCursor cursor(int index) {
 		return myCursorManager.get(index);
 	}
-
-	protected abstract ExtensionElementManager getExtensionManager();
 }

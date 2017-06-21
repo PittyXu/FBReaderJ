@@ -37,7 +37,6 @@ import java.util.List;
 public final class ZLTextParagraphCursor {
 	private static final class Processor {
 		private final ZLTextParagraph myParagraph;
-		private final ExtensionElementManager myExtManager;
 		private final LineBreaker myLineBreaker;
 		private final ArrayList<ZLTextElement> myElements;
 		private int myOffset;
@@ -45,8 +44,7 @@ public final class ZLTextParagraphCursor {
 		private int myLastMark;
 		private final List<ZLTextMark> myMarks;
 
-		private Processor(ZLTextParagraph paragraph, ExtensionElementManager extManager, LineBreaker lineBreaker, List<ZLTextMark> marks, int paragraphIndex, ArrayList<ZLTextElement> elements) {
-			myExtManager = extManager;
+		private Processor(ZLTextParagraph paragraph, LineBreaker lineBreaker, List<ZLTextMark> marks, int paragraphIndex, ArrayList<ZLTextElement> elements) {
 			myParagraph = paragraph;
 			myLineBreaker = lineBreaker;
 			myElements = elements;
@@ -114,11 +112,6 @@ public final class ZLTextParagraphCursor {
 						break;
 					case ZLTextParagraph.Entry.VIDEO:
 						elements.add(new ZLTextVideoElement(it.getVideoEntry().sources()));
-						break;
-					case ZLTextParagraph.Entry.EXTENSION:
-						if (myExtManager != null) {
-							elements.addAll(myExtManager.getElements(it.getExtensionEntry()));
-						}
 						break;
 					case ZLTextParagraph.Entry.STYLE_CSS:
 					case ZLTextParagraph.Entry.STYLE_OTHER:
@@ -229,7 +222,7 @@ public final class ZLTextParagraphCursor {
 	private final ArrayList<ZLTextElement> myElements = new ArrayList<ZLTextElement>();
 
 	public ZLTextParagraphCursor(ZLTextModel model, int index) {
-		this(new CursorManager(model, null), model, index);
+		this(new CursorManager(model), model, index);
 	}
 
 	ZLTextParagraphCursor(CursorManager cManager, ZLTextModel model, int index) {
@@ -244,7 +237,7 @@ public final class ZLTextParagraphCursor {
 		ZLTextParagraph	paragraph = Model.getParagraph(Index);
 		switch (paragraph.getKind()) {
 			case ZLTextParagraph.Kind.TEXT_PARAGRAPH:
-				new Processor(paragraph, CursorManager.ExtensionManager, new LineBreaker(Model.getLanguage()), Model.getMarks(), Index, myElements).fill();
+				new Processor(paragraph, new LineBreaker(Model.getLanguage()), Model.getMarks(), Index, myElements).fill();
 				break;
 			case ZLTextParagraph.Kind.EMPTY_LINE_PARAGRAPH:
 				myElements.add(new ZLTextWord(SPACE_ARRAY, 0, 1, 0));

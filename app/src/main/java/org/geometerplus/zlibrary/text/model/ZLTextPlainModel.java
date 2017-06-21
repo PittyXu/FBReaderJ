@@ -75,9 +75,6 @@ public final class ZLTextPlainModel implements ZLTextModel, ZLTextStyleEntry.Fea
 		// VideoEntry
 		private ZLVideoEntry myVideoEntry;
 
-		// ExtensionEntry
-		private ExtensionEntry myExtensionEntry;
-
 		// StyleEntry
 		private ZLTextStyleEntry myStyleEntry;
 
@@ -128,10 +125,6 @@ public final class ZLTextPlainModel implements ZLTextModel, ZLTextStyleEntry.Fea
 
 		public ZLVideoEntry getVideoEntry() {
 			return myVideoEntry;
-		}
-
-		public ExtensionEntry getExtensionEntry() {
-			return myExtensionEntry;
 		}
 
 		public ZLTextStyleEntry getStyleEntry() {
@@ -275,25 +268,6 @@ public final class ZLTextPlainModel implements ZLTextModel, ZLTextStyleEntry.Fea
 						dataOffset += len;
 						myVideoEntry.addSource(mime, src);
 					}
-					break;
-				}
-				case ZLTextParagraph.Entry.EXTENSION:
-				{
-					final short kindLength = (short)data[dataOffset++];
-					final String kind = new String(data, dataOffset, kindLength);
-					dataOffset += kindLength;
-
-					final Map<String,String> map = new HashMap<String,String>();
-					final short dataSize = (short)((first >> 8) & 0xFF);
-					for (short i = 0; i < dataSize; ++i) {
-						final short keyLength = (short)data[dataOffset++];
-						final String key = new String(data, dataOffset, keyLength);
-						dataOffset += keyLength;
-						final short valueLength = (short)data[dataOffset++];
-						map.put(key, new String(data, dataOffset, valueLength));
-						dataOffset += valueLength;
-					}
-					myExtensionEntry = new ExtensionEntry(kind, map);
 					break;
 				}
 			}

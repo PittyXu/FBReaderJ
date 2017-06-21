@@ -39,7 +39,6 @@ import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.core.view.SelectionCursor;
 import org.geometerplus.zlibrary.core.view.ZLPaintContext;
 import org.geometerplus.zlibrary.text.model.ZLTextModel;
-import org.geometerplus.zlibrary.text.view.ExtensionElementManager;
 import org.geometerplus.zlibrary.text.view.ZLTextHighlighting;
 import org.geometerplus.zlibrary.text.view.ZLTextHyperlink;
 import org.geometerplus.zlibrary.text.view.ZLTextHyperlinkRegionSoul;
@@ -61,13 +60,11 @@ import java.util.TreeSet;
 public final class FBView extends ZLTextView {
 	private final FBReaderApp myReader;
 	private final ViewOptions myViewOptions;
-	private final BookElementManager myBookElementManager;
 
 	FBView(FBReaderApp reader) {
 		super(reader);
 		myReader = reader;
 		myViewOptions = reader.ViewOptions;
-		myBookElementManager = new BookElementManager(this);
 	}
 
 	public void setModel(ZLTextModel model) {
@@ -106,12 +103,6 @@ public final class FBView extends ZLTextView {
 			myReader.getViewWidget().reset();
 			myReader.getViewWidget().repaint();
 			myReader.runAction(ActionCode.PROCESS_HYPERLINK);
-			return;
-		}
-
-		final ZLTextRegion bookRegion = findRegion(x, y, 0, ZLTextRegion.ExtensionFilter);
-		if (bookRegion != null) {
-			myReader.runAction(ActionCode.DISPLAY_BOOK_POPUP, bookRegion);
 			return;
 		}
 
@@ -703,10 +694,5 @@ public final class FBView extends ZLTextView {
 	public synchronized void onScrollingFinished(PageIndex pageIndex) {
 		super.onScrollingFinished(pageIndex);
 		myReader.storePosition();
-	}
-
-	@Override
-	protected ExtensionElementManager getExtensionManager() {
-		return myBookElementManager;
 	}
 }

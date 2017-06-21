@@ -119,12 +119,6 @@ public final class ZLTextRegion {
 		}
 	};
 
-	public static Filter ExtensionFilter = new Filter() {
-		public boolean accepts(ZLTextRegion region) {
-			return region.getSoul() instanceof ExtensionRegionSoul;
-		}
-	};
-
 	public static Filter ImageOrHyperlinkFilter = new Filter() {
 		public boolean accepts(ZLTextRegion region) {
 			final Soul soul = region.getSoul();

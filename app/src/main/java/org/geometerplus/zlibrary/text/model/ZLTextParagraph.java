@@ -32,7 +32,6 @@ public interface ZLTextParagraph {
 		byte RESET_BIDI = 9;
 		byte AUDIO = 10;
 		byte VIDEO = 11;
-		byte EXTENSION = 12;
 	}
 
 	interface EntryIterator {
@@ -50,7 +49,6 @@ public interface ZLTextParagraph {
 
 		ZLImageEntry getImageEntry();
 		ZLVideoEntry getVideoEntry();
-		ExtensionEntry getExtensionEntry();
 		ZLTextStyleEntry getStyleEntry();
 
 		short getFixedHSpaceLength();
