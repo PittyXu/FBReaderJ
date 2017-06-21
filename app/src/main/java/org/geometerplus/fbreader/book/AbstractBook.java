@@ -47,9 +47,10 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 	protected enum SaveState {
 		Saved,
 		ProgressNotSaved,
-		NotSaved;
-	};
-	protected volatile SaveState mySaveState = SaveState.NotSaved;
+		NotSaved
+  }
+
+  protected volatile SaveState mySaveState = SaveState.NotSaved;
 
 	AbstractBook(long id, String title, String encoding, String language) {
 		super(title);
@@ -373,11 +374,8 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 			index = fileName.lastIndexOf("/", index);
 		}
 		fileName = fileName.substring(index + 1);
-		if (MiscUtil.matchesIgnoreCase(fileName, pattern)) {
-			return true;
-		}
-		return false;
-	}
+    return MiscUtil.matchesIgnoreCase(fileName, pattern);
+  }
 
 	@Override
 	public String toString() {

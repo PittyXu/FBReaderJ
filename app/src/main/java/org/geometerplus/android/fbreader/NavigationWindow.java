@@ -19,7 +19,6 @@
 
 package org.geometerplus.android.fbreader;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -38,8 +37,6 @@ public class NavigationWindow extends LinearLayout {
 	public NavigationWindow(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 	}
-
-	private Animator myShowHideAnimator;
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {

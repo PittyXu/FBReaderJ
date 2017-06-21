@@ -47,12 +47,10 @@ public class AndroidImageSynchronizer implements ZLImageProxy.Synchronizer {
 	private static final class Connection implements ServiceConnection {
 		private final ExecutorService myExecutor = Executors.newSingleThreadExecutor();
 
-		private final ExternalFormatPlugin myPlugin;
 		private volatile CoverReader Reader;
 		private final List<Runnable> myPostActions = new LinkedList<Runnable>();
 
-		Connection(ExternalFormatPlugin plugin) {
-			myPlugin = plugin;
+		Connection() {
 		}
 
 		synchronized void runOrAddAction(Runnable action) {
@@ -136,7 +134,7 @@ public class AndroidImageSynchronizer implements ZLImageProxy.Synchronizer {
 	private synchronized Connection getConnection(ExternalFormatPlugin plugin) {
 		Connection connection = myConnections.get(plugin);
 		if (connection == null) {
-			connection = new Connection(plugin);
+			connection = new Connection();
 			myConnections.put(plugin, connection);
 			myContext.bindService(
 				new Intent(FBReaderIntents.Action.PLUGIN_CONNECT_COVER_SERVICE)

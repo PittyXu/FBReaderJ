@@ -25,7 +25,7 @@ import org.geometerplus.zlibrary.text.view.ZLTextPosition;
 import java.util.List;
 
 public interface IBookCollection<B extends AbstractBook> extends AbstractSerializer.BookCreator<B> {
-	public enum Status {
+	enum Status {
 		NotStarted(false),
 		Started(false),
 		Succeeded(true),
@@ -38,13 +38,13 @@ public interface IBookCollection<B extends AbstractBook> extends AbstractSeriali
 		}
 	}
 
-	public interface Listener<B> {
+	interface Listener<B> {
 		void onBookEvent(BookEvent event, B book);
 		void onBuildEvent(Status status);
 	}
 
-	public void addListener(Listener<B> listener);
-	public void removeListener(Listener<B> listener);
+	void addListener(Listener<B> listener);
+	void removeListener(Listener<B> listener);
 
 	Status status();
 

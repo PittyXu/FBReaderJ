@@ -85,13 +85,13 @@ public class TapZoneMap {
 		ourMapsOption.setValue(lst);
 	}
 
-	public static enum Tap {
+	public enum Tap {
 		singleTap,
 		singleNotDoubleTap,
 		doubleTap
-	};
+	}
 
-	public final String Name;
+  public final String Name;
 	private final String myOptionGroupName;
 	private ZLIntegerRangeOption myHeight;
 	private ZLIntegerRangeOption myWidth;

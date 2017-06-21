@@ -75,8 +75,8 @@ public final class DbBook extends AbstractBook {
 	enum WhatIsSaved {
 		Nothing,
 		Progress,
-		Everything;
-	}
+		Everything
+  }
 
 	WhatIsSaved save(BooksDatabase database, boolean force) {
 		if (force || myId == -1) {

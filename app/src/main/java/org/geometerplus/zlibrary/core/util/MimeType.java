@@ -110,9 +110,6 @@ public final class MimeType {
 	// unofficial, used by data.fbreader.org LitRes catalog
 	public static final MimeType APP_LITRES = get("application/litres+xml");
 	//???
-	public static final MimeType APP_CBZ = get("application/x-cbz");
-	public static final MimeType APP_CBR = get("application/x-cbr");
-
 	// MIME types / text
 	// ???
 	public static final MimeType TEXT_XML = get("text/xml");
@@ -161,8 +158,6 @@ public final class MimeType {
 		 = Arrays.asList(TEXT_HTML, APP_HTML, APP_HTMLHTM);
 	public static final List<MimeType> TYPES_PDF
 		 = Arrays.asList(APP_PDF, APP_XPDF, TEXT_PDF, APP_VND_PDF);
-	public static final List<MimeType> TYPES_COMIC_BOOK
-		 = Arrays.asList(APP_CBZ, APP_CBR);
 	public static final List<MimeType> TYPES_DOC
 		 = Arrays.asList(APP_MSWORD, APP_DOC);
 

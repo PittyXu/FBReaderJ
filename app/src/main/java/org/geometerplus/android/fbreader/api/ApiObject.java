@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ApiObject implements Parcelable {
-	protected static interface Type {
+	protected interface Type {
 		int ERROR = -1;
 		int VOID = 0;
 		int INT = 1;

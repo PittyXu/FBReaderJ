@@ -8,6 +8,5 @@
 		<node name="HTML" value="HTML"/>
 		<node name="RTF" value="RTF"/>
 		<node name="PDF" value="PDF"/>
-		<node name="CBZ" value="Comic book archive (cbz, cbr)"/>
 	</node>
 </resources>

@@ -38,9 +38,7 @@ import android.widget.TextView;
 import org.geometerplus.android.fbreader.FBReader;
 import org.geometerplus.android.fbreader.api.FBReaderIntents;
 import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
-import org.geometerplus.android.util.DeviceType;
 import org.geometerplus.android.util.OrientationUtil;
-import org.geometerplus.android.util.SearchDialogUtil;
 import org.geometerplus.android.util.UIMessageUtil;
 import org.geometerplus.android.util.ViewUtil;
 import org.geometerplus.fbreader.book.Book;
@@ -272,11 +270,7 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 
 	@Override
 	public boolean onSearchRequested() {
-		if (DeviceType.Instance().hasStandardSearchDialog()) {
-			startSearch(myBookmarkSearchPatternOption.getValue(), true, null, false);
-		} else {
-			SearchDialogUtil.showDialog(this, BookmarksActivity.class, myBookmarkSearchPatternOption.getValue(), null);
-		}
+		startSearch(myBookmarkSearchPatternOption.getValue(), true, null, false);
 		return true;
 	}
 

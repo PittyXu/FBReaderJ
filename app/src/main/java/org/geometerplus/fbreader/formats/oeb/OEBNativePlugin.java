@@ -47,7 +47,7 @@ public class OEBNativePlugin extends NativeFormatPlugin {
 				public List<String> getCandidates(String id) {
 					final int index = id.indexOf("#");
 					return index > 0
-						? Collections.<String>singletonList(id.substring(0, index))
+						? Collections.singletonList(id.substring(0, index))
 						: Collections.<String>emptyList();
 				}
 			});

@@ -59,13 +59,7 @@ public final class ZLKeyBindings {
 		public void run() {
 			final Set<String> keys = new TreeSet<String>();
 
-			final DeviceType deviceType = DeviceType.Instance();
-			final String keymapFilename;
-			if (deviceType == DeviceType.NOOK || deviceType == DeviceType.NOOK12) {
-				keymapFilename = "keymap-nook.xml";
-			} else {
-				keymapFilename = "keymap.xml";
-			}
+			final String keymapFilename = "keymap.xml";
 			new Reader(keys).readQuietly("default/" + keymapFilename);
 			new Reader(keys).readQuietly(Paths.systemShareDirectory() + "/keymap.xml");
 			new Reader(keys).readQuietly(Paths.bookPath().get(0) + "/keymap.xml");

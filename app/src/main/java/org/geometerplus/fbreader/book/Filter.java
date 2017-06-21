@@ -40,7 +40,7 @@ public abstract class Filter {
 		public boolean matches(AbstractBook book) {
 			final List<Author> bookAuthors = book.authors();
 			return
-				Author.NULL.equals(Author) ? bookAuthors.isEmpty() : bookAuthors.contains(Author);
+				org.geometerplus.fbreader.book.Author.NULL.equals(Author) ? bookAuthors.isEmpty() : bookAuthors.contains(Author);
 		}
 	}
 
@@ -54,7 +54,7 @@ public abstract class Filter {
 		public boolean matches(AbstractBook book) {
 			final List<Tag> bookTags = book.tags();
 			return
-				Tag.NULL.equals(Tag) ? bookTags.isEmpty() : bookTags.contains(Tag);
+				org.geometerplus.fbreader.book.Tag.NULL.equals(Tag) ? bookTags.isEmpty() : bookTags.contains(Tag);
 		}
 	}
 

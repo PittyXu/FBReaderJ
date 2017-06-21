@@ -504,7 +504,7 @@ class XMLSerializer extends AbstractSerializer {
 	}
 
 	private static final class BookDeserializer<B extends AbstractBook> extends DefaultHandler {
-		private static enum State {
+		private enum State {
 			READ_NOTHING,
 			READ_ENTRY,
 			READ_ID,
@@ -734,7 +734,7 @@ class XMLSerializer extends AbstractSerializer {
 	}
 
 	private static final class BookQueryDeserializer extends DefaultHandler {
-		private static enum State {
+		private enum State {
 			READ_QUERY,
 			READ_FILTER_NOT,
 			READ_FILTER_AND,
@@ -911,7 +911,7 @@ class XMLSerializer extends AbstractSerializer {
 	}
 
 	private static final class BookmarkDeserializer extends DefaultHandler {
-		private static enum State {
+		private enum State {
 			READ_NOTHING,
 			READ_BOOKMARK,
 			READ_TEXT,

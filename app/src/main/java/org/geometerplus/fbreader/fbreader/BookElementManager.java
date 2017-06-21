@@ -31,19 +31,11 @@ import java.util.Timer;
 class BookElementManager extends ExtensionElementManager {
 
   private final FBView myView;
-  private final Runnable myScreenRefresher;
   private final Map<Map<String, String>, List<BookElement>> myCache =
       new HashMap<Map<String, String>, List<BookElement>>();
-  private Timer myTimer;
 
   BookElementManager(final FBView view) {
     myView = view;
-    myScreenRefresher = new Runnable() {
-      public void run() {
-        view.Application.getViewWidget().reset();
-        view.Application.getViewWidget().repaint();
-      }
-    };
   }
 
   @Override

@@ -20,7 +20,6 @@
 package org.geometerplus.android.fbreader.preferences;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.preference.Preference;
 import android.support.annotation.ColorInt;
 import android.view.View;

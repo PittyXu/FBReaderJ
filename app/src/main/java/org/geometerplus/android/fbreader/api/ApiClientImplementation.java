@@ -22,7 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ApiClientImplementation implements ServiceConnection, Api, ApiMethods {
-	public static interface ConnectionListener {
+	public interface ConnectionListener {
 		void onConnected();
 	}
 

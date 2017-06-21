@@ -162,7 +162,7 @@ public final class ZLAndroidLibrary extends ZLibrary {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
 	}
 
-	private static interface StreamStatus {
+	private interface StreamStatus {
 		int UNKNOWN = -1;
 		int NULL = 0;
 		int OK = 1;

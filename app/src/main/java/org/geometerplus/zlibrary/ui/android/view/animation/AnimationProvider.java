@@ -30,7 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public abstract class AnimationProvider {
-	public static enum Mode {
+	public enum Mode {
 		NoScrolling(false),
 		PreManualScrolling(false),
 		ManualScrolling(false),

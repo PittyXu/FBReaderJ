@@ -63,7 +63,7 @@ import java.util.List;
 
 public final class FBReaderApp extends ZLApplication {
 	public interface ExternalFileOpener {
-		public void openFile(ExternalFormatPlugin plugin, Book book, Bookmark bookmark);
+		void openFile(ExternalFormatPlugin plugin, Book book, Bookmark bookmark);
 	}
 
 	private ExternalFileOpener myExternalFileOpener;

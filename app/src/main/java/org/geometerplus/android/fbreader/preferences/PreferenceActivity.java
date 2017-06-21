@@ -23,12 +23,10 @@ import android.content.Intent;
 import android.view.KeyEvent;
 
 import org.geometerplus.android.fbreader.FBReader;
-import org.geometerplus.android.util.DeviceType;
 import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.fbreader.FBView;
 import org.geometerplus.fbreader.fbreader.options.ColorProfile;
-import org.geometerplus.fbreader.fbreader.options.EInkOptions;
 import org.geometerplus.fbreader.fbreader.options.FooterOptions;
 import org.geometerplus.fbreader.fbreader.options.ImageOptions;
 import org.geometerplus.fbreader.fbreader.options.MiscOptions;
@@ -96,36 +94,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
         viewOptions.TwoColumnView,
         appearanceScreen.Resource.getResource("twoColumnView")
     ));
-
-    if (DeviceType.Instance().isEInk()) {
-      final EInkOptions einkOptions = new EInkOptions();
-      final Screen einkScreen = createPreferenceScreen("eink");
-      final PreferenceSet einkPreferences = new PreferenceSet.Enabler() {
-        @Override
-        protected Boolean detectState() {
-          return einkOptions.EnableFastRefresh.getValue();
-        }
-      };
-
-      einkScreen.addPreference(new ZLBooleanPreference(
-          this, einkOptions.EnableFastRefresh,
-          einkScreen.Resource.getResource("enableFastRefresh")
-      ) {
-        @Override
-        protected void onClick() {
-          super.onClick();
-          einkPreferences.run();
-        }
-      });
-
-      final ZLIntegerRangePreference updateIntervalPreference = new ZLIntegerRangePreference(
-          this, einkScreen.Resource.getResource("interval"), einkOptions.UpdateInterval
-      );
-      einkScreen.addPreference(updateIntervalPreference);
-
-      einkPreferences.add(updateIntervalPreference);
-      einkPreferences.run();
-    }
 
     final Screen textScreen = createPreferenceScreen("text");
 
@@ -295,7 +263,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
       protected Boolean detectState() {
         switch (viewOptions.ScrollbarType.getValue()) {
           case FBView.SCROLLBAR_SHOW_AS_FOOTER:
-          case FBView.SCROLLBAR_SHOW_AS_FOOTER_OLD_STYLE:
             return true;
           default:
             return false;
@@ -307,19 +274,7 @@ public class PreferenceActivity extends ZLPreferenceActivity {
       protected Boolean detectState() {
         switch (viewOptions.ScrollbarType.getValue()) {
           case FBView.SCROLLBAR_SHOW_AS_FOOTER:
-          case FBView.SCROLLBAR_SHOW_AS_FOOTER_OLD_STYLE:
             return footerOptions.ShowTOCMarks.getValue();
-          default:
-            return false;
-        }
-      }
-    };
-    final PreferenceSet oldStyleFooterPreferences = new PreferenceSet.Enabler() {
-      @Override
-      protected Boolean detectState() {
-        switch (viewOptions.ScrollbarType.getValue()) {
-          case FBView.SCROLLBAR_SHOW_AS_FOOTER_OLD_STYLE:
-            return true;
           default:
             return false;
         }
@@ -348,7 +303,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
         super.onDialogClosed(result);
         footerPreferences.run();
         tocPreferences.run();
-        oldStyleFooterPreferences.run();
         newStyleFooterPreferences.run();
       }
     });
@@ -357,8 +311,6 @@ public class PreferenceActivity extends ZLPreferenceActivity {
         this, statusLineScreen.Resource.getResource("footerHeight"),
         viewOptions.FooterHeight
     )));
-    oldStyleFooterPreferences.add(
-        statusLineScreen.addOption(profile.FooterFillOption, "footerOldStyleColor"));
     newStyleFooterPreferences.add(
         statusLineScreen.addOption(profile.FooterNGBackgroundOption, "footerBackgroundColor"));
     newStyleFooterPreferences.add(
@@ -384,19 +336,7 @@ public class PreferenceActivity extends ZLPreferenceActivity {
     )));
     footerPreferences.run();
     tocPreferences.run();
-    oldStyleFooterPreferences.run();
     newStyleFooterPreferences.run();
-
-		/*
-		final Screen colorProfileScreen = createPreferenceScreen("colorProfile");
-		final ZLResource resource = colorProfileScreen.Resource;
-		colorProfileScreen.setSummary(ColorProfilePreference.createTitle(resource, fbreader.getColorProfileName()));
-		for (String key : ColorProfile.names()) {
-			colorProfileScreen.addPreference(new ColorProfilePreference(
-				this, fbreader, colorProfileScreen, key, ColorProfilePreference.createTitle(resource, key)
-			));
-		}
-		 */
 
     final Screen scrollingScreen = createPreferenceScreen("scrolling");
     scrollingScreen.addOption(pageTurningOptions.FingerScrolling, "fingerScrolling");

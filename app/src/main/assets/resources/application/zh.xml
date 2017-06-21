@@ -1023,12 +1023,6 @@
 		<node name="pdf" value="PDF">
 			<node name="summary" value="用 PDF 格式阅读书籍"/>
 		</node>
-		<node name="djvu" value="DjVu">
-			<node name="summary" value="用 DjVu 格式阅读书籍"/>
-		</node>
-		<node name="cbr" value="漫画书">
-			<node name="summary" value="阅读漫画书(CBR, CBZ)"/>
-		</node>
 	</node>
 	<node name="drm">
 		<node name="encryptedSection" value="加密部分"/>

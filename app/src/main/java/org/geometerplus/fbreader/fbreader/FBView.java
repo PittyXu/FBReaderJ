@@ -558,74 +558,6 @@ public final class FBView extends ZLTextView {
 		}
 	}
 
-	private class FooterOldStyle extends Footer {
-		public synchronized void paint(ZLPaintContext context) {
-			final ZLFile wallpaper = getWallpaperFile();
-			if (wallpaper != null) {
-				context.clear(wallpaper, getFillMode());
-			} else {
-				context.clear(getBackgroundColor());
-			}
-
-			final BookModel model = myReader.Model;
-			if (model == null) {
-				return;
-			}
-
-			//final ZLColor bgColor = getBackgroundColor();
-			// TODO: separate color option for footer color
-			final Integer fgColor = getTextColor(ZLTextHyperlink.NO_LINK);
-			final Integer fillColor = myViewOptions.getColorProfile().FooterFillOption.getValue();
-
-			final int left = getLeftMargin();
-			final int right = context.getWidth() - getRightMargin();
-			final int height = getHeight();
-			final int lineWidth = height <= 10 ? 1 : 2;
-			final int delta = height <= 10 ? 0 : 1;
-			setFont(context, height, height > 10);
-
-			final PagePosition pagePosition = FBView.this.pagePosition();
-
-			// draw info text
-			final String infoString = buildInfoString(pagePosition, " ");
-			final int infoWidth = context.getStringWidth(infoString);
-			context.setTextColor(fgColor);
-			context.drawString(right - infoWidth, height - delta, infoString);
-
-			// draw gauge
-			final int gaugeRight = right - (infoWidth == 0 ? 0 : infoWidth + 10);
-			final int gaugeWidth = gaugeRight - left - 2 * lineWidth;
-
-			context.setLineColor(fgColor);
-			context.setLineWidth(lineWidth);
-			context.drawLine(left, lineWidth, left, height - lineWidth);
-			context.drawLine(left, height - lineWidth, gaugeRight, height - lineWidth);
-			context.drawLine(gaugeRight, height - lineWidth, gaugeRight, lineWidth);
-			context.drawLine(gaugeRight, lineWidth, left, lineWidth);
-
-			final int gaugeInternalRight =
-				left + lineWidth + (int)(1.0 * gaugeWidth * pagePosition.Current / pagePosition.Total);
-
-			context.setFillColor(fillColor);
-			context.fillRectangle(left + 1, height - 2 * lineWidth, gaugeInternalRight, lineWidth + 1);
-
-			final FooterOptions footerOptions = myViewOptions.getFooterOptions();
-			if (footerOptions.ShowTOCMarks.getValue()) {
-				updateTOCMarks(model, footerOptions.MaxTOCMarks.getValue());
-				final int fullLength = sizeOfFullText();
-				for (TOCTree tocItem : myTOCMarks) {
-					TOCTree.Reference reference = tocItem.getReference();
-					if (reference != null) {
-						final int refCoord = sizeOfTextBeforeParagraph(reference.ParagraphIndex);
-						final int xCoord =
-							left + 2 * lineWidth + (int)(1.0 * gaugeWidth * refCoord / fullLength);
-						context.drawLine(xCoord, height - lineWidth, xCoord, lineWidth);
-					}
-				}
-			}
-		}
-	}
-
 	private class FooterNewStyle extends Footer {
 		public synchronized void paint(ZLPaintContext context) {
 			final ColorProfile cProfile = myViewOptions.getColorProfile();
@@ -705,15 +637,6 @@ public final class FBView extends ZLTextView {
 					myReader.addTimerTask(myFooter.UpdateTask, 15000);
 				}
 				break;
-			case SCROLLBAR_SHOW_AS_FOOTER_OLD_STYLE:
-				if (!(myFooter instanceof FooterOldStyle)) {
-					if (myFooter != null) {
-						myReader.removeTimerTask(myFooter.UpdateTask);
-					}
-					myFooter = new FooterOldStyle();
-					myReader.addTimerTask(myFooter.UpdateTask, 15000);
-				}
-				break;
 			default:
 				if (myFooter != null) {
 					myReader.removeTimerTask(myFooter.UpdateTask);
@@ -752,7 +675,6 @@ public final class FBView extends ZLTextView {
 	}
 
 	public static final int SCROLLBAR_SHOW_AS_FOOTER = 3;
-	public static final int SCROLLBAR_SHOW_AS_FOOTER_OLD_STYLE = 4;
 
 	@Override
 	public int scrollbarType() {
