@@ -44,20 +44,6 @@ public abstract class Filter {
 		}
 	}
 
-	public final static class ByTag extends Filter {
-		public final Tag Tag;
-
-		public ByTag(Tag tag) {
-			Tag = tag;
-		}
-
-		public boolean matches(AbstractBook book) {
-			final List<Tag> bookTags = book.tags();
-			return
-				org.geometerplus.fbreader.book.Tag.NULL.equals(Tag) ? bookTags.isEmpty() : bookTags.contains(Tag);
-		}
-	}
-
 	public final static class ByLabel extends Filter {
 		public final String Label;
 

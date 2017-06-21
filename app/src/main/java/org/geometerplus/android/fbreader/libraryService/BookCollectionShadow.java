@@ -40,7 +40,6 @@ import org.geometerplus.fbreader.book.BookmarkQuery;
 import org.geometerplus.fbreader.book.Filter;
 import org.geometerplus.fbreader.book.HighlightingStyle;
 import org.geometerplus.fbreader.book.SerializerUtil;
-import org.geometerplus.fbreader.book.Tag;
 import org.geometerplus.fbreader.book.UID;
 import org.geometerplus.zlibrary.core.options.Config;
 import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
@@ -256,19 +255,6 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> implement
 					authors.add(Util.stringToAuthor(s));
 				}
 				return authors;
-			}
-		});
-	}
-
-	public List<Tag> tags() {
-		return listCall(new ListCallable<Tag>() {
-			public List<Tag> call() throws RemoteException {
-				final List<String> strings = myInterface.tags();
-				final List<Tag> tags = new ArrayList<Tag>(strings.size());
-				for (String s : strings) {
-					tags.add(Util.stringToTag(s));
-				}
-				return tags;
 			}
 		});
 	}

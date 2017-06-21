@@ -67,7 +67,6 @@ public interface IBookCollection<B extends AbstractBook> extends AbstractSeriali
 
 	List<String> labels();
 	List<Author> authors();
-	List<Tag> tags();
 	List<String> firstTitleLetters();
 
 	boolean saveBook(B book);

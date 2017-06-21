@@ -21,7 +21,6 @@ package org.geometerplus.android.fbreader.libraryService;
 
 import org.geometerplus.fbreader.book.Author;
 import org.geometerplus.fbreader.book.IBookCollection;
-import org.geometerplus.fbreader.book.Tag;
 
 abstract class Util {
 	static String authorToString(Author author) {
@@ -39,23 +38,6 @@ abstract class Util {
 		}
 
 		return new Author(split[0], split[1]);
-	}
-
-	static String tagToString(Tag tag) {
-		return tag.toString("\000");
-	}
-
-	static Tag stringToTag(String string) {
-		if (string == null) {
-			return Tag.NULL;
-		}
-
-		final String[] split = string.split("\000");
-		if (split.length == 0) {
-			return Tag.NULL;
-		}
-
-		return Tag.getTag(split);
 	}
 
 	static String formatDescriptorToString(IBookCollection.FormatDescriptor descriptor) {

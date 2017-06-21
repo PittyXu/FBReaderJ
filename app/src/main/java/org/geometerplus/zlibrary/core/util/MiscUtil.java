@@ -28,9 +28,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class MiscUtil {
-	public static boolean isEmptyString(String s) {
-		return s == null || "".equals(s);
-	}
 
 	public static <T> boolean listsEquals(List<T> list1, List<T> list2) {
 		if (list1 == null) {

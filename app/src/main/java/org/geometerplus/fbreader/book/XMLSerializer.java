@@ -77,21 +77,6 @@ class XMLSerializer extends AbstractSerializer {
 				"displayName", author.DisplayName,
 				"sorkKey", author.SortKey
 			);
-		} else if (filter instanceof Filter.ByTag) {
-			final LinkedList<String> lst = new LinkedList<String>();
-			for (Tag t = ((Filter.ByTag)filter).Tag; t != null; t = t.Parent) {
-				lst.add(0, t.Name);
-			}
-			final String[] params = new String[lst.size() * 2 + 2];
-			int index = 0;
-			params[index++] = "type";
-			params[index++] = "tag";
-			int num = 0;
-			for (String name : lst) {
-				params[index++] = "name" + num++;
-				params[index++] = name;
-			}
-			appendTag(buffer, "filter", true, params);
 		} else if (filter instanceof Filter.ByLabel) {
 			appendTag(buffer, "filter", true,
 				"type", "label",
@@ -194,14 +179,6 @@ class XMLSerializer extends AbstractSerializer {
 			appendTagWithContent(buffer, "uri", author.SortKey);
 			appendTagWithContent(buffer, "name", author.DisplayName);
 			closeTag(buffer, "author");
-		}
-
-		for (Tag tag : book.tags()) {
-			appendTag(
-				buffer, "category", true,
-				"term", tag.toString("/"),
-				"label", tag.Name
-			);
 		}
 
 		for (Label label : book.labels()) {
@@ -531,7 +508,6 @@ class XMLSerializer extends AbstractSerializer {
 		private final StringBuilder myUid = new StringBuilder();
 		private final ArrayList<UID> myUidList = new ArrayList<UID>();
 		private final ArrayList<Author> myAuthors = new ArrayList<Author>();
-		private final ArrayList<Tag> myTags = new ArrayList<Tag>();
 		private final ArrayList<Label> myLabels = new ArrayList<Label>();
 		private final StringBuilder myAuthorSortKey = new StringBuilder();
 		private final StringBuilder myAuthorName = new StringBuilder();
@@ -564,7 +540,6 @@ class XMLSerializer extends AbstractSerializer {
 			clear(myUid);
 			myUidList.clear();
 			myAuthors.clear();
-			myTags.clear();
 			myLabels.clear();
 			myHasBookmark = false;
 			myProgress = null;
@@ -582,9 +557,6 @@ class XMLSerializer extends AbstractSerializer {
 			);
 			for (Author author : myAuthors) {
 				myBook.addAuthorWithNoCheck(author);
-			}
-			for (Tag tag : myTags) {
-				myBook.addTagWithNoCheck(tag);
 			}
 			for (Label label : myLabels) {
 				myBook.addLabelWithNoCheck(label);
@@ -621,11 +593,6 @@ class XMLSerializer extends AbstractSerializer {
 						myState = State.READ_AUTHOR;
 						clear(myAuthorName);
 						clear(myAuthorSortKey);
-					} else if ("category".equals(localName)) {
-						final String term = attributes.getValue("term");
-						if (term != null) {
-							myTags.add(Tag.getTag(term.split("/")));
-						}
 					} else if ("label".equals(localName)) {
 						final String name = attributes.getValue("name");
 						if (name != null) {
@@ -791,14 +758,6 @@ class XMLSerializer extends AbstractSerializer {
 							attributes.getValue("displayName"),
 							attributes.getValue("sorkKey")
 						));
-					} else if ("tag".equals(type)) {
-						final LinkedList<String> names = new LinkedList<String>();
-						int num = 0;
-						String n;
-						while ((n = attributes.getValue("name" + num++)) != null) {
-							names.add(n);
-						}
-						myFilter = new Filter.ByTag(Tag.getTag(names.toArray(new String[names.size()])));
 					} else if ("label".equals(type)) {
 						myFilter = new Filter.ByLabel(attributes.getValue("name"));
 //					} else if ("series".equals(type)) {

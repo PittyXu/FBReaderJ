@@ -38,7 +38,6 @@ import org.geometerplus.fbreader.book.BooksDatabase;
 import org.geometerplus.fbreader.book.DbBook;
 import org.geometerplus.fbreader.book.IBookCollection;
 import org.geometerplus.fbreader.book.SerializerUtil;
-import org.geometerplus.fbreader.book.Tag;
 import org.geometerplus.fbreader.book.UID;
 import org.geometerplus.zlibrary.core.options.Config;
 import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
@@ -216,15 +215,6 @@ public class LibraryService extends Service {
 			final List<String> strings = new ArrayList<String>(authors.size());
 			for (Author a : authors) {
 				strings.add(Util.authorToString(a));
-			}
-			return strings;
-		}
-
-		public List<String> tags() {
-			final List<Tag> tags = myCollection.tags();
-			final List<String> strings = new ArrayList<String>(tags.size());
-			for (Tag t : tags) {
-				strings.add(Util.tagToString(t));
 			}
 			return strings;
 		}

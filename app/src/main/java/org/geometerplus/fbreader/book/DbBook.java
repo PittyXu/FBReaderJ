@@ -57,7 +57,6 @@ public final class DbBook extends AbstractBook {
 
 	void loadLists(BooksDatabase database, PluginCollection pluginCollection) {
 		myAuthors = database.listAuthors(myId);
-		myTags = database.listTags(myId);
 		myLabels = database.listLabels(myId);
 		myUids = database.listUids(myId);
 		myProgress = database.getProgress(myId);
@@ -139,10 +138,6 @@ public final class DbBook extends AbstractBook {
 				for (Author author : authors()) {
 					database.saveBookAuthorInfo(myId, index++, author);
 				}
-				database.deleteAllBookTags(myId);
-				for (Tag tag : tags()) {
-					database.saveBookTagInfo(myId, tag);
-				}
 				final List<Label> labelsInDb = database.listLabels(myId);
 				for (Label label : labelsInDb) {
 					if (myLabels == null || !myLabels.contains(label)) {
@@ -202,7 +197,6 @@ public final class DbBook extends AbstractBook {
 			ComparisonUtil.equal(myEncoding, other.myEncoding) &&
 			ComparisonUtil.equal(myLanguage, other.myLanguage) &&
 			ComparisonUtil.equal(myAuthors, other.myAuthors) &&
-			MiscUtil.listsEquals(myTags, other.myTags) &&
 			ComparisonUtil.equal(myUids, other.myUids);
 	}
 
@@ -218,11 +212,6 @@ public final class DbBook extends AbstractBook {
 		if (!ComparisonUtil.equal(myLanguage, other.myLanguage) &&
 			ComparisonUtil.equal(myLanguage, base.myLanguage)) {
 			setLanguage(other.myLanguage);
-		}
-		if (!MiscUtil.listsEquals(myTags, other.myTags) &&
-			MiscUtil.listsEquals(myTags, base.myTags)) {
-			myTags = other.myTags != null ? new ArrayList<Tag>(other.myTags) : null;
-			mySaveState = SaveState.NotSaved;
 		}
 		if (!MiscUtil.listsEquals(myUids, other.myUids) &&
 			MiscUtil.listsEquals(myUids, base.myUids)) {

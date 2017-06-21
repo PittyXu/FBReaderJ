@@ -19,7 +19,6 @@
 
 #include "Book.h"
 #include "Author.h"
-#include "Tag.h"
 
 bool BookComparator::operator() (
 	const shared_ptr<Book> book0,
@@ -48,39 +47,4 @@ bool AuthorComparator::operator() (
 
 	const int comp = author0->sortKey().compare(author1->sortKey());
 	return comp != 0 ? comp < 0 : author0->name() < author1->name();
-}
-
-bool TagComparator::operator() (
-	shared_ptr<Tag> tag0,
-	shared_ptr<Tag> tag1
-) const {
-	if (tag0.isNull()) {
-		return !tag1.isNull();
-	}
-	if (tag1.isNull()) {
-		return false;
-	}
-
-	std::size_t level0 = tag0->level();
-	std::size_t level1 = tag1->level();
-	if (level0 > level1) {
-		for (; level0 > level1; --level0) {
-			tag0 = tag0->parent();
-		}
-		if (tag0 == tag1) {
-			return false;
-		}
-	} else if (level0 < level1) {
-		for (; level0 < level1; --level1) {
-			tag1 = tag1->parent();
-		}
-		if (tag0 == tag1) {
-			return true;
-		}
-	}
-	while (tag0->parent() != tag1->parent()) {
-		tag0 = tag0->parent();
-		tag1 = tag1->parent();
-	}
-	return tag0->name() < tag1->name();
 }

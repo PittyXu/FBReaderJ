@@ -26,7 +26,6 @@
 #include "fbreader/src/formats/FormatPlugin.h"
 #include "fbreader/src/library/Author.h"
 #include "fbreader/src/library/Book.h"
-#include "fbreader/src/library/Tag.h"
 #include "fbreader/src/library/UID.h"
 
 static shared_ptr<FormatPlugin> findCppPlugin(jobject base) {
@@ -63,12 +62,6 @@ static void fillMetaInfo(JNIEnv* env, jobject javaBook, Book &book) {
 		JString name(env, author.name(), false);
 		JString key(env, author.sortKey(), false);
 		AndroidUtil::Method_Book_addAuthor->call(javaBook, name.j(), key.j());
-	}
-
-	const TagList &tags = book.tags();
-	for (std::size_t i = 0; i < tags.size(); ++i) {
-		const Tag &tag = *tags[i];
-		AndroidUtil::Method_Book_addTag->call(javaBook, tag.javaTag(env));
 	}
 
 	fillUids(env, javaBook, book);

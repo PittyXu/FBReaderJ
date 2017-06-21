@@ -52,7 +52,6 @@ JavaClass AndroidUtil::Class_PluginCollection("org/geometerplus/fbreader/formats
 JavaClass AndroidUtil::Class_Paths("org/geometerplus/fbreader/Paths");
 JavaClass AndroidUtil::Class_AbstractBook("org/geometerplus/fbreader/book/AbstractBook");
 JavaClass AndroidUtil::Class_Book("org/geometerplus/fbreader/book/Book");
-JavaClass AndroidUtil::Class_Tag("org/geometerplus/fbreader/book/Tag");
 JavaClass AndroidUtil::Class_BookModel("org/geometerplus/fbreader/bookmodel/BookModel");
 
 shared_ptr<StringMethod> AndroidUtil::Method_java_lang_String_toLowerCase;
@@ -111,10 +110,7 @@ shared_ptr<VoidMethod> AndroidUtil::Method_Book_setTitle;
 shared_ptr<VoidMethod> AndroidUtil::Method_Book_setLanguage;
 shared_ptr<VoidMethod> AndroidUtil::Method_Book_setEncoding;
 shared_ptr<VoidMethod> AndroidUtil::Method_Book_addAuthor;
-shared_ptr<VoidMethod> AndroidUtil::Method_Book_addTag;
 shared_ptr<VoidMethod> AndroidUtil::Method_Book_addUid;
-
-shared_ptr<StaticObjectMethod> AndroidUtil::StaticMethod_Tag_getTag;
 
 shared_ptr<ObjectField> AndroidUtil::Field_BookModel_Book;
 shared_ptr<VoidMethod> AndroidUtil::Method_BookModel_initInternalHyperlinks;
@@ -191,10 +187,7 @@ bool AndroidUtil::init(JavaVM* jvm) {
 	Method_Book_setLanguage = new VoidMethod(Class_AbstractBook, "setLanguage", "(Ljava/lang/String;)");
 	Method_Book_setEncoding = new VoidMethod(Class_AbstractBook, "setEncoding", "(Ljava/lang/String;)");
 	Method_Book_addAuthor = new VoidMethod(Class_AbstractBook, "addAuthor", "(Ljava/lang/String;Ljava/lang/String;)");
-	Method_Book_addTag = new VoidMethod(Class_AbstractBook, "addTag", "(Lorg/geometerplus/fbreader/book/Tag;)");
 	Method_Book_addUid = new VoidMethod(Class_AbstractBook, "addUid", "(Ljava/lang/String;Ljava/lang/String;)");
-
-	StaticMethod_Tag_getTag = new StaticObjectMethod(Class_Tag, "getTag", Class_Tag, "(Lorg/geometerplus/fbreader/book/Tag;Ljava/lang/String;)");
 
 	Field_BookModel_Book = new ObjectField(Class_BookModel, "Book", Class_Book);
 	Method_BookModel_initInternalHyperlinks = new VoidMethod(Class_BookModel, "initInternalHyperlinks", "(Ljava/lang/String;Ljava/lang/String;I)");

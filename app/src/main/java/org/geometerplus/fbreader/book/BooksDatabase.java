@@ -49,9 +49,6 @@ public abstract class BooksDatabase {
 	protected void addAuthor(DbBook book, Author author) {
 		book.addAuthorWithNoCheck(author);
 	}
-	protected void addTag(DbBook book, Tag tag) {
-		book.addTagWithNoCheck(tag);
-	}
 
 	protected abstract void executeAsTransaction(Runnable actions);
 
@@ -65,7 +62,6 @@ public abstract class BooksDatabase {
 	protected abstract List<String> listLabels();
 
 	protected abstract List<Author> listAuthors(long bookId);
-	protected abstract List<Tag> listTags(long bookId);
 	protected abstract List<Label> listLabels(long bookId);
 	protected abstract List<UID> listUids(long bookId);
 	protected abstract boolean hasVisibleBookmark(long bookId);
@@ -77,8 +73,6 @@ public abstract class BooksDatabase {
 	protected abstract long insertBookInfo(ZLFile file, String encoding, String language, String title);
 	protected abstract void deleteAllBookAuthors(long bookId);
 	protected abstract void saveBookAuthorInfo(long bookId, long index, Author author);
-	protected abstract void deleteAllBookTags(long bookId);
-	protected abstract void saveBookTagInfo(long bookId, Tag tag);
 	protected abstract void deleteAllBookUids(long bookId);
 	protected abstract void saveBookUid(long bookId, UID uid);
 	protected abstract void saveBookProgress(long bookId, RationalNumber progress);

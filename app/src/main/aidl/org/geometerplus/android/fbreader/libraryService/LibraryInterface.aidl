@@ -32,7 +32,6 @@ interface LibraryInterface {
 	String getRecentBook(in int index);
 
 	List<String> authors();
-	List<String> tags();
 	List<String> labels();
 	List<String> titles(in String query);
 	List<String> firstTitleLetters();

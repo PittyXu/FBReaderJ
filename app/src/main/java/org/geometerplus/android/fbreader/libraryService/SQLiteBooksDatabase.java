@@ -36,7 +36,6 @@ import org.geometerplus.fbreader.book.FileInfo;
 import org.geometerplus.fbreader.book.FileInfoSet;
 import org.geometerplus.fbreader.book.HighlightingStyle;
 import org.geometerplus.fbreader.book.Label;
-import org.geometerplus.fbreader.book.Tag;
 import org.geometerplus.fbreader.book.UID;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.options.Config;
@@ -233,28 +232,6 @@ final class SQLiteBooksDatabase extends BooksDatabase {
 		return book;
 	}
 
-	private boolean myTagCacheIsInitialized;
-	private final HashMap<Tag,Long> myIdByTag = new HashMap<Tag,Long>();
-	private final HashMap<Long,Tag> myTagById = new HashMap<Long,Tag>();
-
-	private void initTagCache() {
-		if (myTagCacheIsInitialized) {
-			return;
-		}
-		myTagCacheIsInitialized = true;
-
-		Cursor cursor = myDatabase.rawQuery("SELECT tag_id,parent_id,name FROM Tags ORDER BY tag_id", null);
-		while (cursor.moveToNext()) {
-			long id = cursor.getLong(0);
-			if (myTagById.get(id) == null) {
-				final Tag tag = Tag.getTag(myTagById.get(cursor.getLong(1)), cursor.getString(2));
-				myIdByTag.put(tag, id);
-				myTagById.put(id, tag);
-			}
-		}
-		cursor.close();
-	}
-
 	@Override
 	protected Map<Long,DbBook> loadBooks(FileInfoSet infos, boolean existing) {
 		Cursor cursor = myDatabase.rawQuery(
@@ -275,8 +252,6 @@ final class SQLiteBooksDatabase extends BooksDatabase {
 		}
 		cursor.close();
 
-		initTagCache();
-
 		cursor = myDatabase.rawQuery(
 			"SELECT author_id,name,sort_key FROM Authors", null
 		);
@@ -296,15 +271,6 @@ final class SQLiteBooksDatabase extends BooksDatabase {
 				if (author != null) {
 					addAuthor(book, author);
 				}
-			}
-		}
-		cursor.close();
-
-		cursor = myDatabase.rawQuery("SELECT book_id,tag_id FROM BookTag", null);
-		while (cursor.moveToNext()) {
-			final DbBook book = booksById.get(cursor.getLong(0));
-			if (book != null) {
-				addTag(book, getTagById(cursor.getLong(1)));
 			}
 		}
 		cursor.close();
@@ -455,90 +421,6 @@ final class SQLiteBooksDatabase extends BooksDatabase {
 		final ArrayList<Author> list = new ArrayList<Author>();
 		do {
 			list.add(new Author(cursor.getString(0), cursor.getString(1)));
-		} while (cursor.moveToNext());
-		cursor.close();
-		return list;
-	}
-
-	private long getTagId(Tag tag) {
-		final SQLiteStatement getTagIdStatement = get(
-			"SELECT tag_id FROM Tags WHERE parent_id=? AND name=?"
-		);
-		{
-			final Long id = myIdByTag.get(tag);
-			if (id != null) {
-				return id;
-			}
-		}
-		if (tag.Parent != null) {
-			getTagIdStatement.bindLong(1, getTagId(tag.Parent));
-		} else {
-			getTagIdStatement.bindNull(1);
-		}
-		getTagIdStatement.bindString(2, tag.Name);
-		long id;
-		try {
-			id = getTagIdStatement.simpleQueryForLong();
-		} catch (SQLException e) {
-			final SQLiteStatement createTagIdStatement = get(
-				"INSERT OR IGNORE INTO Tags (parent_id,name) VALUES (?,?)"
-			);
-			if (tag.Parent != null) {
-				createTagIdStatement.bindLong(1, getTagId(tag.Parent));
-			} else {
-				createTagIdStatement.bindNull(1);
-			}
-			createTagIdStatement.bindString(2, tag.Name);
-			id = createTagIdStatement.executeInsert();
-		}
-		myIdByTag.put(tag, id);
-		myTagById.put(id, tag);
-		return id;
-	}
-
-	protected void deleteAllBookTags(long bookId) {
-		final SQLiteStatement statement = get("DELETE FROM BookTag WHERE book_id=?");
-		synchronized (statement) {
-			statement.bindLong(1, bookId);
-			statement.execute();
-		}
-	}
-
-	protected void saveBookTagInfo(long bookId, Tag tag) {
-		final SQLiteStatement statement = get(
-			"INSERT OR IGNORE INTO BookTag (book_id,tag_id) VALUES (?,?)"
-		);
-		synchronized (statement) {
-			statement.bindLong(1, bookId);
-			statement.bindLong(2, getTagId(tag));
-			statement.execute();
-		}
-	}
-
-	private Tag getTagById(long id) {
-		Tag tag = myTagById.get(id);
-		if (tag == null) {
-			final Cursor cursor = myDatabase.rawQuery("SELECT parent_id,name FROM Tags WHERE tag_id = ?", new String[] { String.valueOf(id) });
-			if (cursor.moveToNext()) {
-				final Tag parent = cursor.isNull(0) ? null : getTagById(cursor.getLong(0));
-				tag = Tag.getTag(parent, cursor.getString(1));
-				myIdByTag.put(tag, id);
-				myTagById.put(id, tag);
-			}
-			cursor.close();
-		}
-		return tag;
-	}
-
-	protected List<Tag> listTags(long bookId) {
-		final Cursor cursor = myDatabase.rawQuery("SELECT Tags.tag_id FROM BookTag INNER JOIN Tags ON Tags.tag_id = BookTag.tag_id WHERE BookTag.book_id = ?", new String[] { String.valueOf(bookId) });
-		if (!cursor.moveToNext()) {
-			cursor.close();
-			return null;
-		}
-		final ArrayList<Tag> list = new ArrayList<Tag>();
-		do {
-			list.add(getTagById(cursor.getLong(0)));
 		} while (cursor.moveToNext());
 		cursor.close();
 		return list;

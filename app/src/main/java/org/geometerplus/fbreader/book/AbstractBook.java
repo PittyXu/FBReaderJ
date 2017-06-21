@@ -36,7 +36,6 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 	protected volatile String myEncoding;
 	protected volatile String myLanguage;
 	protected volatile List<Author> myAuthors;
-	protected volatile List<Tag> myTags;
 	protected volatile List<Label> myLabels;
 //	protected volatile SeriesInfo mySeriesInfo;
 	protected volatile List<UID> myUids;
@@ -71,10 +70,6 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 		setLanguage(book.myLanguage);
 		if (!ComparisonUtil.equal(myAuthors, book.myAuthors)) {
 			myAuthors = book.myAuthors != null ? new ArrayList<Author>(book.myAuthors) : null;
-			mySaveState = SaveState.NotSaved;
-		}
-		if (!ComparisonUtil.equal(myTags, book.myTags)) {
-			myTags = book.myTags != null ? new ArrayList<Tag>(book.myTags) : null;
 			mySaveState = SaveState.NotSaved;
 		}
 		if (!MiscUtil.listsEquals(myLabels, book.myLabels)) {
@@ -195,64 +190,6 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 		}
 	}
 
-	public List<Tag> tags() {
-		return myTags != null
-			? Collections.unmodifiableList(myTags)
-			: Collections.<Tag>emptyList();
-	}
-
-	public final String tagsString(String separator) {
-		final List<Tag> tags = myTags;
-		if (tags == null || tags.isEmpty()) {
-			return null;
-		}
-
-		final HashSet<String> tagNames = new HashSet<String>();
-		final StringBuilder buffer = new StringBuilder();
-		boolean first = true;
-		for (Tag t : tags) {
-			if (!first) {
-				buffer.append(separator);
-			}
-			if (!tagNames.contains(t.Name)) {
-				tagNames.add(t.Name);
-				buffer.append(t.Name);
-				first = false;
-			}
-		}
-		return buffer.toString();
-	}
-
-	void addTagWithNoCheck(Tag tag) {
-		if (myTags == null) {
-			myTags = new ArrayList<Tag>();
-		}
-		myTags.add(tag);
-	}
-
-	public void removeAllTags() {
-		if (myTags != null) {
-			myTags = null;
-			mySaveState = SaveState.NotSaved;
-		}
-	}
-
-	public void addTag(Tag tag) {
-		if (tag != null) {
-			if (myTags == null) {
-				myTags = new ArrayList<Tag>();
-			}
-			if (!myTags.contains(tag)) {
-				myTags.add(tag);
-				mySaveState = SaveState.NotSaved;
-			}
-		}
-	}
-
-	public void addTag(String tagName) {
-		addTag(Tag.getTag(null, tagName));
-	}
-
 	public boolean hasLabel(String name) {
 		for (Label l : labels()) {
 			if (name.equals(l.Name)) {
@@ -352,13 +289,6 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 		if (myAuthors != null) {
 			for (Author author : myAuthors) {
 				if (MiscUtil.matchesIgnoreCase(author.DisplayName, pattern)) {
-					return true;
-				}
-			}
-		}
-		if (myTags != null) {
-			for (Tag tag : myTags) {
-				if (MiscUtil.matchesIgnoreCase(tag.Name, pattern)) {
 					return true;
 				}
 			}

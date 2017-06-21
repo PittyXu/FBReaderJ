@@ -63,7 +63,6 @@ public: // unmodifiable book methods
 	const std::string &language() const;
 	const std::string &encoding() const;
 
-	const TagList &tags() const;
 	const AuthorList &authors() const;
 	const UIDList &uids() const;
 
@@ -74,13 +73,6 @@ public: // modifiable book methods
 	void setSeries(const std::string &title, const std::string &index);
 
 public:
-	bool addTag(shared_ptr<Tag> tag);
-	bool addTag(const std::string &fullName);
-	bool removeTag(shared_ptr<Tag> tag, bool includeSubTags);
-	bool renameTag(shared_ptr<Tag> from, shared_ptr<Tag> to, bool includeSubTags);
-	bool cloneTag(shared_ptr<Tag> from, shared_ptr<Tag> to, bool includeSubTags);
-	void removeAllTags();
-
 	void addAuthor(shared_ptr<Author> author);
 	void addAuthor(const std::string &displayName, const std::string &sortKey = std::string());
 	bool replaceAuthor(shared_ptr<Author> from, shared_ptr<Author> to);
@@ -101,9 +93,6 @@ private:
 	std::string myTitle;
 	std::string myLanguage;
 	std::string myEncoding;
-	std::string mySeriesTitle;
-	std::string myIndexInSeries;
-	TagList myTags;
 	AuthorList myAuthors;
 	UIDList myUIDs;
 
@@ -135,7 +124,6 @@ inline const ZLFile &Book::file() const { return myFile; }
 inline const std::string &Book::language() const { return myLanguage; }
 inline const std::string &Book::encoding() const { return myEncoding; }
 
-inline const TagList &Book::tags() const { return myTags; }
 inline const AuthorList &Book::authors() const { return myAuthors; }
 inline const UIDList &Book::uids() const { return myUIDs; }
 

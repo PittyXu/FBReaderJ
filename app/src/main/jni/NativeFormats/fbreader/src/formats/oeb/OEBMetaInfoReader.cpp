@@ -30,7 +30,6 @@
 OEBMetaInfoReader::OEBMetaInfoReader(Book &book) : myBook(book) {
 	myBook.removeAllAuthors();
 	myBook.setTitle("");
-	myBook.removeAllTags();
 	myBook.removeAllUids();
 }
 
@@ -109,11 +108,6 @@ void OEBMetaInfoReader::endElementHandler(const char *tag) {
 		case READ_AUTHOR2:
 			if (!myBuffer.empty()) {
 				myAuthorList2.push_back(myBuffer);
-			}
-			break;
-		case READ_SUBJECT:
-			if (!myBuffer.empty()) {
-				myBook.addTag(myBuffer);
 			}
 			break;
 		case READ_TITLE:
