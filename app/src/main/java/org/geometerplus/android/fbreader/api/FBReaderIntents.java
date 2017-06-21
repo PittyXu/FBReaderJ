@@ -42,11 +42,6 @@ public abstract class FBReaderIntents {
 		String PREFERENCES                      = "android.fbreader.action.PREFERENCES";
 		String EDIT_STYLES                      = "android.fbreader.action.EDIT_STYLES";
 		String EDIT_BOOKMARK                    = "android.fbreader.action.EDIT_BOOKMARK";
-		String SWITCH_YOTA_SCREEN               = "android.fbreader.action.SWITCH_YOTA_SCREEN";
-
-		String PLUGIN_VIEW                      = "android.fbreader.action.plugin.VIEW";
-		String PLUGIN_KILL                      = "android.fbreader.action.plugin.KILL";
-		String PLUGIN_CONNECT_COVER_SERVICE     = "android.fbreader.action.plugin.CONNECT_COVER_SERVICE";
 	}
 
 	public interface Event {

@@ -297,10 +297,6 @@ public class ApiClientImplementation implements ServiceConnection, Api, ApiMetho
 		return requestString(GET_BOOK_TITLE, EMPTY_PARAMETERS);
 	}
 
-	public List<String> getBookTags() throws ApiException {
-		return requestStringList(LIST_BOOK_TAGS, EMPTY_PARAMETERS);
-	}
-
 	public String getBookFilePath() throws ApiException {
 		return requestString(GET_BOOK_FILE_PATH, EMPTY_PARAMETERS);
 	}
@@ -331,10 +327,6 @@ public class ApiClientImplementation implements ServiceConnection, Api, ApiMetho
 
 	public String getBookTitle(long id) throws ApiException {
 		return requestString(GET_BOOK_TITLE, envelope(id));
-	}
-
-	public List<String> getBookTags(long id) throws ApiException {
-		return requestStringList(LIST_BOOK_TAGS, envelope(id));
 	}
 
 	public String getBookFilePath(long id) throws ApiException {

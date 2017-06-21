@@ -31,7 +31,7 @@ import org.geometerplus.android.fbreader.util.AndroidImageSynchronizer;
 import java.io.IOException;
 
 public class DataService extends Service {
-	final AndroidImageSynchronizer ImageSynchronizer = new AndroidImageSynchronizer(this);
+	final AndroidImageSynchronizer ImageSynchronizer = new AndroidImageSynchronizer();
 
 	public static class Connection implements ServiceConnection {
 		private DataInterface myDataInterface;
@@ -86,7 +86,6 @@ public class DataService extends Service {
 				}
 			}).start();
 		}
-		ImageSynchronizer.clear();
 		super.onDestroy();
 	}
 

@@ -19,71 +19,12 @@
 
 package org.geometerplus.android.fbreader.util;
 
-import android.app.Activity;
-import android.app.Service;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
-
-import org.geometerplus.android.fbreader.api.FBReaderIntents;
-import org.geometerplus.android.fbreader.formatPlugin.CoverReader;
-import org.geometerplus.fbreader.formats.ExternalFormatPlugin;
-import org.geometerplus.fbreader.formats.PluginImage;
 import org.geometerplus.zlibrary.core.image.ZLImageProxy;
 import org.geometerplus.zlibrary.core.image.ZLImageSimpleProxy;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
-import org.geometerplus.zlibrary.ui.android.image.ZLBitmapImage;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class AndroidImageSynchronizer implements ZLImageProxy.Synchronizer {
-	private static final class Connection implements ServiceConnection {
-		private final ExecutorService myExecutor = Executors.newSingleThreadExecutor();
-
-		private volatile CoverReader Reader;
-		private final List<Runnable> myPostActions = new LinkedList<Runnable>();
-
-		Connection() {
-		}
-
-		synchronized void runOrAddAction(Runnable action) {
-			if (Reader != null) {
-				myExecutor.execute(action);
-			} else {
-				myPostActions.add(action);
-			}
-		}
-
-		public synchronized void onServiceConnected(ComponentName className, IBinder binder) {
-			Reader = CoverReader.Stub.asInterface(binder);
-			for (Runnable action : myPostActions) {
-				myExecutor.execute(action);
-			}
-			myPostActions.clear();
-		}
-
-		public synchronized void onServiceDisconnected(ComponentName className) {
-			Reader = null;
-		}
-	}
-
-	private final Context myContext;
-	private final Map<ExternalFormatPlugin,Connection> myConnections =
-		new HashMap<ExternalFormatPlugin,Connection>();
-
-	public AndroidImageSynchronizer(Activity activity) {
-		myContext = activity;
-	}
-
-	public AndroidImageSynchronizer(Service service) {
-		myContext = service;
+	public AndroidImageSynchronizer() {
 	}
 
 	@Override
@@ -104,45 +45,8 @@ public class AndroidImageSynchronizer implements ZLImageProxy.Synchronizer {
 			if (postAction != null) {
 				postAction.run();
 			}
-		} else if (image instanceof PluginImage) {
-			final PluginImage pluginImage = (PluginImage)image;
-			final Connection connection = getConnection(pluginImage.Plugin);
-			connection.runOrAddAction(new Runnable() {
-				public void run() {
-					try {
-						pluginImage.setRealImage(new ZLBitmapImage(connection.Reader.readBitmap(pluginImage.File.getPath(), Integer.MAX_VALUE, Integer.MAX_VALUE)));
-					} catch (Throwable t) {
-						t.printStackTrace();
-					}
-					if (postAction != null) {
-						postAction.run();
-					}
-				}
-			});
 		} else {
 			throw new RuntimeException("Cannot synchronize " + image.getClass());
 		}
-	}
-
-	public synchronized void clear() {
-		for (ServiceConnection connection : myConnections.values()) {
-			myContext.unbindService(connection);
-		}
-		myConnections.clear();
-	}
-
-	private synchronized Connection getConnection(ExternalFormatPlugin plugin) {
-		Connection connection = myConnections.get(plugin);
-		if (connection == null) {
-			connection = new Connection();
-			myConnections.put(plugin, connection);
-			myContext.bindService(
-				new Intent(FBReaderIntents.Action.PLUGIN_CONNECT_COVER_SERVICE)
-					.setPackage(plugin.packageName()),
-				connection,
-				Context.BIND_AUTO_CREATE
-			);
-		}
-		return connection;
 	}
 }

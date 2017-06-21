@@ -38,9 +38,7 @@ public class PluginCollection implements IFormatPluginCollection {
 	private static volatile PluginCollection ourInstance;
 
 	private final List<BuiltinFormatPlugin> myBuiltinPlugins =
-		new LinkedList<BuiltinFormatPlugin>();
-	private final List<ExternalFormatPlugin> myExternalPlugins =
-		new LinkedList<ExternalFormatPlugin>();
+			new LinkedList<>();
 
 	public static PluginCollection Instance(SystemInfo systemInfo) {
 		if (ourInstance == null) {
@@ -73,11 +71,7 @@ public class PluginCollection implements IFormatPluginCollection {
 
 	public FormatPlugin getPlugin(ZLFile file) {
 		final FileType fileType = FileTypeCollection.Instance.typeForFile(file);
-		final FormatPlugin plugin = getPlugin(fileType);
-		if (plugin instanceof ExternalFormatPlugin) {
-			return file == file.getPhysicalFile() ? plugin : null;
-		}
-		return plugin;
+		return getPlugin(fileType);
 	}
 
 	public FormatPlugin getPlugin(FileType fileType) {
@@ -90,18 +84,12 @@ public class PluginCollection implements IFormatPluginCollection {
 				return p;
 			}
 		}
-		for (FormatPlugin p : myExternalPlugins) {
-			if (fileType.Id.equalsIgnoreCase(p.supportedFileType())) {
-				return p;
-			}
-		}
 		return null;
 	}
 
 	public List<FormatPlugin> plugins() {
 		final ArrayList<FormatPlugin> all = new ArrayList<FormatPlugin>();
 		all.addAll(myBuiltinPlugins);
-		all.addAll(myExternalPlugins);
 		Collections.sort(all, new Comparator<FormatPlugin>() {
 			public int compare(FormatPlugin p0, FormatPlugin p1) {
 				final int diff = p0.priority() - p1.priority();

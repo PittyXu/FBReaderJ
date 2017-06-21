@@ -34,7 +34,6 @@ import org.geometerplus.fbreader.fbreader.options.MiscOptions;
 import org.geometerplus.fbreader.fbreader.options.PageTurningOptions;
 import org.geometerplus.fbreader.fbreader.options.ViewOptions;
 import org.geometerplus.fbreader.formats.BookReadingException;
-import org.geometerplus.fbreader.formats.ExternalFormatPlugin;
 import org.geometerplus.fbreader.formats.FormatPlugin;
 import org.geometerplus.fbreader.formats.PluginCollection;
 import org.geometerplus.fbreader.util.AutoTextSnippet;
@@ -62,16 +61,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public final class FBReaderApp extends ZLApplication {
-	public interface ExternalFileOpener {
-		void openFile(ExternalFormatPlugin plugin, Book book, Bookmark bookmark);
-	}
-
-	private ExternalFileOpener myExternalFileOpener;
-
-	public void setExternalFileOpener(ExternalFileOpener o) {
-		myExternalFileOpener = o;
-	}
-
 	public final MiscOptions MiscOptions = new MiscOptions();
 	public final ImageOptions ImageOptions = new ImageOptions();
 	public final ViewOptions ViewOptions = new ViewOptions();
@@ -333,22 +322,6 @@ public final class FBReaderApp extends ZLApplication {
 			plugin = BookUtil.getPlugin(pluginCollection, book);
 		} catch (BookReadingException e) {
 			processException(e);
-			return;
-		}
-
-		if (plugin instanceof ExternalFormatPlugin) {
-			ExternalBook = book;
-			final Bookmark bm;
-			if (bookmark != null) {
-				bm = bookmark;
-			} else {
-				ZLTextPosition pos = getStoredPosition(book);
-				if (pos == null) {
-					pos = new ZLTextFixedPosition(0, 0, 0);
-				}
-				bm = new Bookmark(Collection, book, "", new EmptyTextSnippet(pos), false);
-			}
-			myExternalFileOpener.openFile((ExternalFormatPlugin)plugin, book, bm);
 			return;
 		}
 

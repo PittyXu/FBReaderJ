@@ -34,7 +34,6 @@ import org.geometerplus.android.fbreader.api.ApiListener;
 import org.geometerplus.android.fbreader.api.ApiServerImplementation;
 import org.geometerplus.android.fbreader.api.FBReaderIntents;
 import org.geometerplus.android.fbreader.api.MenuNode;
-import org.geometerplus.android.fbreader.formatPlugin.PluginUtil;
 import org.geometerplus.android.fbreader.httpd.DataService;
 import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
 import org.geometerplus.android.util.UIMessageUtil;
@@ -47,7 +46,6 @@ import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.fbreader.options.ColorProfile;
-import org.geometerplus.fbreader.formats.ExternalFormatPlugin;
 import org.geometerplus.fbreader.formats.PluginCollection;
 import org.geometerplus.zlibrary.core.application.ZLApplicationWindow;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
@@ -186,8 +184,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		myFBReaderApp.setWindow(this);
 		myFBReaderApp.initWindow();
 
-		myFBReaderApp.setExternalFileOpener(new ExternalFileOpener(this));
-
 		if (myFBReaderApp.getPopupById(TextSearchPopup.ID) == null) {
 			new TextSearchPopup(myFBReaderApp);
 		}
@@ -245,22 +241,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 			myFBReaderApp.runAction(data.getEncodedSchemeSpecificPart(), data.getFragment());
 		} else if (Intent.ACTION_VIEW.equals(action) || FBReaderIntents.Action.VIEW.equals(action)) {
 			myOpenBookIntent = intent;
-			if (myFBReaderApp.Model == null && myFBReaderApp.ExternalBook != null) {
-				final BookCollectionShadow collection = getCollection();
-				final Book b = FBReaderIntents.getBookExtra(intent, collection);
-				if (!collection.sameBook(b, myFBReaderApp.ExternalBook)) {
-					try {
-						final ExternalFormatPlugin plugin =
-							(ExternalFormatPlugin)BookUtil.getPlugin(
-								PluginCollection.Instance(Paths.systemInfo(this)),
-								myFBReaderApp.ExternalBook
-							);
-						startActivity(PluginUtil.createIntent(plugin, FBReaderIntents.Action.PLUGIN_KILL));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			}
 		} else if (Intent.ACTION_SEARCH.equals(action)) {
 			final String pattern = intent.getStringExtra(SearchManager.QUERY);
 			final Runnable runnable = new Runnable() {

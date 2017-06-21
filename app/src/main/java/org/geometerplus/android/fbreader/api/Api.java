@@ -23,7 +23,6 @@ public interface Api {
 	String getBookLanguage() throws ApiException;
 	String getBookTitle() throws ApiException;
 	List<String> getBookAuthors() throws ApiException;
-	List<String> getBookTags() throws ApiException;
 	String getBookFilePath() throws ApiException;
 	String getBookHash() throws ApiException;
 	String getBookUniqueId() throws ApiException;
@@ -33,7 +32,6 @@ public interface Api {
 	String getBookLanguage(long id) throws ApiException;
 	String getBookTitle(long id) throws ApiException;
 	//List<String> getBookAuthors(long id) throws ApiException;
-	List<String> getBookTags(long id) throws ApiException;
 	String getBookFilePath(long id) throws ApiException;
 	String getBookHash(long id) throws ApiException;
 	String getBookUniqueId(long id) throws ApiException;

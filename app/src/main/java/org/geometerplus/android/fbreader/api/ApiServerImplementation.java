@@ -271,8 +271,6 @@ public class ApiServerImplementation extends ApiInterface.Stub implements Api, A
 					return ApiObject.envelopeStringList(getOptionNames(
 						((ApiObject.String)parameters[0]).Value
 					));
-				case LIST_BOOK_TAGS:
-					return ApiObject.envelopeStringList(getBookTags());
 				case LIST_BOOK_AUTHORS:
 					return ApiObject.envelopeStringList(getBookAuthors());
 				case LIST_ACTIONS:
@@ -352,11 +350,6 @@ public class ApiServerImplementation extends ApiInterface.Stub implements Api, A
 		return book != null ? book.getTitle() : null;
 	}
 
-	public List<String> getBookTags() {
-		// TODO: implement
-		return Collections.emptyList();
-	}
-
 	public float getBookProgress() {
 		final Book book = getReader().getCurrentBook();
 		if (book == null) {
@@ -411,11 +404,6 @@ public class ApiServerImplementation extends ApiInterface.Stub implements Api, A
 	public String getBookTitle(long id) {
 		// TODO: implement
 		return null;
-	}
-
-	public List<String> getBookTags(long id) {
-		// TODO: implement
-		return Collections.emptyList();
 	}
 
 	public String getBookFilePath(long id) {

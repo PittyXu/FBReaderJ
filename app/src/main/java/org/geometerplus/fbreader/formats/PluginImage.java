@@ -25,12 +25,10 @@ import org.geometerplus.zlibrary.core.image.ZLImageProxy;
 
 public final class PluginImage extends ZLImageProxy {
 	public final ZLFile File;
-	public final ExternalFormatPlugin Plugin;
 	private volatile ZLImage myImage;
 
-	PluginImage(ZLFile file, ExternalFormatPlugin plugin) {
+	PluginImage(ZLFile file) {
 		File = file;
-		Plugin = plugin;
 	}
 
 	public final synchronized void setRealImage(ZLImage image) {
