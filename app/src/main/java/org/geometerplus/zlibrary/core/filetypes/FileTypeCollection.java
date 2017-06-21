@@ -33,13 +33,10 @@ public class FileTypeCollection {
 
 	private FileTypeCollection() {
 		addType(new FileTypeEpub());
-		addType(new FileTypeMobipocket());
 		addType(new FileTypeHtml());
 		addType(new SimpleFileType("txt", "txt", MimeType.TYPES_TXT));
 		addType(new SimpleFileType("RTF", "rtf", MimeType.TYPES_RTF));
-		addType(new SimpleFileType("PDF", "pdf", MimeType.TYPES_PDF));
 		addType(new SimpleFileType("ZIP archive", "zip", Collections.singletonList(MimeType.APP_ZIP)));
-		addType(new SimpleFileType("msdoc", "doc", MimeType.TYPES_DOC));
 	}
 
 	private void addType(FileType type) {

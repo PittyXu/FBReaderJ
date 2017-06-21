@@ -1020,9 +1020,6 @@
 		<node name="widgets" value="Widgets">
 			<node name="summary" value="将书籍添加到主屏幕"/>
 		</node>
-		<node name="pdf" value="PDF">
-			<node name="summary" value="用 PDF 格式阅读书籍"/>
-		</node>
 	</node>
 	<node name="drm">
 		<node name="encryptedSection" value="加密部分"/>

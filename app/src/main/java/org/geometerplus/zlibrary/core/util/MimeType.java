@@ -73,19 +73,9 @@ public final class MimeType {
 	// unofficial, used by flibusta catalog
 	public static final MimeType APP_EPUB = get("application/epub");
 	// ???
-	public static final MimeType APP_MOBIPOCKET = get("application/x-mobipocket-ebook");
-	// ???
-	//public static final MimeType APP_MOBI = get("application/mobi");
 	// unofficial, used by Calibre server
 	// unofficial, used by FBReder book network
 	// http://www.iana.org/assignments/media-types/application/index.html
-	public static final MimeType APP_PDF = get("application/pdf");
-	// ???
-	public static final MimeType APP_XPDF = get("application/x-pdf");
-	// ???
-	public static final MimeType TEXT_PDF = get("text/pdf");
-	// ???
-	public static final MimeType APP_VND_PDF = get("application/vnd.pdf");
 	// http://www.iana.org/assignments/media-types/application/index.html
 	public static final MimeType APP_RTF = get("application/rtf");
 	// unofficial, used by flibusta catalog
@@ -95,28 +85,12 @@ public final class MimeType {
 	// unofficial, used by flibusta catalog
 	public static final MimeType APP_HTMLHTM = get("application/html+htm");
 	// unofficial, used by flibusta catalog
-	public static final MimeType APP_DOC = get("application/doc");
 	// http://www.iana.org/assignments/media-types/application/index.html
-	public static final MimeType APP_MSWORD = get("application/msword");
-	// unofficial, used by data.fbreader.org LitRes catalog & FBReader book nework
-	// http://www.iana.org/assignments/media-types/application/index.html
-	public static final MimeType APP_ATOM_XML = get("application/atom+xml");
-	public static final MimeType APP_ATOM_XML_ENTRY = get("application/atom+xml;type=entry");
-	public static final MimeType OPDS = get("application/atom+xml;profile=opds");
-	// http://tools.ietf.org/id/draft-nottingham-rss-media-type-00.txt
-	public static final MimeType APP_RSS_XML = get("application/rss+xml");
-	// ???
-	public static final MimeType APP_OPENSEARCHDESCRIPTION = get("application/opensearchdescription+xml");
-	// unofficial, used by data.fbreader.org LitRes catalog
-	public static final MimeType APP_LITRES = get("application/litres+xml");
-	//???
 	// MIME types / text
 	// ???
-	public static final MimeType TEXT_XML = get("text/xml");
 	// http://www.iana.org/assignments/media-types/text/index.html
 	public static final MimeType TEXT_HTML = get("text/html");
 	// ???
-	public static final MimeType TEXT_XHTML = get("text/xhtml");
 	// http://www.iana.org/assignments/media-types/text/index.html
 	public static final MimeType TEXT_PLAIN = get("text/plain");
 	// http://www.iana.org/assignments/media-types/text/index.html
@@ -124,15 +98,10 @@ public final class MimeType {
 	// unofficial, used by Calibre OPDS server
 
 	// MIME images
-	public static final String IMAGE_PREFIX = "image/";
 	// http://www.iana.org/assignments/media-types/image/index.html
 	public static final MimeType IMAGE_PNG = get("image/png");
 	// http://www.iana.org/assignments/media-types/image/index.html
 	public static final MimeType IMAGE_JPEG = get("image/jpeg");
-	// ???
-	public static final MimeType IMAGE_AUTO = get("image/auto");
-	// ???
-	public static final MimeType IMAGE_PALM = get("image/palm");
 	// http://www.iana.org/assignments/media-types/image/index.html
 	// ???
 	// video
@@ -148,18 +117,12 @@ public final class MimeType {
 
 	public static final List<MimeType> TYPES_EPUB
 		 = Arrays.asList(APP_EPUB_ZIP, APP_EPUB);
-	public static final List<MimeType> TYPES_MOBIPOCKET
-		 = Arrays.asList(APP_MOBIPOCKET);
 	public static final List<MimeType> TYPES_TXT
 		 = Arrays.asList(TEXT_PLAIN, APP_TXT);
 	public static final List<MimeType> TYPES_RTF
 		 = Arrays.asList(APP_RTF, TEXT_RTF);
 	public static final List<MimeType> TYPES_HTML
 		 = Arrays.asList(TEXT_HTML, APP_HTML, APP_HTMLHTM);
-	public static final List<MimeType> TYPES_PDF
-		 = Arrays.asList(APP_PDF, APP_XPDF, TEXT_PDF, APP_VND_PDF);
-	public static final List<MimeType> TYPES_DOC
-		 = Arrays.asList(APP_MSWORD, APP_DOC);
 
 	public final String Name;
 

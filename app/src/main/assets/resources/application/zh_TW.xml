@@ -1182,9 +1182,6 @@
 		<node name="widgets" value="Widgets" toBeTranslated="true">
 			<node name="summary" value="Add books to your home screen" toBeTranslated="true"/>
 		</node>
-		<node name="pdf" value="PDF" toBeTranslated="true">
-			<node name="summary" value="Read books in PDF format" toBeTranslated="true"/>
-		</node>
 	</node>
 	<node name="drm">
 		<node name="encryptedSection" value="Encrypted section" toBeTranslated="true"/>

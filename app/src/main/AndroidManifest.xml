@@ -58,11 +58,9 @@
                 <data android:host="" android:scheme="file" />
                 <data android:pathPattern=".*\\.epub" />
                 <data android:pathPattern=".*\\.oeb" />
-                <data android:pathPattern=".*\\.mobi" />
                 <data android:pathPattern=".*\\.prc" />
                 <data android:pathPattern=".*\\.txt" />
                 <data android:pathPattern=".*\\.rtf" />
-                <data android:pathPattern=".*\\.pdf" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -70,11 +68,9 @@
                 <data android:host="" android:scheme="file" android:mimeType="text/plain" />
                 <data android:pathPattern=".*\\.epub" />
                 <data android:pathPattern=".*\\.oeb" />
-                <data android:pathPattern=".*\\.mobi" />
                 <data android:pathPattern=".*\\.prc" />
                 <data android:pathPattern=".*\\.txt" />
                 <data android:pathPattern=".*\\.rtf" />
-                <data android:pathPattern=".*\\.pdf" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -86,8 +82,6 @@
                 <data android:mimeType="application/x-mobipocket-ebook" />
                 <data android:mimeType="application/x-fictionbook+xml" />
                 <data android:mimeType="application/x-fictionbook" />
-                <data android:mimeType="application/pdf" />
-                <data android:mimeType="application/x-pdf" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
             <intent-filter>

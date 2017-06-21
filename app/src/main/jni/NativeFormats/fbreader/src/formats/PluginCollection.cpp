@@ -29,13 +29,8 @@
 
 #include "html/HtmlPlugin.h"
 #include "txt/TxtPlugin.h"
-#include "pdb/PdbPlugin.h"
-//#include "tcr/TcrPlugin.h"
 #include "oeb/OEBPlugin.h"
-//#include "chm/CHMPlugin.h"
 #include "rtf/RtfPlugin.h"
-//#include "openreader/OpenReaderPlugin.h"
-#include "doc/DocPlugin.h"
 
 PluginCollection *PluginCollection::ourInstance = 0;
 
@@ -44,10 +39,8 @@ PluginCollection &PluginCollection::Instance() {
 		ourInstance = new PluginCollection();
 		ourInstance->myPlugins.push_back(new HtmlPlugin());
 		ourInstance->myPlugins.push_back(new TxtPlugin());
-		ourInstance->myPlugins.push_back(new MobipocketPlugin());
 		ourInstance->myPlugins.push_back(new OEBPlugin());
 		ourInstance->myPlugins.push_back(new RtfPlugin());
-		ourInstance->myPlugins.push_back(new DocPlugin());
 	}
 	return *ourInstance;
 }

@@ -2,11 +2,8 @@
 <resources>
 	<node name="format">
 		<node name="ePub" value="ePub"/>
-		<node name="mobi" value="Mobipocket (azw3, kindle)"/>
 		<node name="txt" value="txt"/>
-		<node name="msdoc" value="Microsoft Word"/>
 		<node name="HTML" value="HTML"/>
 		<node name="RTF" value="RTF"/>
-		<node name="PDF" value="PDF"/>
 	</node>
 </resources>
