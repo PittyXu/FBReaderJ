@@ -43,9 +43,7 @@ public final class BookModel {
 			return model;
 		}
 
-		throw new BookReadingException(
-			"unknownPluginType", null, new String[] { String.valueOf(plugin) }
-		);
+		throw new BookReadingException("未知插件类型: " + plugin, null);
 	}
 
 	public final Book Book;

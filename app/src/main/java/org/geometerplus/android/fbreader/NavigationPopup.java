@@ -30,7 +30,6 @@ import android.widget.TextView;
 import org.geometerplus.fbreader.bookmodel.TOCTree;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
-import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.text.view.ZLTextWordCursor;
 import org.geometerplus.zlibrary.ui.android.R;
@@ -159,9 +158,8 @@ final class NavigationPopup extends ZLApplication.PopupPanel {
 		btnOk.setOnClickListener(listener);
 		btnCancel.setOnClickListener(listener);
 
-		final ZLResource buttonResource = ZLResource.resource("dialog").getResource("button");
-		btnOk.setText(buttonResource.getResource("ok").getValue());
-		btnCancel.setText(buttonResource.getResource("cancel").getValue());
+		btnOk.setText(R.string.ok);
+		btnCancel.setText(R.string.cancel);
 	}
 
 	private void setupNavigation() {

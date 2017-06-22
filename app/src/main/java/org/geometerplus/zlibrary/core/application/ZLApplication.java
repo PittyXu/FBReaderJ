@@ -81,15 +81,9 @@ public abstract class ZLApplication {
 		}
 	}
 
-	protected void showErrorMessage(String resourceKey) {
+	protected void showErrorMessage(String msg) {
 		if (myWindow != null) {
-			myWindow.showErrorMessage(resourceKey);
-		}
-	}
-
-	protected void showErrorMessage(String resourceKey, String parameter) {
-		if (myWindow != null) {
-			myWindow.showErrorMessage(resourceKey, parameter);
+			myWindow.showErrorMessage(msg);
 		}
 	}
 
@@ -127,9 +121,6 @@ public abstract class ZLApplication {
 	}
 
 	public final void onRepaintFinished() {
-		if (myWindow != null) {
-			myWindow.refresh();
-		}
 		for (PopupPanel popup : popupPanels()) {
 			popup.update();
 		}

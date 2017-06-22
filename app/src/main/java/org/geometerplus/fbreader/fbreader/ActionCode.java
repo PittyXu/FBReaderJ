@@ -20,7 +20,6 @@
 package org.geometerplus.fbreader.fbreader;
 
 public interface ActionCode {
-	String SHOW_PREFERENCES = "preferences";
 	String SHOW_TOC = "toc";
 	String SHOW_BOOKMARKS = "bookmarks";
 
@@ -72,5 +71,4 @@ public interface ActionCode {
 	String OPEN_VIDEO = "video";
 
 	String HIDE_TOAST = "hideToast";
-	String OPEN_START_SCREEN = "openStartScreen";
 }

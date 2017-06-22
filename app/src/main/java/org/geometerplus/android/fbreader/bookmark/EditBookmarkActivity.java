@@ -48,20 +48,18 @@ import org.geometerplus.fbreader.book.BookmarkUtil;
 import org.geometerplus.fbreader.book.HighlightingStyle;
 import org.geometerplus.fbreader.book.IBookCollection;
 import org.geometerplus.zlibrary.core.options.ZLStringOption;
-import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.ui.android.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EditBookmarkActivity extends Activity implements IBookCollection.Listener<Book> {
-	private final ZLResource myResource = ZLResource.resource("editBookmark");
 	private Bookmark myBookmark;
 	private StyleListAdapter myStylesAdapter;
 
 	private void addTab(TabHost host, String id, int content) {
 		final TabHost.TabSpec spec = host.newTabSpec(id);
-		spec.setIndicator(myResource.getResource(id).getValue());
+		spec.setIndicator(id);
 		spec.setContent(content);
         host.addTab(spec);
 	}
@@ -94,9 +92,9 @@ public class EditBookmarkActivity extends Activity implements IBookCollection.Li
 		));
 		tabHost.setup();
 
-		addTab(tabHost, "text", R.id.edit_bookmark_content_text);
-		addTab(tabHost, "style", R.id.edit_bookmark_content_style);
-		addTab(tabHost, "delete", R.id.edit_bookmark_content_delete);
+		addTab(tabHost, getString(R.string.bookmarks_text), R.id.edit_bookmark_content_text);
+		addTab(tabHost, getString(R.string.bookmarks_style), R.id.edit_bookmark_content_style);
+		addTab(tabHost, getString(R.string.delete), R.id.edit_bookmark_content_delete);
 
 		final ZLStringOption currentTabOption =
 			new ZLStringOption("LookNFeel", "EditBookmark", "text");
@@ -116,7 +114,7 @@ public class EditBookmarkActivity extends Activity implements IBookCollection.Li
 
 		final Button saveTextButton = (Button)findViewById(R.id.edit_bookmark_save_text_button);
 		saveTextButton.setEnabled(false);
-		saveTextButton.setText(myResource.getResource("saveText").getValue());
+		saveTextButton.setText(R.string.bookmarks_save);
 		editor.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void onTextChanged(CharSequence sequence, int start, int before, int count) {
@@ -134,7 +132,7 @@ public class EditBookmarkActivity extends Activity implements IBookCollection.Li
 		});
 
 		final Button deleteButton = (Button)findViewById(R.id.edit_bookmark_delete_button);
-		deleteButton.setText(myResource.getResource("deleteBookmark").getValue());
+		deleteButton.setText(R.string.bookmarks_delete);
 	}
 
 	@Override
@@ -198,19 +196,10 @@ public class EditBookmarkActivity extends Activity implements IBookCollection.Li
 			colorView.setVisibility(View.VISIBLE);
 			BookmarksUtil.setupColorView(colorView, style);
 
-			titleView.setText(BookmarkUtil.getStyleName(style));
+			titleView.setText(BookmarkUtil.getStyleName(EditBookmarkActivity.this, style));
 
 			button.setVisibility(View.VISIBLE);
-			button.setText(myResource.getResource("editStyle").getValue());
-			button.setOnClickListener(new Button.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					startActivity(
-						new Intent(EditBookmarkActivity.this, EditStyleActivity.class)
-							.putExtra(EditStyleActivity.STYLE_ID_KEY, style.Id)
-					);
-				}
-			});
+			button.setText(R.string.bookmarks_edit_style);
 
 			return view;
 		}

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<resources>
-	<node name="format">
-		<node name="ePub" value="ePub"/>
-		<node name="txt" value="txt"/>
-		<node name="HTML" value="HTML"/>
-	</node>
-</resources>

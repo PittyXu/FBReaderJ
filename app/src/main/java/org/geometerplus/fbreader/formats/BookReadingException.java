@@ -20,25 +20,12 @@
 package org.geometerplus.fbreader.formats;
 
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.resources.ZLResource;
 
 public final class BookReadingException extends Exception {
-	private static String getResourceText(String resourceId, String ... params) {
-		String message = ZLResource.resource("errorMessage").getResource(resourceId).getValue();
-		for (String p : params) {
-			message = message.replaceFirst("%s", p);
-		}
-		return message;
-	}
-
 	public final ZLFile File;
 
-	public BookReadingException(String resourceId, ZLFile file, String[] params) {
-		super(getResourceText(resourceId, params));
+	public BookReadingException(String message, ZLFile file) {
+		super(message);
 		File = file;
-	}
-
-	public BookReadingException(String resourceId, ZLFile file) {
-		this(resourceId, file, new String[] { file.getPath() });
 	}
 }

@@ -26,7 +26,7 @@ import org.geometerplus.android.util.UIMessageUtil;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.fbreader.FBView;
 import org.geometerplus.fbreader.util.TextSnippet;
-import org.geometerplus.zlibrary.core.resources.ZLResource;
+import org.geometerplus.zlibrary.ui.android.R;
 
 public class SelectionCopyAction extends FBAndroidAction {
 	SelectionCopyAction(FBReader baseActivity, FBReaderApp fbreader) {
@@ -49,7 +49,7 @@ public class SelectionCopyAction extends FBAndroidAction {
 		clipboard.setText(text);
 		UIMessageUtil.showMessageText(
 			BaseActivity,
-			ZLResource.resource("selection").getResource("textInBuffer").getValue().replace("%s", clipboard.getText())
+				BaseActivity.getString(R.string.text_in_buffer, clipboard.getText())
 		);
 	}
 }

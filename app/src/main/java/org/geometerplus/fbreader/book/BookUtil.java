@@ -41,26 +41,6 @@ public abstract class BookUtil {
 		}
 	}
 
-	public static ZLResourceFile getHelpFile() {
-		final Locale locale = Locale.getDefault();
-
-		ZLResourceFile file = ZLResourceFile.createResourceFile(
-			"data/intro/intro-" + locale.getLanguage() + "_" + locale.getCountry() + ".epub"
-		);
-		if (file.exists()) {
-			return file;
-		}
-
-		file = ZLResourceFile.createResourceFile(
-			"data/intro/intro-" + locale.getLanguage() + ".epub"
-		);
-		if (file.exists()) {
-			return file;
-		}
-
-		return ZLResourceFile.createResourceFile("data/intro/intro-en.epub");
-	}
-
 	public static UID createUid(AbstractBook book, String algorithm) {
 		return createUid(fileByBook(book), algorithm);
 	}

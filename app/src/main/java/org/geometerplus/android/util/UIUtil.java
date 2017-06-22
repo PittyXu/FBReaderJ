@@ -27,7 +27,6 @@ import android.os.Message;
 
 import org.geometerplus.fbreader.util.Pair;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
-import org.geometerplus.zlibrary.core.resources.ZLResource;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -68,16 +67,8 @@ public abstract class UIUtil {
 		}
 	}
 
-	public static void wait(String key, String param, Runnable action, Context context) {
-		waitInternal(getWaitMessage(key).replace("%s", param), action, context);
-	}
-
 	public static void wait(String key, Runnable action, Context context) {
-		waitInternal(getWaitMessage(key), action, context);
-	}
-
-	private static String getWaitMessage(String key) {
-		return ZLResource.resource("dialog").getResource("waitMessage").getResource(key).getValue();
+		waitInternal(key, action, context);
 	}
 
 	private static void waitInternal(String message, Runnable action, Context context) {
@@ -114,9 +105,7 @@ public abstract class UIUtil {
 
 	public static ZLApplication.SynchronousExecutor createExecutor(final Activity activity, final String key) {
 		return new ZLApplication.SynchronousExecutor() {
-			private final ZLResource myResource =
-				ZLResource.resource("dialog").getResource("waitMessage");
-			private final String myMessage = myResource.getResource(key).getValue();
+			private final String myMessage = key;
 			private volatile ProgressDialog myProgress;
 
 			public void execute(final Runnable action, final Runnable uiPostAction) {
@@ -159,7 +148,7 @@ public abstract class UIUtil {
 			}
 
 			public void executeAux(String key, Runnable runnable) {
-				setMessage(myProgress, myResource.getResource(key).getValue());
+				setMessage(myProgress, key);
 				runnable.run();
 				setMessage(myProgress, myMessage);
 			}

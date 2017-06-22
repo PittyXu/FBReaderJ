@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+  <item
+      android:id="@+id/action_toc"
+      android:icon="@drawable/ic_menu_toc"
+      android:title="本书目录"
+      app:showAsAction="ifRoom" />
+
+  <item
+      android:id="@+id/action_bookmarks"
+      android:icon="@drawable/ic_menu_bookmarks"
+      android:title="我的书签"
+      app:showAsAction="ifRoom" />
+
+  <item
+      android:id="@+id/action_search"
+      android:icon="@drawable/ic_menu_search"
+      android:title="内容查找"
+      app:showAsAction="ifRoom" />
+
+  <item
+      android:id="@+id/action_increase_font"
+      android:title="字体加大"
+      app:showAsAction="ifRoom" />
+
+  <item
+      android:id="@+id/action_decrease_font"
+      android:title="字体缩小"
+      app:showAsAction="ifRoom" />
+
+  <item
+      android:id="@+id/action_show_navigation"
+      android:title="快速翻看"
+      app:showAsAction="ifRoom" />
+</menu>

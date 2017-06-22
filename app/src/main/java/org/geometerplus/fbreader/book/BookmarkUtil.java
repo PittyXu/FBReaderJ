@@ -19,24 +19,26 @@
 
 package org.geometerplus.fbreader.book;
 
-import org.geometerplus.zlibrary.core.resources.ZLResource;
+import android.content.Context;
+
 import org.geometerplus.zlibrary.text.view.ZLTextElement;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.text.view.ZLTextWord;
 import org.geometerplus.zlibrary.text.view.ZLTextWordCursor;
+import org.geometerplus.zlibrary.ui.android.R;
 
 public abstract class BookmarkUtil {
-	public static String getStyleName(HighlightingStyle style) {
+	public static String getStyleName(Context pContext, HighlightingStyle style) {
 		final String name = style.getNameOrNull();
-		return (name != null && name.length() > 0) ? name : defaultName(style);
+		return (name != null && name.length() > 0) ? name : defaultName(pContext, style);
 	}
 
-	public static void setStyleName(HighlightingStyle style, String name) {
-		style.setName(defaultName(style).equals(name) ? null : name);
+	public static void setStyleName(Context pContext, HighlightingStyle style, String name) {
+		style.setName(defaultName(pContext, style).equals(name) ? null : name);
 	}
 
-	private static String defaultName(HighlightingStyle style) {
-		return ZLResource.resource("style").getValue().replace("%s", String.valueOf(style.Id));
+	private static String defaultName(Context pContext, HighlightingStyle style) {
+		return pContext.getString(R.string.style_id, String.valueOf(style.Id));
 	}
 
 	public static void findEnd(Bookmark bookmark, ZLTextView view) {

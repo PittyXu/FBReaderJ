@@ -19,13 +19,6 @@
         android:logo="@drawable/fbreader_bw"
         android:label="@string/app_name"
     >
-        <service android:name="org.geometerplus.android.fbreader.api.ApiService"
-                 android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.fbreader.action.API" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </service>
         <activity
             android:name="org.geometerplus.android.fbreader.FBReader"
             android:launchMode="singleTask"
@@ -107,14 +100,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name="org.geometerplus.android.fbreader.bookmark.EditStyleActivity"
-                  android:theme="@style/FBReader.Dialog"
-                  android:configChanges="orientation|keyboardHidden|screenSize">
-            <intent-filter>
-                <action android:name="android.fbreader.action.EDIT_STYLES" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
 
         <activity android:name="org.geometerplus.android.fbreader.image.ImageViewActivity"
                   android:process=":imageView" android:theme="@style/FBReader.Activity"
@@ -134,22 +119,5 @@
         <activity android:name="org.geometerplus.android.fbreader.TOCActivity"
                   android:theme="@style/FBReader.Activity"
                   android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity android:name="org.geometerplus.android.fbreader.preferences.PreferenceActivity"
-                  android:theme="@style/FBReader.Activity"
-                  android:configChanges="orientation|keyboardHidden|screenSize"
-                  android:process=":preferences">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="fbreader-preferences" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.fbreader.action.PREFERENCES" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <service android:name="org.geometerplus.android.fbreader.httpd.DataService"
-                 android:launchMode="singleTask" android:process=":dataService"
-                 android:exported="false" />
     </application>
 </manifest>

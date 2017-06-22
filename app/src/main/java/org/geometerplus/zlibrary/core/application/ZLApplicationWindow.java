@@ -23,12 +23,9 @@ import org.geometerplus.zlibrary.core.view.ZLViewWidget;
 
 public interface ZLApplicationWindow {
 	void setWindowTitle(String title);
-	void showErrorMessage(String resourceKey);
-	void showErrorMessage(String resourceKey, String parameter);
+	void showErrorMessage(String msg);
 	ZLApplication.SynchronousExecutor createExecutor(String key);
 	void processException(Exception e);
-
-	void refresh();
 
 	ZLViewWidget getViewWidget();
 

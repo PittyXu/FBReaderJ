@@ -203,10 +203,6 @@ public class BookCollection extends AbstractBookCollection<DbBook> {
 	}
 
 	public DbBook getBookByHash(String hash) {
-		if (ZERO_HASH.equals(hash)) {
-			return getBookByFile(BookUtil.getHelpFile());
-		}
-
 		for (long id : myDatabase.bookIdsByHash(hash)) {
 			final DbBook book = getBookById(id);
 			if (book != null && book.File.exists()) {
@@ -574,14 +570,6 @@ public class BookCollection extends AbstractBookCollection<DbBook> {
 			);
 			file.setCached(false);
 		}
-
-		// Step 3: add help file
-		final ZLFile helpFile = BookUtil.getHelpFile();
-		DbBook helpBook = savedBooksByFileId.get(fileInfos.getId(helpFile));
-		if (helpBook == null) {
-			helpBook = getBookByFile(helpFile);
-		}
-		saveBook(helpBook);
 
 		// Step 4: save changes into database
 		fileInfos.save();

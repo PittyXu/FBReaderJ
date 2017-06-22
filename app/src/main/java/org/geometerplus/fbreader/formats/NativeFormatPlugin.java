@@ -59,10 +59,8 @@ public class NativeFormatPlugin extends BuiltinFormatPlugin {
 		}
 		if (code != 0) {
 			throw new BookReadingException(
-				"nativeCodeFailure",
-				BookUtil.fileByBook(book),
-				new String[] { String.valueOf(code), book.getPath() }
-			);
+					"原生代码错误 " + String.valueOf(code) + ", 阅读 '" + book.getPath() + "' 时",
+					BookUtil.fileByBook(book));
 		}
 	}
 
@@ -118,10 +116,8 @@ public class NativeFormatPlugin extends BuiltinFormatPlugin {
 				);
 			default:
 				throw new BookReadingException(
-					"nativeCodeFailure",
-					BookUtil.fileByBook(model.Book),
-					new String[] { String.valueOf(code), model.Book.getPath() }
-				);
+						"原生代码错误 " + String.valueOf(code) + ", 阅读 '" + model.Book.getPath() + "' 时",
+						BookUtil.fileByBook(model.Book));
 		}
 	}
 

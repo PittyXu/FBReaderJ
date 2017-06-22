@@ -2,4 +2,33 @@
 <resources>
 	<string name="app_name">FBReader</string>
 	<string name="empty_string"></string>
+  <string name="ok">确定</string>
+	<string name="cancel">取消</string>
+	<string name="edit">编辑</string>
+	<string name="text_in_buffer"><![CDATA[复制到剪贴板:&#10;%s]]></string>
+	<string name="collapse_tree">折叠目录</string>
+	<string name="expand_tree">展开目录</string>
+	<string name="read_text">阅读图书内容</string>
+	<string name="tag">标签</string>
+	<string name="bookmarks_new">添加书签</string>
+	<string name="bookmarks_open">打开书签</string>
+	<string name="bookmarks_edit">编辑书签</string>
+	<string name="bookmarks_delete">删除书签</string>
+	<string name="bookmarks_save">保存文本</string>
+	<string name="bookmarks_edit_style">编辑样式…</string>
+	<string name="bookmarks_text">文本</string>
+	<string name="bookmarks_style">样式</string>
+	<string name="delete">删除</string>
+	<string name="style_bg_color">背景颜色</string>
+	<string name="style_invisible">不可见</string>
+  <string name="style_invisible_on">不要高亮书签</string>
+	<string name="style_invisible_off">高亮书签</string>
+	<string name="style_edit_name">样式名称</string>
+	<string name="drm_encrypted_section">加密部分</string>
+	<string name="style_id">样式 %s</string>
+	<string name="text_not_found">对不起，本书中找不到对应内容</string>
+	<string name="cannot_open_book">对不起，无法开启本书</string>
+	<string name="bookmarks_not_found">对不起，找不到对应的书签</string>
+  <string name="loading_book">图书加载中，请稍等…</string>
+	<string name="search">搜索</string>
 </resources>

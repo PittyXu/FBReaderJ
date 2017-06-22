@@ -31,8 +31,6 @@ public abstract class FBReaderIntents {
 	public static final String DEFAULT_PACKAGE = "org.geometerplus.zlibrary.ui.android";
 
 	public interface Action {
-		String API                              = "android.fbreader.action.API";
-		String API_CALLBACK                     = "android.fbreader.action.API_CALLBACK";
 		String VIEW                             = "android.fbreader.action.VIEW";
 		String CONFIG_SERVICE                   = "android.fbreader.action.CONFIG_SERVICE";
 		String LIBRARY_SERVICE                  = "android.fbreader.action.LIBRARY_SERVICE";

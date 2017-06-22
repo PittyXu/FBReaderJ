@@ -24,7 +24,6 @@ import org.geometerplus.zlibrary.core.drm.FileEncryptionInfo;
 import org.geometerplus.zlibrary.core.encodings.EncodingCollection;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.image.ZLImage;
-import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.core.util.SystemInfo;
 
 import java.util.Collections;
@@ -44,7 +43,7 @@ public abstract class FormatPlugin {
 	}
 
 	public final String name() {
-		return ZLResource.resource("format").getResource(myFileType).getValue();
+		return myFileType;
 	}
 
 	public ZLFile realBookFile(ZLFile file) throws BookReadingException {

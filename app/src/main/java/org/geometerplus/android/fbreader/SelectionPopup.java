@@ -24,7 +24,6 @@ import android.widget.RelativeLayout;
 
 import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
-import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.ui.android.R;
 
 class SelectionPopup extends PopupPanel implements View.OnClickListener {
@@ -48,16 +47,14 @@ class SelectionPopup extends PopupPanel implements View.OnClickListener {
 		activity.getLayoutInflater().inflate(R.layout.selection_panel, root);
 		myWindow = (SimplePopupWindow)root.findViewById(R.id.selection_panel);
 
-		final ZLResource resource = ZLResource.resource("selectionPopup");
-		setupButton(R.id.selection_panel_copy, resource.getResource("copyToClipboard").getValue());
-		setupButton(R.id.selection_panel_bookmark, resource.getResource("bookmark").getValue());
-		setupButton(R.id.selection_panel_close, resource.getResource("close").getValue());
+		setupButton(R.id.selection_panel_copy);
+		setupButton(R.id.selection_panel_bookmark);
+		setupButton(R.id.selection_panel_close);
 	}
 
-	private void setupButton(int buttonId, String description) {
+	private void setupButton(int buttonId) {
 		final View button = myWindow.findViewById(buttonId);
 		button.setOnClickListener(this);
-		button.setContentDescription(description);
 	}
 
 	public void move(int selectionStartY, int selectionEndY) {

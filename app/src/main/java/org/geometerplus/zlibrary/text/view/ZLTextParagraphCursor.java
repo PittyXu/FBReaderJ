@@ -19,16 +19,18 @@
 
 package org.geometerplus.zlibrary.text.view;
 
+import android.content.Context;
+
 import org.geometerplus.zlibrary.core.image.ZLImage;
 import org.geometerplus.zlibrary.core.image.ZLImageData;
 import org.geometerplus.zlibrary.core.image.ZLImageManager;
-import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.text.model.ZLImageEntry;
 import org.geometerplus.zlibrary.text.model.ZLTextMark;
 import org.geometerplus.zlibrary.text.model.ZLTextModel;
 import org.geometerplus.zlibrary.text.model.ZLTextOtherStyleEntry;
 import org.geometerplus.zlibrary.text.model.ZLTextParagraph;
 import org.geometerplus.zlibrary.text.model.ZLTextStyleEntry;
+import org.geometerplus.zlibrary.ui.android.R;
 import org.vimgadgets.linebreak.LineBreaker;
 
 import java.util.ArrayList;
@@ -216,13 +218,15 @@ public final class ZLTextParagraphCursor {
 		}
 	}
 
+	private Context mContext;
 	public final int Index;
 	final CursorManager CursorManager;
 	public final ZLTextModel Model;
 	private final ArrayList<ZLTextElement> myElements = new ArrayList<ZLTextElement>();
 
-	public ZLTextParagraphCursor(ZLTextModel model, int index) {
+	public ZLTextParagraphCursor(Context pContext, ZLTextModel model, int index) {
 		this(new CursorManager(model), model, index);
+		mContext = pContext;
 	}
 
 	ZLTextParagraphCursor(CursorManager cManager, ZLTextModel model, int index) {
@@ -247,7 +251,7 @@ public final class ZLTextParagraphCursor {
 				final ZLTextStyleEntry entry = new ZLTextOtherStyleEntry();
 				entry.setFontModifier(ZLTextStyleEntry.FontModifier.FONT_MODIFIER_BOLD, true);
 				myElements.add(new ZLTextStyleElement(entry));
-				myElements.add(new ZLTextWord(ZLResource.resource("drm").getResource("encryptedSection").getValue(), 0));
+				myElements.add(new ZLTextWord(mContext.getString(R.string.drm_encrypted_section), 0));
 				break;
 			}
 			default:

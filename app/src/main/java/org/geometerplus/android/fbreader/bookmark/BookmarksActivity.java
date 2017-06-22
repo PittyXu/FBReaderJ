@@ -48,7 +48,6 @@ import org.geometerplus.fbreader.book.BookmarkQuery;
 import org.geometerplus.fbreader.book.HighlightingStyle;
 import org.geometerplus.fbreader.book.IBookCollection;
 import org.geometerplus.zlibrary.core.options.ZLStringOption;
-import org.geometerplus.zlibrary.core.resources.ZLResource;
 import org.geometerplus.zlibrary.core.util.MiscUtil;
 import org.geometerplus.zlibrary.ui.android.R;
 
@@ -80,12 +79,11 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 	private volatile BookmarksAdapter myAllBooksAdapter;
 	private volatile BookmarksAdapter mySearchResultsAdapter;
 
-	private final ZLResource myResource = ZLResource.resource("bookmarksView");
 	private final ZLStringOption myBookmarkSearchPatternOption =
 		new ZLStringOption("BookmarkSearch", "Pattern", "");
 
 	private void createTab(String tag, int id) {
-		final String label = myResource.getResource(tag).getValue();
+		final String label = getString(R.string.tag);
 		myTabHost.addTab(myTabHost.newTabSpec(tag).setIndicator(label).setContent(id));
 	}
 
@@ -258,7 +256,7 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 			}
 			mySearchResultsAdapter.addAll(bookmarks);
 		} else {
-			UIMessageUtil.showErrorMessage(this, "bookmarkNotFound");
+			UIMessageUtil.showErrorMessage(this, getString(R.string.bookmarks_not_found));
 		}
 	}
 
@@ -313,7 +311,7 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 		if (book != null) {
 			FBReader.openBookActivity(this, book, bookmark);
 		} else {
-			UIMessageUtil.showErrorMessage(this, "cannotOpenBook");
+			UIMessageUtil.showErrorMessage(this, getString(R.string.cannot_open_book));
 		}
 	}
 
@@ -400,9 +398,9 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 		public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
 			final int position = ((AdapterView.AdapterContextMenuInfo)menuInfo).position;
 			if (getItem(position) != null) {
-				menu.add(0, OPEN_ITEM_ID, 0, myResource.getResource("openBook").getValue());
-				menu.add(0, EDIT_ITEM_ID, 0, myResource.getResource("editBookmark").getValue());
-				menu.add(0, DELETE_ITEM_ID, 0, myResource.getResource("deleteBookmark").getValue());
+				menu.add(0, OPEN_ITEM_ID, 0, R.string.bookmarks_open);
+				menu.add(0, EDIT_ITEM_ID, 0, R.string.bookmarks_edit);
+				menu.add(0, DELETE_ITEM_ID, 0, R.string.bookmarks_delete);
 			}
 		}
 
@@ -421,7 +419,7 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 				imageView.setVisibility(View.VISIBLE);
 				imageView.setImageResource(R.drawable.ic_list_plus);
 				colorContainer.setVisibility(View.GONE);
-				textView.setText(myResource.getResource("new").getValue());
+				textView.setText(R.string.bookmarks_new);
 				bookTitleView.setVisibility(View.GONE);
 			} else {
 				imageView.setVisibility(View.GONE);

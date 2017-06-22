@@ -19,6 +19,8 @@
 
 package org.geometerplus.fbreader.fbreader;
 
+import android.content.Context;
+
 import org.geometerplus.fbreader.book.Author;
 import org.geometerplus.fbreader.book.Book;
 import org.geometerplus.fbreader.book.BookEvent;
@@ -54,6 +56,7 @@ import org.geometerplus.zlibrary.text.view.ZLTextParagraphCursor;
 import org.geometerplus.zlibrary.text.view.ZLTextPosition;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.text.view.ZLTextWordCursor;
+import org.geometerplus.zlibrary.ui.android.R;
 
 import java.util.Collections;
 import java.util.Date;
@@ -79,10 +82,11 @@ public final class FBReaderApp extends ZLApplication {
 	private Date myJumpTimeStamp;
 
 	public final IBookCollection<Book> Collection;
+	private Context mContext;
 
-	public FBReaderApp(SystemInfo systemInfo, final IBookCollection<Book> collection) {
+	public FBReaderApp(Context pContext, SystemInfo systemInfo, final IBookCollection<Book> collection) {
 		super(systemInfo);
-
+		mContext = pContext;
 		Collection = collection;
 
 		collection.addListener(new IBookCollection.Listener<Book>() {
@@ -142,10 +146,6 @@ public final class FBReaderApp extends ZLApplication {
 		return m != null ? m.Book : ExternalBook;
 	}
 
-	public void openHelpBook() {
-		openBook(Collection.getBookByFile(BookUtil.getHelpFile().getPath()), null, null);
-	}
-
 	public void openBook(Book book, final Bookmark bookmark, Runnable postAction) {
 		if (Model != null) {
 			if (book == null || bookmark == null && Collection.sameBook(book, Model.Book)) {
@@ -155,9 +155,6 @@ public final class FBReaderApp extends ZLApplication {
 
 		if (book == null) {
 			book = Collection.getRecentBook(0);
-			if (book == null || !BookUtil.fileByBook(book).exists()) {
-				book = Collection.getBookByFile(BookUtil.getHelpFile().getPath());
-			}
 			if (book == null) {
 				return;
 			}
@@ -165,7 +162,7 @@ public final class FBReaderApp extends ZLApplication {
 		final Book bookToOpen = book;
 		Collection.saveBook(bookToOpen);
 
-		final SynchronousExecutor executor = createExecutor("loadingBook");
+		final SynchronousExecutor executor = createExecutor(mContext.getString(R.string.loading_book));
 		executor.execute(new Runnable() {
 			public void run() {
 				openBookInternal(bookToOpen, bookmark, false);
@@ -176,7 +173,7 @@ public final class FBReaderApp extends ZLApplication {
 	private void reloadBook() {
 		final Book book = getCurrentBook();
 		if (book != null) {
-			final SynchronousExecutor executor = createExecutor("loadingBook");
+			final SynchronousExecutor executor = createExecutor(mContext.getString(R.string.loading_book));
 			executor.execute(new Runnable() {
 				public void run() {
 					openBookInternal(book, null, true);
@@ -211,7 +208,7 @@ public final class FBReaderApp extends ZLApplication {
 			return null;
 		}
 		final ZLTextWordCursor cursor =
-			new ZLTextWordCursor(new ZLTextParagraphCursor(model, label.ParagraphIndex));
+			new ZLTextWordCursor(new ZLTextParagraphCursor(mContext, model, label.ParagraphIndex));
 		final AutoTextSnippet longSnippet = new AutoTextSnippet(cursor, 140);
 		if (longSnippet.IsEndOfText) {
 			return longSnippet;
@@ -358,7 +355,7 @@ public final class FBReaderApp extends ZLApplication {
 
 		for (FileEncryptionInfo info : plugin.readEncryptionInfos(book)) {
 			if (info != null && !EncryptionMethod.isSupported(info.Method)) {
-				showErrorMessage("unsupportedEncryptionMethod", book.getPath());
+				showErrorMessage("FBReader不支持文件 "+ book.getPath() +" 加密方法. 某些页面不可读");
 				break;
 			}
 		}
