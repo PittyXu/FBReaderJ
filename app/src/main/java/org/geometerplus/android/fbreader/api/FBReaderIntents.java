@@ -35,11 +35,7 @@ public abstract class FBReaderIntents {
 		String CONFIG_SERVICE                   = "android.fbreader.action.CONFIG_SERVICE";
 		String LIBRARY_SERVICE                  = "android.fbreader.action.LIBRARY_SERVICE";
 		String LIBRARY                          = "android.fbreader.action.LIBRARY";
-		String BOOKMARKS                        = "android.fbreader.action.BOOKMARKS";
 		String EXTERNAL_BOOKMARKS               = "android.fbreader.action.EXTERNAL_BOOKMARKS";
-		String PREFERENCES                      = "android.fbreader.action.PREFERENCES";
-		String EDIT_STYLES                      = "android.fbreader.action.EDIT_STYLES";
-		String EDIT_BOOKMARK                    = "android.fbreader.action.EDIT_BOOKMARK";
 	}
 
 	public interface Event {
@@ -52,10 +48,6 @@ public abstract class FBReaderIntents {
 	public interface Key {
 		String BOOK                             = "fbreader.book";
 		String BOOKMARK                         = "fbreader.bookmark";
-	}
-
-	public static Intent defaultInternalIntent(String action) {
-		return internalIntent(action).addCategory(Intent.CATEGORY_DEFAULT);
 	}
 
 	public static Intent internalIntent(String action) {

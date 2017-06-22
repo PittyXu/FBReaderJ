@@ -167,9 +167,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		if (myFBReaderApp.getPopupById(TextSearchPopup.ID) == null) {
 			new TextSearchPopup(myFBReaderApp);
 		}
-		if (myFBReaderApp.getPopupById(NavigationPopup.ID) == null) {
-			new NavigationPopup(myFBReaderApp);
-		}
 		if (myFBReaderApp.getPopupById(SelectionPopup.ID) == null) {
 			new SelectionPopup(myFBReaderApp);
 		}
@@ -178,7 +175,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		myFBReaderApp.addAction(ActionCode.SHOW_BOOKMARKS, new ShowBookmarksAction(this, myFBReaderApp));
 
 		myFBReaderApp.addAction(ActionCode.SHOW_MENU, new ShowMenuAction(this, myFBReaderApp));
-		myFBReaderApp.addAction(ActionCode.SHOW_NAVIGATION, new ShowNavigationAction(this, myFBReaderApp));
 		myFBReaderApp.addAction(ActionCode.SEARCH, new SearchAction(this, myFBReaderApp));
 
 		myFBReaderApp.addAction(ActionCode.SELECTION_SHOW_PANEL, new SelectionShowPanelAction(this, myFBReaderApp));
@@ -260,7 +256,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		});
 
 		((PopupPanel)myFBReaderApp.getPopupById(TextSearchPopup.ID)).setPanelInfo(this, myRootView);
-		((NavigationPopup)myFBReaderApp.getPopupById(NavigationPopup.ID)).setPanelInfo(this, myRootView);
 		((PopupPanel)myFBReaderApp.getPopupById(SelectionPopup.ID)).setPanelInfo(this, myRootView);
 	}
 
@@ -400,10 +395,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		}
 	}
 
-	public void navigate() {
-		((NavigationPopup)myFBReaderApp.getPopupById(NavigationPopup.ID)).runNavigation();
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -432,7 +423,7 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 				actionId = ActionCode.DECREASE_FONT;
 				break;
 			default:
-				actionId = ActionCode.SHOW_NAVIGATION;
+				actionId = ActionCode.SEARCH;
 				break;
 		}
 		myFBReaderApp.runAction(actionId);

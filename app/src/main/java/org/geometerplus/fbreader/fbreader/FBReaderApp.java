@@ -40,7 +40,6 @@ import org.geometerplus.fbreader.formats.FormatPlugin;
 import org.geometerplus.fbreader.formats.PluginCollection;
 import org.geometerplus.fbreader.util.AutoTextSnippet;
 import org.geometerplus.fbreader.util.ComparisonUtil;
-import org.geometerplus.fbreader.util.EmptyTextSnippet;
 import org.geometerplus.fbreader.util.TextSnippet;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.application.ZLKeyBindings;
@@ -55,6 +54,7 @@ import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
 import org.geometerplus.zlibrary.text.view.ZLTextParagraphCursor;
 import org.geometerplus.zlibrary.text.view.ZLTextPosition;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
+import org.geometerplus.zlibrary.text.view.ZLTextView.PagePosition;
 import org.geometerplus.zlibrary.text.view.ZLTextWordCursor;
 import org.geometerplus.zlibrary.ui.android.R;
 
@@ -653,5 +653,30 @@ public final class FBReaderApp extends ZLApplication {
 		option.setValue(option.getValue() + delta);
 		clearTextCaches();
 		getViewWidget().repaint();
+	}
+
+	public PagePosition pagePosition() {
+		return getTextView().pagePosition();
+	}
+
+	public void gotoPage(int page) {
+		final ZLTextView view = getTextView();
+		if (page == 1) {
+			view.gotoHome();
+		} else {
+			view.gotoPage(page);
+		}
+		getViewWidget().reset();
+		getViewWidget().repaint();
+	}
+
+	public void gotoPosition(ZLTextWordCursor position) {
+		getTextView().gotoPosition(position);
+		getViewWidget().reset();
+		getViewWidget().repaint();
+	}
+
+	public ZLTextWordCursor getCurrentPosition() {
+		return getTextView().getStartCursor();
 	}
 }

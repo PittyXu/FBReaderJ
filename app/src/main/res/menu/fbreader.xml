@@ -29,9 +29,4 @@
       android:id="@+id/action_decrease_font"
       android:title="字体缩小"
       app:showAsAction="ifRoom" />
-
-  <item
-      android:id="@+id/action_show_navigation"
-      android:title="快速翻看"
-      app:showAsAction="ifRoom" />
 </menu>

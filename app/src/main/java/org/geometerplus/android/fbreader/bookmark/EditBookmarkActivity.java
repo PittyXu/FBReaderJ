@@ -55,7 +55,6 @@ import java.util.List;
 
 public class EditBookmarkActivity extends Activity implements IBookCollection.Listener<Book> {
 	private Bookmark myBookmark;
-	private StyleListAdapter myStylesAdapter;
 
 	private void addTab(TabHost host, String id, int content) {
 		final TabHost.TabSpec spec = host.newTabSpec(id);
@@ -153,60 +152,5 @@ public class EditBookmarkActivity extends Activity implements IBookCollection.Li
 
 	// method from IBookCollection.Listener
 	public void onBuildEvent(IBookCollection.Status status) {
-	}
-
-	private class StyleListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
-		private final List<HighlightingStyle> myStyles;
-
-		StyleListAdapter(List<HighlightingStyle> styles) {
-			myStyles = new ArrayList<HighlightingStyle>(styles);
-		}
-
-		public synchronized void setStyleList(List<HighlightingStyle> styles) {
-			myStyles.clear();
-			myStyles.addAll(styles);
-			notifyDataSetChanged();
-		}
-
-		public final synchronized int getCount() {
-			return myStyles.size();
-		}
-
-		public final synchronized HighlightingStyle getItem(int position) {
-			return myStyles.get(position);
-		}
-
-		public final long getItemId(int position) {
-			return position;
-		}
-
-		public final synchronized View getView(int position, View convertView, final ViewGroup parent) {
-			final View view = convertView != null
-				? convertView
-				: LayoutInflater.from(parent.getContext()).inflate(R.layout.style_item, parent, false);
-			final HighlightingStyle style = getItem(position);
-
-			final CheckBox checkBox = (CheckBox)ViewUtil.findView(view, R.id.style_item_checkbox);
-			final TextView colorView = (TextView) ViewUtil.findView(view, R.id.style_item_color);
-			final TextView titleView = ViewUtil.findTextView(view, R.id.style_item_title);
-			final Button button = (Button)ViewUtil.findView(view, R.id.style_item_edit_button);
-
-			checkBox.setChecked(style.Id == myBookmark.getStyleId());
-
-			colorView.setVisibility(View.VISIBLE);
-			BookmarksUtil.setupColorView(colorView, style);
-
-			titleView.setText(BookmarkUtil.getStyleName(EditBookmarkActivity.this, style));
-
-			button.setVisibility(View.VISIBLE);
-			button.setText(R.string.bookmarks_edit_style);
-
-			return view;
-		}
-
-		public final synchronized void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			final HighlightingStyle style = getItem(position);
-			notifyDataSetChanged();
-		}
 	}
 }
