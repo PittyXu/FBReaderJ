@@ -206,23 +206,6 @@ public class LibraryService extends Service {
 			return SerializerUtil.serialize(myCollection.getBookByHash(hash));
 		}
 
-		public List<String> authors() {
-			final List<Author> authors = myCollection.authors();
-			final List<String> strings = new ArrayList<String>(authors.size());
-			for (Author a : authors) {
-				strings.add(Util.authorToString(a));
-			}
-			return strings;
-		}
-
-		public List<String> titles(String query) {
-			return myCollection.titles(SerializerUtil.deserializeBookQuery(query));
-		}
-
-		public List<String> firstTitleLetters() {
-			return myCollection.firstTitleLetters();
-		}
-
 		public boolean saveBook(String book) {
 			return myCollection.saveBook(SerializerUtil.deserializeBook(book, myCollection));
 		}
@@ -269,11 +252,6 @@ public class LibraryService extends Service {
 		@Override
 		public void markHyperlinkAsVisited(String book, String linkId) {
 			myCollection.markHyperlinkAsVisited(SerializerUtil.deserializeBook(book, myCollection), linkId);
-		}
-
-		@Override
-		public String getDescription(String book) {
-			return BookUtil.getAnnotation(SerializerUtil.deserializeBook(book, myCollection), myCollection.PluginCollection);
 		}
 
 		@Override

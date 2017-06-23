@@ -53,7 +53,6 @@ public:
 	virtual bool readLanguageAndEncoding(Book &book) const = 0;
 	virtual bool readModel(BookModel &model) const = 0;
 	virtual shared_ptr<const ZLImage> coverImage(const ZLFile &file) const;
-	virtual std::string readAnnotation(const ZLFile &file) const;
 
 protected:
 	static bool detectEncodingAndLanguage(Book &book, ZLInputStream &stream, bool force = false);

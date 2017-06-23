@@ -96,7 +96,6 @@ abstract class PopupPanel extends ZLApplication.PopupPanel {
 
 		final FBReaderApp reader = getReader();
 		if (!StartPosition.equals(reader.getTextView().getStartCursor())) {
-			reader.addInvisibleBookmark(StartPosition);
 			reader.storePosition();
 		}
 	}

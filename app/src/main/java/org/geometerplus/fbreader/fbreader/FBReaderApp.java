@@ -78,9 +78,6 @@ public final class FBReaderApp extends ZLApplication {
 	public volatile BookModel Model;
 	public volatile Book ExternalBook;
 
-	private ZLTextPosition myJumpEndPosition;
-	private Date myJumpTimeStamp;
-
 	public final IBookCollection<Book> Collection;
 	private Context mContext;
 
@@ -219,16 +216,9 @@ public final class FBReaderApp extends ZLApplication {
 
 	public void tryOpenFootnote(String id) {
 		if (Model != null) {
-			myJumpEndPosition = null;
-			myJumpTimeStamp = null;
 			final BookModel.Label label = Model.getLabel(id);
 			if (label != null) {
 				if (label.ModelId == null) {
-					if (getTextView() == BookTextView) {
-						addInvisibleBookmark();
-						myJumpEndPosition = new ZLTextFixedPosition(label.ParagraphIndex, 0, 0);
-						myJumpTimeStamp = new Date();
-					}
 					BookTextView.gotoPosition(label.ParagraphIndex, 0, 0);
 					setView(BookTextView);
 				} else {
@@ -369,42 +359,9 @@ public final class FBReaderApp extends ZLApplication {
 		return bookmarks;
 	}
 
-	public boolean jumpBack() {
-		try {
-			if (getTextView() != BookTextView) {
-				showBookTextView();
-				return true;
-			}
-
-			if (myJumpEndPosition == null || myJumpTimeStamp == null) {
-				return false;
-			}
-			// more than 2 minutes ago
-			if (myJumpTimeStamp.getTime() + 2 * 60 * 1000 < new Date().getTime()) {
-				return false;
-			}
-			if (!myJumpEndPosition.equals(BookTextView.getStartCursor())) {
-				return false;
-			}
-
-			final List<Bookmark> bookmarks = invisibleBookmarks();
-			if (bookmarks.isEmpty()) {
-				return false;
-			}
-			final Bookmark b = bookmarks.get(0);
-			Collection.deleteBookmark(b);
-			gotoBookmark(b, true);
-			return true;
-		} finally {
-			myJumpEndPosition = null;
-			myJumpTimeStamp = null;
-		}
-	}
-
 	private void gotoBookmark(Bookmark bookmark, boolean exactly) {
 		final String modelId = bookmark.ModelId;
 		if (modelId == null) {
-			addInvisibleBookmark();
 			if (exactly) {
 				BookTextView.gotoPosition(bookmark);
 			} else {
@@ -520,57 +477,6 @@ public final class FBReaderApp extends ZLApplication {
 		}
 	}
 
-	private synchronized void updateInvisibleBookmarksList(Bookmark b) {
-		if (Model != null && Model.Book != null && b != null) {
-			for (Bookmark bm : invisibleBookmarks()) {
-				if (b.equals(bm)) {
-					Collection.deleteBookmark(bm);
-				}
-			}
-			Collection.saveBookmark(b);
-			final List<Bookmark> bookmarks = invisibleBookmarks();
-			for (int i = 3; i < bookmarks.size(); ++i) {
-				Collection.deleteBookmark(bookmarks.get(i));
-			}
-		}
-	}
-
-	public void addInvisibleBookmark(ZLTextWordCursor cursor) {
-		if (cursor == null) {
-			return;
-		}
-
-		cursor = new ZLTextWordCursor(cursor);
-		if (cursor.isNull()) {
-			return;
-		}
-
-		final ZLTextView textView = getTextView();
-		final ZLTextModel textModel;
-		final Book book;
-		final AutoTextSnippet snippet;
-		// textView.model will not be changed inside synchronised block
-		synchronized (textView) {
-			textModel = textView.getModel();
-			final BookModel model = Model;
-			book = model != null ? model.Book : null;
-			if (book == null || textView != BookTextView || textModel == null) {
-				return;
-			}
-			snippet = new AutoTextSnippet(cursor, 30);
-		}
-
-		updateInvisibleBookmarksList(new Bookmark(
-			Collection, book, textModel.getId(), snippet, false
-		));
-	}
-
-	public void addInvisibleBookmark() {
-		if (Model.Book != null && getTextView() == BookTextView) {
-			updateInvisibleBookmarksList(createBookmark(30, false));
-		}
-	}
-
 	public Bookmark createBookmark(int maxChars, boolean visible) {
 		final FBView view = getTextView();
 		final ZLTextWordCursor cursor = view.getStartCursor();
@@ -655,10 +561,18 @@ public final class FBReaderApp extends ZLApplication {
 		getViewWidget().repaint();
 	}
 
+	/**
+	 * 获取分页信息
+	 * @return
+	 */
 	public PagePosition pagePosition() {
 		return getTextView().pagePosition();
 	}
 
+	/**
+	 * 前往某页, 第一页为 1
+	 * @param page
+	 */
 	public void gotoPage(int page) {
 		final ZLTextView view = getTextView();
 		if (page == 1) {
@@ -670,12 +584,20 @@ public final class FBReaderApp extends ZLApplication {
 		getViewWidget().repaint();
 	}
 
+	/**
+	 * 前往某位置
+	 * @param position
+	 */
 	public void gotoPosition(ZLTextWordCursor position) {
 		getTextView().gotoPosition(position);
 		getViewWidget().reset();
 		getViewWidget().repaint();
 	}
 
+	/**
+	 * 获取当前位置
+	 * @return
+	 */
 	public ZLTextWordCursor getCurrentPosition() {
 		return getTextView().getStartCursor();
 	}

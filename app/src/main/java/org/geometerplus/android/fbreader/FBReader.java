@@ -102,8 +102,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 				}
 				UIMessageUtil.showErrorMessage(this, "文件未找到: " + file.getPath());
 				myBook = null;
-			} else {
-				NotificationUtil.drop(this, myBook);
 			}
 		}
 		Config.Instance().runOnConnect(new Runnable() {

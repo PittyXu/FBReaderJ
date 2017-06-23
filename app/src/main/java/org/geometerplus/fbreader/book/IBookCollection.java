@@ -52,7 +52,6 @@ public interface IBookCollection<B extends AbstractBook> extends AbstractSeriali
 
 	List<B> books(BookQuery query);
 	boolean hasBooks(Filter filter);
-	List<String> titles(BookQuery query);
 
 	List<B> recentlyOpenedBooks(int count);
 	List<B> recentlyAddedBooks(int count);
@@ -66,8 +65,6 @@ public interface IBookCollection<B extends AbstractBook> extends AbstractSeriali
 	B getBookByHash(String hash);
 
 	List<String> labels();
-	List<Author> authors();
-	List<String> firstTitleLetters();
 
 	boolean saveBook(B book);
 	boolean canRemoveBook(B book, boolean deleteFromDisk);
@@ -82,8 +79,6 @@ public interface IBookCollection<B extends AbstractBook> extends AbstractSeriali
 
 	boolean isHyperlinkVisited(B book, String linkId);
 	void markHyperlinkAsVisited(B book, String linkId);
-
-	String getDescription(B book);
 
 	List<Bookmark> bookmarks(BookmarkQuery query);
 	void saveBookmark(Bookmark bookmark);

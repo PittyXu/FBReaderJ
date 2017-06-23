@@ -246,35 +246,6 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> implement
 		}
 	}
 
-	public List<Author> authors() {
-		return listCall(new ListCallable<Author>() {
-			public List<Author> call() throws RemoteException {
-				final List<String> strings = myInterface.authors();
-				final List<Author> authors = new ArrayList<Author>(strings.size());
-				for (String s : strings) {
-					authors.add(Util.stringToAuthor(s));
-				}
-				return authors;
-			}
-		});
-	}
-
-	public List<String> titles(final BookQuery query) {
-		return listCall(new ListCallable<String>() {
-			public List<String> call() throws RemoteException {
-				return myInterface.titles(SerializerUtil.serialize(query));
-			}
-		});
-	}
-
-	public List<String> firstTitleLetters() {
-		return listCall(new ListCallable<String>() {
-			public List<String> call() throws RemoteException {
-				return myInterface.firstTitleLetters();
-			}
-		});
-	}
-
 	public synchronized boolean saveBook(Book book) {
 		if (myInterface == null) {
 			return false;
@@ -399,18 +370,6 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> implement
 				myInterface.markHyperlinkAsVisited(SerializerUtil.serialize(book), linkId);
 			} catch (RemoteException e) {
 			}
-		}
-	}
-
-	@Override
-	public String getDescription(Book book) {
-		if (myInterface == null) {
-			return null;
-		}
-		try {
-			return myInterface.getDescription(SerializerUtil.serialize(book));
-		} catch (RemoteException e) {
-			return null;
 		}
 	}
 

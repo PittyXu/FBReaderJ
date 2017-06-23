@@ -56,10 +56,7 @@ public abstract class FormatPlugin {
 	public abstract void readUids(AbstractBook book) throws BookReadingException;
 	public abstract void detectLanguageAndEncoding(AbstractBook book) throws BookReadingException;
 	public abstract ZLImage readCover(ZLFile file);
-	public abstract String readAnnotation(ZLFile file);
 
 	/* lesser is higher: 0 for ePub, 5 for other native, 10 for external */
 	public abstract int priority();
-
-	public abstract EncodingCollection supportedEncodings();
 }

@@ -101,7 +101,3 @@ std::vector<shared_ptr<FileEncryptionInfo> > FormatPlugin::readEncryptionInfos(B
 shared_ptr<const ZLImage> FormatPlugin::coverImage(const ZLFile &file) const {
 	return 0;
 }
-
-std::string FormatPlugin::readAnnotation(const ZLFile &file) const {
-	return "";
-}

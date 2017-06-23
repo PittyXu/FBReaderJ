@@ -24,8 +24,6 @@ import org.geometerplus.fbreader.book.BookUtil;
 import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.formats.oeb.OEBNativePlugin;
 import org.geometerplus.zlibrary.core.drm.FileEncryptionInfo;
-import org.geometerplus.zlibrary.core.encodings.EncodingCollection;
-import org.geometerplus.zlibrary.core.encodings.JavaEncodingCollection;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.image.ZLFileImage;
 import org.geometerplus.zlibrary.core.image.ZLFileImageProxy;
@@ -140,22 +138,8 @@ public class NativeFormatPlugin extends BuiltinFormatPlugin {
 	private native void readCoverNative(ZLFile file, ZLFileImage[] box);
 
 	@Override
-	public String readAnnotation(ZLFile file) {
-		synchronized (ourNativeLock) {
-			return readAnnotationNative(file);
-		}
-	}
-
-	private native String readAnnotationNative(ZLFile file);
-
-	@Override
 	public int priority() {
 		return 5;
-	}
-
-	@Override
-	public EncodingCollection supportedEncodings() {
-		return JavaEncodingCollection.Instance();
 	}
 
 	@Override

@@ -31,10 +31,7 @@ interface LibraryInterface {
 	String getBookByHash(in String hash);
 	String getRecentBook(in int index);
 
-	List<String> authors();
 	List<String> labels();
-	List<String> titles(in String query);
-	List<String> firstTitleLetters();
 
 	boolean saveBook(in String book);
 	void removeBook(in String book, in boolean deleteFromDisk);
@@ -61,8 +58,6 @@ interface LibraryInterface {
 	void rescan(in String path);
 
 	void setHash(in String book, in String hash);
-
-	String getDescription(in String book);
 
 	List<String> recentlyAddedBooks(in int count);
 	List<String> recentlyOpenedBooks(in int count);

@@ -19,55 +19,51 @@
 
 package org.geometerplus.zlibrary.text.hyphenation;
 
-import org.geometerplus.zlibrary.core.util.ZLArrayUtils;
-import org.geometerplus.zlibrary.core.xml.ZLStringMap;
-import org.geometerplus.zlibrary.core.xml.ZLXMLReaderAdapter;
+import android.text.TextUtils;
 
-final class ZLTextHyphenationReader extends ZLXMLReaderAdapter {
-	private static final String PATTERN = "pattern";
+import org.geometerplus.zlibrary.core.filesystem.ZLFile;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
 
-	private final ZLTextTeXHyphenator myHyphenator;
-	private boolean myReadPattern;
-	private char[] myBuffer = new char[10];
-	private int myBufferLength;
+final class ZLTextHyphenationReader {
 
-	ZLTextHyphenationReader(ZLTextTeXHyphenator hyphenator) {
-		myHyphenator = hyphenator;
-	}
+  private static final String PATTERN = "pattern";
 
-	@Override
-	public boolean startElementHandler(String tag, ZLStringMap attributes) {
-		if (PATTERN.equals(tag)) {
-			myReadPattern = true;
-		}
-		return false;
-	}
+  private final ZLTextTeXHyphenator myHyphenator;
 
-	@Override
-	public boolean endElementHandler(String tag) {
-		if (PATTERN.equals(tag)) {
-			myReadPattern = false;
-			final int len = myBufferLength;
-			if (len != 0) {
-				myHyphenator.addPattern(new ZLTextTeXHyphenationPattern(myBuffer, 0, len, true));
-			}
-			myBufferLength = 0;
-		}
-		return false;
-	}
+  ZLTextHyphenationReader(ZLTextTeXHyphenator hyphenator) {
+    myHyphenator = hyphenator;
+  }
 
-	@Override
-	public void characterDataHandler(char[] ch, int start, int length) {
-		if (myReadPattern) {
-			char[] buffer = myBuffer;
-			final int oldLen = myBufferLength;
-			final int newLen = oldLen + length;
-			if (newLen > buffer.length) {
-				buffer = ZLArrayUtils.createCopy(buffer, oldLen, newLen + 10);
-				myBuffer = buffer;
-			}
-			System.arraycopy(ch, start, buffer, oldLen, length);
-			myBufferLength = newLen;
-		}
-	}
+  public boolean readQuietly(ZLFile file) {
+    try {
+      XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
+      parser.setInput(file.getInputStream(), "utf-8");
+
+      int eventCode = parser.getEventType();//获取事件类型
+      // 直到文档的结尾处
+      while (eventCode != XmlPullParser.END_DOCUMENT) {
+        switch (eventCode) {
+          case XmlPullParser.START_DOCUMENT: //开始读取XML文档
+            //实例化集合类
+            break;
+          case XmlPullParser.START_TAG://开始读取某个标签
+            if (PATTERN.equals(parser.getName())) {
+              //通过getName判断读到哪个标签，然后通过nextText()获取文本节点值，或通过getAttributeValue(i)获取属性节点值
+              String text = parser.nextText();
+              if (!TextUtils.isEmpty(text)) {
+                myHyphenator.addPattern(
+                    new ZLTextTeXHyphenationPattern(text.toCharArray(), 0, text.length(), true));
+              }
+            }
+            break;
+        }
+        eventCode = parser.next();
+      }
+      return true;
+    } catch (Exception pE) {
+      pE.printStackTrace();
+      return false;
+    }
+  }
 }

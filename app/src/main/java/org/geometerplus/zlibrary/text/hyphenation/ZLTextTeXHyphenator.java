@@ -56,7 +56,7 @@ final class ZLTextTeXHyphenator extends ZLTextHyphenator {
 			}
 
 			codes.add("zh");
-			myLanguageCodes = new ArrayList<String>(codes);
+			myLanguageCodes = new ArrayList<>(codes);
 		}
 
 		return Collections.unmodifiableList(myLanguageCodes);
@@ -72,11 +72,9 @@ final class ZLTextTeXHyphenator extends ZLTextHyphenator {
 		myLanguage = language;
 		unload();
 
-		if (language != null) {
-			new ZLTextHyphenationReader(this).readQuietly(ZLResourceFile.createResourceFile(
-				"hyphenationPatterns/" + language + ".pattern"
-			));
-		}
+		new ZLTextHyphenationReader(this).readQuietly(ZLResourceFile.createResourceFile(
+      "hyphenationPatterns/" + language + ".pattern"
+    ));
 	}
 
 	public void unload() {

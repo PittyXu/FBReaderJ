@@ -33,14 +33,6 @@ import java.util.Formatter;
 import java.util.Locale;
 
 public abstract class BookUtil {
-	public static String getAnnotation(AbstractBook book, PluginCollection pluginCollection) {
-		try {
-			return getPlugin(pluginCollection, book).readAnnotation(fileByBook(book));
-		} catch (BookReadingException e) {
-			return null;
-		}
-	}
-
 	public static UID createUid(AbstractBook book, String algorithm) {
 		return createUid(fileByBook(book), algorithm);
 	}

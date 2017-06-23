@@ -340,15 +340,6 @@ public class BookCollection extends AbstractBookCollection<DbBook> {
 		return false;
 	}
 
-	public List<String> titles(BookQuery query) {
-		final List<DbBook> books = books(query);
-		final List<String> titles = new ArrayList<String>(books.size());
-		for (DbBook b : books) {
-			titles.add(b.getTitle());
-		}
-		return titles;
-	}
-
 	public List<DbBook> recentlyAddedBooks(int count) {
 		return books(myDatabase.loadRecentBookIds(BooksDatabase.HistoryEvent.Added, count));
 	}
@@ -368,36 +359,8 @@ public class BookCollection extends AbstractBookCollection<DbBook> {
 		return bookList;
 	}
 
-	public List<Author> authors() {
-		final Set<Author> authors = new TreeSet<Author>();
-		synchronized (myBooksByFile) {
-			for (DbBook book : myBooksByFile.values()) {
-				final List<Author> bookAuthors = book.authors();
-				if (bookAuthors.isEmpty()) {
-					authors.add(Author.NULL);
-				} else {
-					authors.addAll(bookAuthors);
-				}
-			}
-		}
-		return new ArrayList<Author>(authors);
-	}
-
 	public List<String> labels() {
 		return myDatabase.listLabels();
-	}
-
-	public List<String> firstTitleLetters() {
-		synchronized (myBooksByFile) {
-			final TreeSet<String> letters = new TreeSet<String>();
-			for (DbBook book : myBooksByFile.values()) {
-				final String l = book.firstTitleLetter();
-				if (l != null) {
-					letters.add(l);
-				}
-			}
-			return new ArrayList<String>(letters);
-		}
 	}
 
 	public DbBook getRecentBook(int index) {
@@ -657,12 +620,6 @@ public class BookCollection extends AbstractBookCollection<DbBook> {
 				);
 			}
 		}
-	}
-
-	@Override
-	public String getDescription(DbBook book) {
-		// not implemented in non-shadow collection
-		return null;
 	}
 
 	public List<Bookmark> bookmarks(BookmarkQuery query) {
