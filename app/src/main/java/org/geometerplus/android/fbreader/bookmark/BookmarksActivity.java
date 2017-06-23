@@ -36,8 +36,8 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import org.geometerplus.android.fbreader.FBReader;
-import org.geometerplus.android.fbreader.api.FBReaderIntents;
-import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
+import org.geometerplus.android.fbreader.api.FBReaderIntents.Key;
+import org.geometerplus.android.fbreader.BookCollectionShadow;
 import org.geometerplus.android.util.OrientationUtil;
 import org.geometerplus.android.util.UIMessageUtil;
 import org.geometerplus.android.util.ViewUtil;
@@ -69,7 +69,7 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 	private final Map<Integer,HighlightingStyle> myStyles =
 		Collections.synchronizedMap(new HashMap<Integer,HighlightingStyle>());
 
-	private final BookCollectionShadow myCollection = new BookCollectionShadow();
+	private BookCollectionShadow myCollection;
 	private volatile Book myBook;
 	private volatile Bookmark myBookmark;
 
@@ -93,6 +93,7 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 
 		setContentView(R.layout.bookmarks);
 
+		myCollection = new BookCollectionShadow(this);
 		setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 
 		final SearchManager manager = (SearchManager)getSystemService(SEARCH_SERVICE);
@@ -114,33 +115,25 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 			}
 		});
 
-		myBook = FBReaderIntents.getBookExtra(getIntent(), myCollection);
+		myBook = getIntent().getParcelableExtra(Key.BOOK);
 		if (myBook == null) {
 			finish();
 		}
-		myBookmark = FBReaderIntents.getBookmarkExtra(getIntent());
+		myBookmark = getIntent().getParcelableExtra(Key.BOOKMARK);
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
 
-		myCollection.bindToService(this, new Runnable() {
-			public void run() {
-				if (myAllBooksAdapter != null) {
-					return;
-				}
+		if (myAllBooksAdapter == null) {
+			myThisBookAdapter = new BookmarksAdapter((ListView) findViewById(R.id.bookmarks_this_book), myBookmark != null);
+			myAllBooksAdapter = new BookmarksAdapter((ListView) findViewById(R.id.bookmarks_all_books), false);
+			myCollection.addListener(BookmarksActivity.this);
 
-				myThisBookAdapter =
-					new BookmarksAdapter((ListView)findViewById(R.id.bookmarks_this_book), myBookmark != null);
-				myAllBooksAdapter =
-					new BookmarksAdapter((ListView)findViewById(R.id.bookmarks_all_books), false);
-				myCollection.addListener(BookmarksActivity.this);
-
-				updateStyles();
-				loadBookmarks();
-			}
-		});
+			updateStyles();
+			loadBookmarks();
+		}
 
 		OrientationUtil.setOrientation(this, getIntent());
 	}
@@ -262,7 +255,6 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 
 	@Override
 	protected void onDestroy() {
-		myCollection.unbind();
 		super.onDestroy();
 	}
 
@@ -294,7 +286,7 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 				return true;
 			case EDIT_ITEM_ID:
 				final Intent intent = new Intent(this, EditBookmarkActivity.class);
-				FBReaderIntents.putBookmarkExtra(intent, bookmark);
+				intent.putExtra(Key.BOOKMARK, bookmark);
 				OrientationUtil.startActivity(this, intent);
 				return true;
 			case DELETE_ITEM_ID:

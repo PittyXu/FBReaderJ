@@ -40,8 +40,4 @@ public class ViewUtil {
 	public static ImageView findImageView(View container, int id) {
 		return (ImageView)findView(container, id);
 	}
-
-	public static void setSubviewText(View view, int resourceId, String text) {
-		findTextView(view, resourceId).setText(text);
-	}
 }

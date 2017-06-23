@@ -49,8 +49,6 @@ public abstract class ZLibrary {
 		ourImplementation = this;
 	}
 
-	abstract public String getVersionName();
-	abstract public String getFullVersionName();
 	abstract public String getCurrentTimeString();
 	abstract public int getDisplayDPI();
 	abstract public int getWidthInPixels();

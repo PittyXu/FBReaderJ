@@ -19,6 +19,8 @@
 
 package org.geometerplus.zlibrary.core.filesystem;
 
+import android.os.Parcel;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -93,4 +95,30 @@ final class ZLZipEntryFile extends ZLArchiveEntryFile {
 		ZipEntry zipEntry = zipFile.getEntry(myName);
 		return zipFile.getInputStream(zipEntry);
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+	}
+
+	protected ZLZipEntryFile(Parcel in) {
+		super(in);
+	}
+
+	public static final Creator<ZLZipEntryFile> CREATOR = new Creator<ZLZipEntryFile>() {
+		@Override
+		public ZLZipEntryFile createFromParcel(Parcel source) {
+			return new ZLZipEntryFile(source);
+		}
+
+		@Override
+		public ZLZipEntryFile[] newArray(int size) {
+			return new ZLZipEntryFile[size];
+		}
+	};
 }

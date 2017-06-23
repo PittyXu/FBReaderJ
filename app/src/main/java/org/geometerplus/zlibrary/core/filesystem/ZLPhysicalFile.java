@@ -19,6 +19,8 @@
 
 package org.geometerplus.zlibrary.core.filesystem;
 
+import android.os.Parcel;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -124,4 +126,36 @@ public final class ZLPhysicalFile extends ZLFile {
 		}
 		return entries;
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeSerializable(this.myFile);
+		dest.writeValue(this.myIsDirectory);
+		dest.writeString(this.myPath);
+	}
+
+	protected ZLPhysicalFile(Parcel in) {
+		super(in);
+		this.myFile = (File) in.readSerializable();
+		this.myIsDirectory = (Boolean) in.readValue(Boolean.class.getClassLoader());
+		this.myPath = in.readString();
+	}
+
+	public static final Creator<ZLPhysicalFile> CREATOR = new Creator<ZLPhysicalFile>() {
+		@Override
+		public ZLPhysicalFile createFromParcel(Parcel source) {
+			return new ZLPhysicalFile(source);
+		}
+
+		@Override
+		public ZLPhysicalFile[] newArray(int size) {
+			return new ZLPhysicalFile[size];
+		}
+	};
 }

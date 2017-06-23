@@ -29,10 +29,6 @@ public abstract class OrientationUtil {
 		current.startActivity(intent.putExtra(KEY, current.getRequestedOrientation()));
 	}
 
-	public static void startActivityForResult(Activity current, Intent intent, int requestCode) {
-		current.startActivityForResult(intent.putExtra(KEY, current.getRequestedOrientation()), requestCode);
-	}
-
 	public static void setOrientation(Activity activity, Intent intent) {
 		if (intent == null) {
 			return;

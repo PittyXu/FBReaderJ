@@ -19,7 +19,10 @@
 
 package org.geometerplus.zlibrary.text.view;
 
-public class ZLTextFixedPosition extends ZLTextPosition {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ZLTextFixedPosition extends ZLTextPosition implements Parcelable {
 	public final int ParagraphIndex;
 	public final int ElementIndex;
 	public final int CharIndex;
@@ -61,4 +64,34 @@ public class ZLTextFixedPosition extends ZLTextPosition {
 			return super.toString() + "; timestamp = " + Timestamp;
 		}
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(this.ParagraphIndex);
+		dest.writeInt(this.ElementIndex);
+		dest.writeInt(this.CharIndex);
+	}
+
+	protected ZLTextFixedPosition(Parcel in) {
+		this.ParagraphIndex = in.readInt();
+		this.ElementIndex = in.readInt();
+		this.CharIndex = in.readInt();
+	}
+
+	public static final Creator<ZLTextFixedPosition> CREATOR = new Creator<ZLTextFixedPosition>() {
+		@Override
+		public ZLTextFixedPosition createFromParcel(Parcel source) {
+			return new ZLTextFixedPosition(source);
+		}
+
+		@Override
+		public ZLTextFixedPosition[] newArray(int size) {
+			return new ZLTextFixedPosition[size];
+		}
+	};
 }

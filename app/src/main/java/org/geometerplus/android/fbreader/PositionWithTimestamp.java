@@ -2,7 +2,7 @@
  * This code is in the public domain.
  */
 
-package org.geometerplus.android.fbreader.libraryService;
+package org.geometerplus.android.fbreader;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -31,7 +31,7 @@ import android.view.Window;
 import android.widget.RelativeLayout;
 
 import org.geometerplus.android.fbreader.api.FBReaderIntents;
-import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
+import org.geometerplus.android.fbreader.api.FBReaderIntents.Key;
 import org.geometerplus.android.util.UIMessageUtil;
 import org.geometerplus.android.util.UIUtil;
 import org.geometerplus.fbreader.Paths;
@@ -65,8 +65,8 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 
 	public static void openBookActivity(Context context, Book book, Bookmark bookmark) {
 		final Intent intent = defaultIntent(context);
-		FBReaderIntents.putBookExtra(intent, book);
-		FBReaderIntents.putBookmarkExtra(intent, bookmark);
+		intent.putExtra(Key.BOOK, book);
+		intent.putExtra(Key.BOOKMARK, bookmark);
 		context.startActivity(intent);
 	}
 
@@ -86,8 +86,8 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 			return;
 		}
 
-		myBook = FBReaderIntents.getBookExtra(intent, myFBReaderApp.Collection);
-		final Bookmark bookmark = FBReaderIntents.getBookmarkExtra(intent);
+		myBook = intent.getParcelableExtra(Key.BOOK);
+		final Bookmark bookmark = intent.getParcelableExtra(Key.BOOKMARK);
 		if (myBook == null) {
 			final Uri data = intent.getData();
 			if (data != null) {
@@ -154,9 +154,8 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 
 		myFBReaderApp = (FBReaderApp)FBReaderApp.Instance();
 		if (myFBReaderApp == null) {
-			myFBReaderApp = new FBReaderApp(this, Paths.systemInfo(this), new BookCollectionShadow());
+			myFBReaderApp = new FBReaderApp(this, Paths.systemInfo(this), new BookCollectionShadow(this));
 		}
-		getCollection().bindToService(this, null);
 		myBook = null;
 
 		myFBReaderApp.setWindow(this);
@@ -263,15 +262,11 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 
 		Config.Instance().runOnConnect(new Runnable() {
 			public void run() {
-				getCollection().bindToService(FBReader.this, new Runnable() {
-					public void run() {
-						final BookModel model = myFBReaderApp.Model;
-						if (model == null || model.Book == null) {
-							return;
-						}
-						onPreferencesUpdate(myFBReaderApp.Collection.getBookById(model.Book.getId()));
-					}
-				});
+				final BookModel model = myFBReaderApp.Model;
+				if (model == null || model.Book == null) {
+					return;
+				}
+				onPreferencesUpdate(myFBReaderApp.Collection.getBookById(model.Book.getId()));
 			}
 		});
 
@@ -286,22 +281,9 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		if (myOpenBookIntent != null) {
 			final Intent intent = myOpenBookIntent;
 			myOpenBookIntent = null;
-			getCollection().bindToService(this, new Runnable() {
-				public void run() {
-					openBook(intent, null, true);
-				}
-			});
+			openBook(intent, null, true);
 		} else if (myFBReaderApp.Model == null && myFBReaderApp.ExternalBook != null) {
-			getCollection().bindToService(this, new Runnable() {
-				public void run() {
-					myFBReaderApp.openBook(myFBReaderApp.ExternalBook, null, null);
-				}
-			});
-		} else {
-			getCollection().bindToService(this, new Runnable() {
-				public void run() {
-				}
-			});
+			myFBReaderApp.openBook(myFBReaderApp.ExternalBook, null, null);
 		}
 
 		PopupPanel.restoreVisibilities(myFBReaderApp);
@@ -322,12 +304,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	protected void onStop() {
 		PopupPanel.removeAllWindows(myFBReaderApp, this);
 		super.onStop();
-	}
-
-	@Override
-	protected void onDestroy() {
-		getCollection().unbind();
-		super.onDestroy();
 	}
 
 	@Override
@@ -380,13 +356,9 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 				break;
 			case REQUEST_PREFERENCES:
 				if (resultCode != RESULT_DO_NOTHING && data != null) {
-					final Book book = FBReaderIntents.getBookExtra(data, myFBReaderApp.Collection);
+					final Book book = data.getParcelableExtra(Key.BOOK);
 					if (book != null) {
-						getCollection().bindToService(this, new Runnable() {
-							public void run() {
-								onPreferencesUpdate(book);
-							}
-						});
+            onPreferencesUpdate(book);
 					}
 				}
 				break;

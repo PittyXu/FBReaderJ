@@ -40,6 +40,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import org.geometerplus.android.fbreader.api.FBReaderIntents;
+import org.geometerplus.android.fbreader.api.FBReaderIntents.Key;
 import org.geometerplus.android.util.ViewUtil;
 import org.geometerplus.fbreader.book.Book;
 import org.geometerplus.fbreader.book.BookEvent;
@@ -69,7 +70,7 @@ public class EditBookmarkActivity extends Activity implements IBookCollection.Li
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.edit_bookmark);
 
-		myBookmark = FBReaderIntents.getBookmarkExtra(getIntent());
+		myBookmark = getIntent().getParcelableExtra(Key.BOOKMARK);
 		if (myBookmark == null) {
 			finish();
 			return;

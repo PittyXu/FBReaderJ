@@ -19,6 +19,10 @@
 
 package org.geometerplus.zlibrary.core.filesystem;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.os.Parcelable.Creator;
+
 import org.geometerplus.zlibrary.core.drm.EncryptionMethod;
 import org.geometerplus.zlibrary.core.drm.FileEncryptionInfo;
 import org.geometerplus.zlibrary.core.drm.embedding.EmbeddingInputStream;
@@ -30,7 +34,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class ZLFile implements InputStreamHolder {
+public abstract class ZLFile implements InputStreamHolder, Parcelable {
 	private final static HashMap<String,ZLFile> ourCachedFiles = new HashMap<>();
 
 	protected interface ArchiveType {
@@ -219,5 +223,28 @@ public abstract class ZLFile implements InputStreamHolder {
 				ZLZipEntryFile.removeFromCache(this);
 			}
 		}
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(this.myExtension);
+		dest.writeString(this.myShortName);
+		dest.writeInt(this.myArchiveType);
+		dest.writeByte(this.myIsCached ? (byte) 1 : (byte) 0);
+	}
+
+	public ZLFile() {
+	}
+
+	protected ZLFile(Parcel in) {
+		this.myExtension = in.readString();
+		this.myShortName = in.readString();
+		this.myArchiveType = in.readInt();
+		this.myIsCached = in.readByte() != 0;
 	}
 }

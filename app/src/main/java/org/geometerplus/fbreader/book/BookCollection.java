@@ -48,7 +48,6 @@ import java.util.TreeSet;
 public class BookCollection extends AbstractBookCollection<DbBook> {
 	private static final String ZERO_HASH = String.format("%040d", 0);
 
-	private final SystemInfo mySystemInfo;
 	public final PluginCollection PluginCollection;
 	private final BooksDatabase myDatabase;
 	public final List<String> BookDirectories;
@@ -68,19 +67,14 @@ public class BookCollection extends AbstractBookCollection<DbBook> {
 		Collections.synchronizedMap(new TreeMap<Integer,HighlightingStyle>());
 
 	public BookCollection(SystemInfo systemInfo, BooksDatabase db, List<String> bookDirectories) {
-		mySystemInfo = systemInfo;
 		PluginCollection = org.geometerplus.fbreader.formats.PluginCollection.Instance(systemInfo);
 		myDatabase = db;
-		BookDirectories = Collections.unmodifiableList(new ArrayList<String>(bookDirectories));
+		BookDirectories = Collections.unmodifiableList(new ArrayList<>(bookDirectories));
 
 		final String formats = db.getOptionValue("formats");
 		if (formats != null) {
 			myActiveFormats = new HashSet<String>(Arrays.asList(formats.split("\000")));
 		}
-	}
-
-	public int size() {
-		return myBooksByFile.size();
 	}
 
 	public DbBook getBookByFile(String path) {
@@ -291,40 +285,6 @@ public class BookCollection extends AbstractBookCollection<DbBook> {
 
 	public Status status() {
 		return myStatus;
-	}
-
-	public List<DbBook> books(BookQuery query) {
-		if (query == null) {
-			return Collections.emptyList();
-		}
-
-		final List<DbBook> allBooks;
-		synchronized (myBooksByFile) {
-			//allBooks = new ArrayList<DbBook>(new LinkedHashSet<DbBook>(myBooksByFile.values()));
-			allBooks = new ArrayList<DbBook>(myBooksByFile.values());
-		}
-		final int start = query.Page * query.Limit;
-		if (start >= allBooks.size()) {
-			return Collections.emptyList();
-		}
-		final int end = start + query.Limit;
-		if (query.Filter instanceof Filter.Empty) {
-			return allBooks.subList(start, Math.min(end, allBooks.size()));
-		} else {
-			int count = 0;
-			final List<DbBook> filtered = new ArrayList<DbBook>(query.Limit);
-			for (DbBook b : allBooks) {
-				if (query.Filter.matches(b)) {
-					if (count >= start) {
-						filtered.add(b);
-					}
-					if (++count == end) {
-						break;
-					}
-				}
-			}
-			return filtered;
-		}
 	}
 
 	public boolean hasBooks(Filter filter) {
@@ -789,5 +749,12 @@ public class BookCollection extends AbstractBookCollection<DbBook> {
 
 	public DbBook createBook(long id, String url, String title, String encoding, String language) {
 		return new DbBook(id, ZLFile.createFileByUrl(url), title, encoding, language);
+	}
+
+	public DbBook createBook(Book pBook) {
+		if (null == pBook) {
+			return null;
+		}
+		return createBook(pBook.getId(), "file://" + pBook.getPath(), pBook.getTitle(), pBook.getEncodingNoDetection(), pBook.getLanguage());
 	}
 }

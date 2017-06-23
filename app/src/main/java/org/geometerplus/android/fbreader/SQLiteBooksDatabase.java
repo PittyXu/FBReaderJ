@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.android.fbreader.libraryService;
+package org.geometerplus.android.fbreader;
 
 import android.content.Context;
 import android.database.Cursor;

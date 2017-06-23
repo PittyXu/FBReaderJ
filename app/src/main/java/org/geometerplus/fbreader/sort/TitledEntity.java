@@ -21,6 +21,9 @@ package org.geometerplus.fbreader.sort;
 
 import android.annotation.TargetApi;
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.os.Parcelable.Creator;
 
 import org.geometerplus.fbreader.util.NaturalOrderComparator;
 
@@ -28,7 +31,7 @@ import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class TitledEntity<T extends TitledEntity<T>> implements Comparable<T> {
+public abstract class TitledEntity<T extends TitledEntity<T>> implements Comparable<T>, Parcelable {
 	private static final NaturalOrderComparator ourComparator = new NaturalOrderComparator();
 
 	private String myTitle;
@@ -179,5 +182,21 @@ public abstract class TitledEntity<T extends TitledEntity<T>> implements Compara
 			return null;
 		}
 		return String.valueOf(Character.toUpperCase(str.charAt(0)));
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(this.myTitle);
+		dest.writeString(this.mySortKey);
+	}
+
+	protected TitledEntity(Parcel in) {
+		this.myTitle = in.readString();
+		this.mySortKey = in.readString();
 	}
 }

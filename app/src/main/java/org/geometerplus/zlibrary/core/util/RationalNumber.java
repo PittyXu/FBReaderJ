@@ -19,7 +19,10 @@
 
 package org.geometerplus.zlibrary.core.util;
 
-public class RationalNumber {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class RationalNumber implements Parcelable {
 	public static RationalNumber create(long numerator, long denominator) {
 		if (denominator == 0) {
 			return null;
@@ -81,4 +84,32 @@ public class RationalNumber {
 	public int hashCode() {
 		return (int)(37 * Numerator + Denominator);
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeLong(this.Numerator);
+		dest.writeLong(this.Denominator);
+	}
+
+	protected RationalNumber(Parcel in) {
+		this.Numerator = in.readLong();
+		this.Denominator = in.readLong();
+	}
+
+	public static final Creator<RationalNumber> CREATOR = new Creator<RationalNumber>() {
+		@Override
+		public RationalNumber createFromParcel(Parcel source) {
+			return new RationalNumber(source);
+		}
+
+		@Override
+		public RationalNumber[] newArray(int size) {
+			return new RationalNumber[size];
+		}
+	};
 }

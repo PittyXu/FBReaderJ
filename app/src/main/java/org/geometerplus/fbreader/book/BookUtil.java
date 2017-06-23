@@ -65,6 +65,7 @@ public abstract class BookUtil {
 				try {
 					stream.close();
 				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
 		}
@@ -77,27 +78,6 @@ public abstract class BookUtil {
 			throw new BookReadingException("pluginNotFound", file);
 		}
 		return plugin;
-	}
-
-	public static String getEncoding(AbstractBook book, PluginCollection pluginCollection) {
-		if (book.getEncodingNoDetection() == null) {
-			try {
-				BookUtil.getPlugin(pluginCollection, book).detectLanguageAndEncoding(book);
-			} catch (BookReadingException e) {
-			}
-			if (book.getEncodingNoDetection() == null) {
-				book.setEncoding("utf-8");
-			}
-		}
-		return book.getEncodingNoDetection();
-	}
-
-	public static void reloadInfoFromFile(AbstractBook book, PluginCollection pluginCollection) {
-		try {
-			readMetainfo(book, pluginCollection);
-		} catch (BookReadingException e) {
-			// ignore
-		}
 	}
 
 	static void readMetainfo(AbstractBook book, PluginCollection pluginCollection) throws BookReadingException {

@@ -19,6 +19,8 @@
 
 package org.geometerplus.zlibrary.core.filesystem;
 
+import android.os.Parcel;
+
 import org.geometerplus.zlibrary.core.filesystem.tar.ZLTarEntryFile;
 
 import java.util.Collections;
@@ -113,5 +115,23 @@ public abstract class ZLArchiveEntryFile extends ZLFile {
 			ancestor = ancestor.getParent();
 		}
 		return (ZLPhysicalFile)ancestor;
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeParcelable(this.myParent, flags);
+		dest.writeString(this.myName);
+	}
+
+	protected ZLArchiveEntryFile(Parcel in) {
+		super(in);
+		this.myParent = in.readParcelable(ZLFile.class.getClassLoader());
+		this.myName = in.readString();
 	}
 }

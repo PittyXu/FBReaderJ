@@ -19,6 +19,8 @@
 
 package org.geometerplus.fbreader.book;
 
+import android.os.Parcel;
+
 public final class Book extends AbstractBook {
 	private final String myPath;
 
@@ -50,4 +52,32 @@ public final class Book extends AbstractBook {
 		}
 		return myPath.equals(((Book)o).myPath);
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeString(this.myPath);
+	}
+
+	protected Book(Parcel in) {
+		super(in);
+		this.myPath = in.readString();
+	}
+
+	public static final Creator<Book> CREATOR = new Creator<Book>() {
+		@Override
+		public Book createFromParcel(Parcel source) {
+			return new Book(source);
+		}
+
+		@Override
+		public Book[] newArray(int size) {
+			return new Book[size];
+		}
+	};
 }

@@ -24,7 +24,7 @@ import org.geometerplus.zlibrary.text.view.ZLTextPosition;
 
 import java.util.List;
 
-public interface IBookCollection<B extends AbstractBook> extends AbstractSerializer.BookCreator<B> {
+public interface IBookCollection<B extends AbstractBook> {
 	enum Status {
 		NotStarted(false),
 		Started(false),
@@ -48,9 +48,6 @@ public interface IBookCollection<B extends AbstractBook> extends AbstractSeriali
 
 	Status status();
 
-	int size();
-
-	List<B> books(BookQuery query);
 	boolean hasBooks(Filter filter);
 
 	List<B> recentlyOpenedBooks(int count);

@@ -69,7 +69,6 @@ shared_ptr<BooleanMethod> AndroidUtil::Method_java_io_InputStream_markSupported;
 shared_ptr<VoidMethod> AndroidUtil::Method_java_io_InputStream_reset;
 
 shared_ptr<StaticObjectMethod> AndroidUtil::StaticMethod_ZLibrary_Instance;
-shared_ptr<StringMethod> AndroidUtil::Method_ZLibrary_getVersionName;
 
 shared_ptr<StaticObjectMethod> AndroidUtil::StaticMethod_NativeFormatPlugin_create;
 shared_ptr<StringMethod> AndroidUtil::Method_NativeFormatPlugin_supportedFileType;
@@ -147,12 +146,9 @@ bool AndroidUtil::init(JavaVM* jvm) {
 	Method_java_io_InputStream_reset = new VoidMethod(Class_java_io_InputStream, "reset", "()");
 
 	StaticMethod_ZLibrary_Instance = new StaticObjectMethod(Class_ZLibrary, "Instance", Class_ZLibrary, "()");
-	Method_ZLibrary_getVersionName = new StringMethod(Class_ZLibrary, "getVersionName", "()");
 
 	StaticMethod_NativeFormatPlugin_create = new StaticObjectMethod(Class_NativeFormatPlugin, "create", Class_NativeFormatPlugin, "(Lorg/geometerplus/zlibrary/core/util/SystemInfo;Ljava/lang/String;)");
 	Method_NativeFormatPlugin_supportedFileType = new StringMethod(Class_NativeFormatPlugin, "supportedFileType", "()");
-
-	//StaticMethod_PluginCollection_Instance = new StaticObjectMethod(Class_PluginCollection, "Instance", Class_PluginCollection, "()");
 
 	Method_Encoding_createConverter = new ObjectMethod(Class_Encoding, "createConverter", Class_EncodingConverter, "()");
 	Field_EncodingConverter_Name = new ObjectField(Class_EncodingConverter, "Name", Class_java_lang_String);

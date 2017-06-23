@@ -28,6 +28,7 @@ import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.johnpersano.supertoasts.util.OnClickWrapper;
 
 import org.geometerplus.android.fbreader.api.FBReaderIntents;
+import org.geometerplus.android.fbreader.api.FBReaderIntents.Key;
 import org.geometerplus.android.fbreader.bookmark.EditBookmarkActivity;
 import org.geometerplus.android.util.OrientationUtil;
 import org.geometerplus.fbreader.book.Bookmark;
@@ -63,7 +64,7 @@ public class SelectionBookmarkAction extends FBAndroidAction {
 			public void onClick(View view, Parcelable token) {
 				final Intent intent =
 					new Intent(BaseActivity.getApplicationContext(), EditBookmarkActivity.class);
-				FBReaderIntents.putBookmarkExtra(intent, bookmark);
+				intent.putExtra(Key.BOOKMARK, bookmark);
 				OrientationUtil.startActivity(BaseActivity, intent);
 			}
 		}));

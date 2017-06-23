@@ -19,6 +19,8 @@
 
 package org.geometerplus.fbreader.book;
 
+import android.os.Parcel;
+
 import org.geometerplus.fbreader.sort.TitledEntity;
 import org.geometerplus.fbreader.util.ComparisonUtil;
 import org.geometerplus.zlibrary.core.util.MiscUtil;
@@ -224,12 +226,6 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 		}
 	}
 
-	public void removeLabel(String label) {
-		if (myLabels != null && myLabels.remove(new Label(label))) {
-			mySaveState = SaveState.NotSaved;
-		}
-	}
-
 	public List<UID> uids() {
 		return myUids != null ? Collections.unmodifiableList(myUids) : Collections.<UID>emptyList();
 	}
@@ -310,5 +306,41 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 	@Override
 	public String toString() {
 		return getClass().getName() + "[" + getPath() + ", " + myId + ", " + getTitle() + "]";
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeLong(this.myId);
+		dest.writeString(this.myEncoding);
+		dest.writeString(this.myLanguage);
+		dest.writeList(this.myAuthors);
+		dest.writeList(this.myLabels);
+		dest.writeList(this.myUids);
+		dest.writeParcelable(this.myProgress, flags);
+		dest.writeByte(this.HasBookmark ? (byte) 1 : (byte) 0);
+		dest.writeInt(this.mySaveState == null ? -1 : this.mySaveState.ordinal());
+	}
+
+	protected AbstractBook(Parcel in) {
+		super(in);
+		this.myId = in.readLong();
+		this.myEncoding = in.readString();
+		this.myLanguage = in.readString();
+		this.myAuthors = new ArrayList<Author>();
+		in.readList(this.myAuthors, Author.class.getClassLoader());
+		this.myLabels = new ArrayList<Label>();
+		in.readList(this.myLabels, Label.class.getClassLoader());
+		this.myUids = new ArrayList<UID>();
+		in.readList(this.myUids, UID.class.getClassLoader());
+		this.myProgress = in.readParcelable(RationalNumber.class.getClassLoader());
+		this.HasBookmark = in.readByte() != 0;
+		int tmpMySaveState = in.readInt();
+		this.mySaveState = tmpMySaveState == -1 ? null : SaveState.values()[tmpMySaveState];
 	}
 }

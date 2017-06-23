@@ -19,6 +19,9 @@
 
 package org.geometerplus.fbreader.book;
 
+import android.os.Parcel;
+import android.os.Parcelable.Creator;
+
 import org.geometerplus.fbreader.util.ComparisonUtil;
 import org.geometerplus.fbreader.util.TextSnippet;
 import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
@@ -256,4 +259,60 @@ public final class Bookmark extends ZLTextFixedPosition {
 		}
 		throw new RuntimeException("INVALID UUID: " + uid);
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeLong(this.myId);
+		dest.writeString(this.Uid);
+		dest.writeString(this.myVersionUid);
+		dest.writeLong(this.BookId);
+		dest.writeString(this.BookTitle);
+		dest.writeString(this.myText);
+		dest.writeString(this.myOriginalText);
+		dest.writeLong(this.CreationTimestamp);
+		dest.writeValue(this.myModificationTimestamp);
+		dest.writeValue(this.myAccessTimestamp);
+		dest.writeParcelable(this.myEnd, flags);
+		dest.writeInt(this.myLength);
+		dest.writeInt(this.myStyleId);
+		dest.writeString(this.ModelId);
+		dest.writeByte(this.IsVisible ? (byte) 1 : (byte) 0);
+	}
+
+	protected Bookmark(Parcel in) {
+		super(in);
+		this.myId = in.readLong();
+		this.Uid = in.readString();
+		this.myVersionUid = in.readString();
+		this.BookId = in.readLong();
+		this.BookTitle = in.readString();
+		this.myText = in.readString();
+		this.myOriginalText = in.readString();
+		this.CreationTimestamp = in.readLong();
+		this.myModificationTimestamp = (Long) in.readValue(Long.class.getClassLoader());
+		this.myAccessTimestamp = (Long) in.readValue(Long.class.getClassLoader());
+		this.myEnd = in.readParcelable(ZLTextFixedPosition.class.getClassLoader());
+		this.myLength = in.readInt();
+		this.myStyleId = in.readInt();
+		this.ModelId = in.readString();
+		this.IsVisible = in.readByte() != 0;
+	}
+
+	public static final Creator<Bookmark> CREATOR = new Creator<Bookmark>() {
+		@Override
+		public Bookmark createFromParcel(Parcel source) {
+			return new Bookmark(source);
+		}
+
+		@Override
+		public Bookmark[] newArray(int size) {
+			return new Bookmark[size];
+		}
+	};
 }

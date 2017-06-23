@@ -19,6 +19,8 @@
 
 package org.geometerplus.fbreader.book;
 
+import android.os.Parcel;
+
 import org.geometerplus.fbreader.formats.BookReadingException;
 import org.geometerplus.fbreader.formats.FormatPlugin;
 import org.geometerplus.fbreader.formats.PluginCollection;
@@ -27,6 +29,8 @@ import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.util.MiscUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -251,4 +255,36 @@ public final class DbBook extends AbstractBook {
 		}
 		return false;
 	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		super.writeToParcel(dest, flags);
+		dest.writeParcelable(this.File, flags);
+		dest.writeStringList(new ArrayList<>(myVisitedHyperlinks));
+	}
+
+	protected DbBook(Parcel in) {
+		super(in);
+		this.File = in.readParcelable(ZLFile.class.getClassLoader());
+		List<String> links = new ArrayList<>();
+		in.readStringList(links);
+		myVisitedHyperlinks = new HashSet<>(links);
+	}
+
+	public static final Creator<DbBook> CREATOR = new Creator<DbBook>() {
+		@Override
+		public DbBook createFromParcel(Parcel source) {
+			return new DbBook(source);
+		}
+
+		@Override
+		public DbBook[] newArray(int size) {
+			return new DbBook[size];
+		}
+	};
 }
