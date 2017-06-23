@@ -19,6 +19,8 @@
 
 package org.geometerplus.zlibrary.core.view;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.ColorInt;
 
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
@@ -52,7 +54,7 @@ abstract public class ZLPaintContext {
 		return mySystemInfo;
 	}
 
-	abstract public void clear(ZLFile wallpaperFile, FillMode mode);
+	abstract public void clear(Bitmap fileBitmap, FillMode mode);
 	abstract public void clear(@ColorInt Integer color);
 	@ColorInt
 	abstract public Integer getBackgroundColor();
@@ -65,7 +67,7 @@ abstract public class ZLPaintContext {
 	private boolean myFontIsUnderlined;
 	private boolean myFontIsStrikedThrough;
 
-	public final void setFont(List<FontEntry> entries, int size, boolean bold, boolean italic, boolean underline, boolean strikeThrough) {
+	public final void setFont(Context pContext, List<FontEntry> entries, int size, boolean bold, boolean italic, boolean underline, boolean strikeThrough) {
 		if (entries != null && !entries.equals(myFontEntries)) {
 			myFontEntries = entries;
 			myResetFont = true;
@@ -92,7 +94,7 @@ abstract public class ZLPaintContext {
 		}
 		if (myResetFont) {
 			myResetFont = false;
-			setFontInternal(myFontEntries, size, bold, italic, underline, strikeThrough);
+			setFontInternal(pContext, myFontEntries, size, bold, italic, underline, strikeThrough);
 			mySpaceWidth = -1;
 			myStringHeight = -1;
 			myDescent = -1;
@@ -100,7 +102,7 @@ abstract public class ZLPaintContext {
 		}
 	}
 
-	abstract protected void setFontInternal(List<FontEntry> entries, int size, boolean bold, boolean italic, boolean underline, boolean strikeThrough);
+	abstract protected void setFontInternal(Context pContext, List<FontEntry> entries, int size, boolean bold, boolean italic, boolean underline, boolean strikeThrough);
 
 	abstract public void setTextColor(@ColorInt Integer color);
 	abstract public void setLineColor(@ColorInt Integer color);

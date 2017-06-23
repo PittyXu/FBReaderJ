@@ -19,6 +19,8 @@
 
 package org.geometerplus.fbreader.fbreader;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.ColorInt;
 
 import org.geometerplus.fbreader.bookmodel.BookModel;
@@ -32,8 +34,6 @@ import org.geometerplus.fbreader.fbreader.options.PageTurningOptions;
 import org.geometerplus.fbreader.fbreader.options.ViewOptions;
 import org.geometerplus.fbreader.util.FixedTextSnippet;
 import org.geometerplus.fbreader.util.TextSnippet;
-import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.filesystem.ZLResourceFile;
 import org.geometerplus.zlibrary.core.fonts.FontEntry;
 import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.core.view.SelectionCursor;
@@ -50,6 +50,7 @@ import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.text.view.ZLTextWordRegionSoul;
 import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -62,7 +63,7 @@ public final class FBView extends ZLTextView {
 	private final ViewOptions myViewOptions;
 
 	FBView(FBReaderApp reader) {
-		super(reader);
+		super(reader.getContext(), reader);
 		myReader = reader;
 		myViewOptions = reader.ViewOptions;
 	}
@@ -83,7 +84,7 @@ public final class FBView extends ZLTextView {
 			id = prefs.Horizontal.getValue() ? "right_to_left" : "up";
 		}
 		if (myZoneMap == null || !id.equals(myZoneMap.Name)) {
-			myZoneMap = TapZoneMap.zoneMap(id);
+			myZoneMap = TapZoneMap.zoneMap(myReader.getContext(), id);
 		}
 		return myZoneMap;
 	}
@@ -333,7 +334,7 @@ public final class FBView extends ZLTextView {
 
 	@Override
 	public ZLTextStyleCollection getTextStyleCollection() {
-		return myViewOptions.getTextStyleCollection();
+		return myViewOptions.getTextStyleCollection(myReader.getContext());
 	}
 
 	@Override
@@ -372,24 +373,23 @@ public final class FBView extends ZLTextView {
 	}
 
 	@Override
-	public ZLFile getWallpaperFile() {
+	public Bitmap getWallpaperFile() {
 		final String filePath = myViewOptions.getColorProfile().WallpaperOption.getValue();
 		if ("".equals(filePath)) {
 			return null;
 		}
 
-		final ZLFile file = ZLFile.createFileByPath(filePath);
-		if (file == null || !file.exists()) {
-			return null;
+		try {
+			return BitmapFactory.decodeStream(myReader.getContext().getAssets().open(filePath));
+		} catch (IOException pE) {
+			pE.printStackTrace();
 		}
-		return file;
+		return null;
 	}
 
 	@Override
 	public ZLPaintContext.FillMode getFillMode() {
-		return getWallpaperFile() instanceof ZLResourceFile
-			? ZLPaintContext.FillMode.tileMirror
-			: myViewOptions.getColorProfile().FillModeOption.getValue();
+		return ZLPaintContext.FillMode.tileMirror;
 	}
 
 	@ColorInt
@@ -528,7 +528,7 @@ public final class FBView extends ZLTextView {
 			final String key = family + (bold ? "N" : "B") + height;
 			final Integer cached = myHeightMap.get(key);
 			if (cached != null) {
-				context.setFont(myFontEntry, cached, bold, false, false, false);
+				context.setFont(myReader.getContext(), myFontEntry, cached, bold, false, false, false);
 				final Integer charHeight = myCharHeightMap.get(key);
 				return charHeight != null ? charHeight : height;
 			} else {
@@ -536,7 +536,7 @@ public final class FBView extends ZLTextView {
 				int charHeight = height;
 				final int max = height < 9 ? height - 1 : height - 2;
 				for (; h > 5; --h) {
-					context.setFont(myFontEntry, h, bold, false, false, false);
+					context.setFont(myReader.getContext(), myFontEntry, h, bold, false, false, false);
 					charHeight = context.getCharHeight('H');
 					if (charHeight <= max) {
 						break;

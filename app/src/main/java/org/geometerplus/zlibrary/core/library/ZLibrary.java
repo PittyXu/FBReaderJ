@@ -19,7 +19,6 @@
 
 package org.geometerplus.zlibrary.core.library;
 
-import org.geometerplus.zlibrary.core.filesystem.ZLResourceFile;
 import org.geometerplus.zlibrary.core.options.ZLIntegerOption;
 import org.geometerplus.zlibrary.core.options.ZLStringOption;
 
@@ -49,9 +48,6 @@ public abstract class ZLibrary {
 	protected ZLibrary() {
 		ourImplementation = this;
 	}
-
-	abstract public ZLResourceFile createResourceFile(String path);
-	abstract public ZLResourceFile createResourceFile(ZLResourceFile parent, String name);
 
 	abstract public String getVersionName();
 	abstract public String getFullVersionName();

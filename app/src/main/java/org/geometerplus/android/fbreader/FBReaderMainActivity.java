@@ -80,7 +80,7 @@ public abstract class FBReaderMainActivity extends Activity {
 		final String fontFamily =
 			new ZLStringOption("Style", "Base:fontFamily", "sans-serif").getValue();
 
-		Typeface typeface = AndroidFontUtil.systemTypeface(fontFamily, false, false);
+		Typeface typeface = AndroidFontUtil.systemTypeface(this, fontFamily, false, false);
 		if (typeface != null) {
 			toast.getTextView().setTypeface(typeface);
 		}

@@ -19,6 +19,8 @@
 
 package org.geometerplus.zlibrary.text.view;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.ColorInt;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
@@ -41,8 +43,8 @@ abstract class ZLTextViewBase extends ZLView {
 	private int myWordHeight = -1;
 	private ZLTextMetrics myMetrics;
 
-	ZLTextViewBase(ZLApplication application) {
-		super(application);
+	ZLTextViewBase(Context pContext, ZLApplication application) {
+		super(pContext, application);
 	}
 
 	private int myMaxSelectionDistance = 0;
@@ -95,7 +97,7 @@ abstract class ZLTextViewBase extends ZLView {
 
 	public abstract boolean twoColumnView();
 
-	public abstract ZLFile getWallpaperFile();
+	public abstract Bitmap getWallpaperFile();
 	public abstract ZLPaintContext.FillMode getFillMode();
 	@ColorInt
 	public abstract Integer getBackgroundColor();
@@ -143,7 +145,7 @@ abstract class ZLTextViewBase extends ZLView {
 			myTextStyle = style;
 			myWordHeight = -1;
 		}
-		getContext().setFont(style.getFontEntries(), style.getFontSize(metrics()), style.isBold(), style.isItalic(), style.isUnderline(), style.isStrikeThrough());
+		getContext().setFont(context, style.getFontEntries(), style.getFontSize(metrics()), style.isBold(), style.isItalic(), style.isUnderline(), style.isStrikeThrough());
 	}
 
 	final void resetTextStyle() {

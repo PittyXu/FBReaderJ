@@ -19,6 +19,8 @@
 
 package org.geometerplus.zlibrary.core.view;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
 
@@ -35,15 +37,11 @@ final class DummyPaintContext extends ZLPaintContext {
 			public String tempDirectory() {
 				return "";
 			}
-
-			public String networkCacheDirectory() {
-				return "";
-			}
 		});
 	}
 
 	@Override
-	public void clear(ZLFile wallpaperFile, FillMode mode) {
+	public void clear(Bitmap wallpaperFile, FillMode mode) {
 	}
 
 	@Override
@@ -57,7 +55,7 @@ final class DummyPaintContext extends ZLPaintContext {
 	}
 
 	@Override
-	protected void setFontInternal(List<FontEntry> entries, int size, boolean bold, boolean italic, boolean underline, boolean strikeThrought) {
+	protected void setFontInternal(Context pContext, List<FontEntry> entries, int size, boolean bold, boolean italic, boolean underline, boolean strikeThrought) {
 	}
 
 	@Override

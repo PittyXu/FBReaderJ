@@ -19,14 +19,18 @@
 
 package org.geometerplus.zlibrary.core.view;
 
+import android.content.Context;
+
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 
 abstract public class ZLView implements ZLViewEnums {
 	public final ZLApplication Application;
 	private ZLPaintContext myViewContext = new DummyPaintContext();
+	public final Context context;
 
-	protected ZLView(ZLApplication application) {
+	protected ZLView(Context pContext, ZLApplication application) {
 		Application = application;
+		context = pContext;
 	}
 
 	protected final void setContext(ZLPaintContext context) {

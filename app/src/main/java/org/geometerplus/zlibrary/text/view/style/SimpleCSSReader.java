@@ -19,6 +19,8 @@
 
 package org.geometerplus.zlibrary.text.view.style;
 
+import android.content.Context;
+
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.util.MiscUtil;
 
@@ -46,13 +48,13 @@ class SimpleCSSReader {
 	private String mySelector;
 	private String myName;
 
-	Map<Integer,ZLTextNGStyleDescription> read(ZLFile file) {
-		myDescriptionMap = new LinkedHashMap<Integer,ZLTextNGStyleDescription>();
+	Map<Integer,ZLTextNGStyleDescription> read(Context pContext, String assetsPath) {
+		myDescriptionMap = new LinkedHashMap<>();
 		myState = State.EXPECT_SELECTOR;
 
 		InputStream stream = null;
 		try {
-			stream = file.getInputStream();
+			stream = pContext.getAssets().open(assetsPath);
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -61,11 +63,13 @@ class SimpleCSSReader {
 				}
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
 		} finally {
 			if (stream != null) {
 				try {
 					stream.close();
 				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
 		}
@@ -92,7 +96,7 @@ class SimpleCSSReader {
 				break;
 			case EXPECT_OPEN_BRACKET:
 				if ("{".equals(token)) {
-					myCurrentMap = new HashMap<String,String>();
+					myCurrentMap = new HashMap<>();
 					myState = State.EXPECT_NAME;
 				}
 				break;

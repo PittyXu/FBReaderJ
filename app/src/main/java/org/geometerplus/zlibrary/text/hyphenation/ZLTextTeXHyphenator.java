@@ -19,16 +19,12 @@
 
 package org.geometerplus.zlibrary.text.hyphenation;
 
-import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.filesystem.ZLResourceFile;
+import android.content.Context;
+
 import org.geometerplus.zlibrary.core.language.Language;
 import org.geometerplus.zlibrary.core.language.ZLLanguageUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
-import java.util.TreeSet;
 
 final class ZLTextTeXHyphenator extends ZLTextHyphenator {
 	private final HashMap<ZLTextTeXHyphenationPattern,ZLTextTeXHyphenationPattern> myPatternTable =
@@ -43,26 +39,7 @@ final class ZLTextTeXHyphenator extends ZLTextHyphenator {
 		}
 	}
 
-	private List<String> myLanguageCodes;
-	public List<String> languageCodes() {
-		if (myLanguageCodes == null) {
-			final TreeSet<String> codes = new TreeSet<String>();
-			final ZLFile patternsFile = ZLResourceFile.createResourceFile("hyphenationPatterns");
-			for (ZLFile file : patternsFile.children()) {
-				final String name = file.getShortName();
-				if (name.endsWith(".pattern")) {
-					codes.add(name.substring(0, name.length() - ".pattern".length()));
-				}
-			}
-
-			codes.add("zh");
-			myLanguageCodes = new ArrayList<>(codes);
-		}
-
-		return Collections.unmodifiableList(myLanguageCodes);
-	}
-
-	public void load(String language) {
+	public void load(Context pContext, String language) {
 		if (language == null || Language.OTHER_CODE.equals(language)) {
 			language = ZLLanguageUtil.defaultLanguageCode();
 		}
@@ -72,9 +49,7 @@ final class ZLTextTeXHyphenator extends ZLTextHyphenator {
 		myLanguage = language;
 		unload();
 
-		new ZLTextHyphenationReader(this).readQuietly(ZLResourceFile.createResourceFile(
-      "hyphenationPatterns/" + language + ".pattern"
-    ));
+		new ZLTextHyphenationReader(this).readQuietly(pContext, "hyphenationPatterns/" + language + ".pattern");
 	}
 
 	public void unload() {

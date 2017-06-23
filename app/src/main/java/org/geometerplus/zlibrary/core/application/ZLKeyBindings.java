@@ -19,6 +19,8 @@
 
 package org.geometerplus.zlibrary.core.application;
 
+import android.content.Context;
+
 import org.geometerplus.android.util.DeviceType;
 import org.geometerplus.fbreader.Paths;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
@@ -45,25 +47,27 @@ public final class ZLKeyBindings {
 	private ZLStringListOption myKeysOption;
 	private final TreeMap<Integer,ZLStringOption> myActionMap = new TreeMap<Integer,ZLStringOption>();
 	private final TreeMap<Integer,ZLStringOption> myLongPressActionMap = new TreeMap<Integer,ZLStringOption>();
+	private Context mContext;
 
-	public ZLKeyBindings() {
-		this("Keys");
+	public ZLKeyBindings(Context pContext) {
+		this(pContext, "Keys");
 	}
 
-	private ZLKeyBindings(String name) {
+	private ZLKeyBindings(Context pContext, String name) {
+		mContext = pContext;
 		myName = name;
 		Config.Instance().runOnConnect(new Initializer());
 	}
 
 	private class Initializer implements Runnable {
 		public void run() {
-			final Set<String> keys = new TreeSet<String>();
+			final Set<String> keys = new TreeSet<>();
 
 			final String keymapFilename = "keymap.xml";
-			new Reader(keys).readQuietly("default/" + keymapFilename);
-			new Reader(keys).readQuietly(Paths.systemShareDirectory() + "/keymap.xml");
-			new Reader(keys).readQuietly(Paths.bookPath().get(0) + "/keymap.xml");
-			myKeysOption = new ZLStringListOption(myName, "KeyList", new ArrayList<String>(keys), ",");
+			new Reader(keys).readQuietly(mContext, "default/" + keymapFilename);
+			new Reader(keys).readQuietly(mContext, Paths.systemShareDirectory() + "/keymap.xml");
+			new Reader(keys).readQuietly(mContext, Paths.bookPath().get(0) + "/keymap.xml");
+			myKeysOption = new ZLStringListOption(myName, "KeyList", new ArrayList<>(keys), ",");
 		}
 	}
 
@@ -112,8 +116,8 @@ public final class ZLKeyBindings {
 			myKeySet = keySet;
 		}
 
-		public void readQuietly(String path) {
-			XmlUtil.parseQuietly(ZLFile.createFileByPath(path), this);
+		public void readQuietly(Context pContext, String path) {
+			XmlUtil.parseQuietly(pContext, path, this);
 		}
 
 		@Override

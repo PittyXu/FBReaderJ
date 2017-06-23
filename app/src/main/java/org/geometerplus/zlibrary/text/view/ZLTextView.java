@@ -19,7 +19,10 @@
 
 package org.geometerplus.zlibrary.text.view;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.text.TextUtils;
 
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
@@ -77,8 +80,8 @@ public abstract class ZLTextView extends ZLTextViewBase {
 
 	private CursorManager myCursorManager;
 
-	public ZLTextView(ZLApplication application) {
-		super(application);
+	public ZLTextView(Context pContext, ZLApplication application) {
+		super(pContext, application);
 	}
 
 	public synchronized void setModel(ZLTextModel model) {
@@ -430,8 +433,8 @@ public abstract class ZLTextView extends ZLTextViewBase {
 	@Override
 	public synchronized void paint(ZLPaintContext context, PageIndex pageIndex) {
 		setContext(context);
-		final ZLFile wallpaper = getWallpaperFile();
-		if (wallpaper != null) {
+		final Bitmap wallpaper = getWallpaperFile();
+		if (null != wallpaper) {
 			context.clear(wallpaper, getFillMode());
 		} else {
 			context.clear(getBackgroundColor());

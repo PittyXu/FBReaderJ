@@ -69,7 +69,7 @@ public final class FBReaderApp extends ZLApplication {
 	public final ViewOptions ViewOptions = new ViewOptions();
 	public final PageTurningOptions PageTurningOptions = new PageTurningOptions();
 
-	private final ZLKeyBindings myBindings = new ZLKeyBindings();
+	private final ZLKeyBindings myBindings;
 
 	public final FBView BookTextView;
 	public final FBView FootnoteView;
@@ -85,6 +85,7 @@ public final class FBReaderApp extends ZLApplication {
 		super(systemInfo);
 		mContext = pContext;
 		Collection = collection;
+		myBindings = new ZLKeyBindings(pContext);
 
 		collection.addListener(new IBookCollection.Listener<Book>() {
 			public void onBookEvent(BookEvent event, Book book) {
@@ -315,7 +316,7 @@ public final class FBReaderApp extends ZLApplication {
 		try {
 			Model = BookModel.createModel(book, plugin);
 			Collection.saveBook(book);
-			ZLTextHyphenator.Instance().load(book.getLanguage());
+			ZLTextHyphenator.Instance().load(mContext, book.getLanguage());
 			BookTextView.setModel(Model.getTextModel());
 			setBookmarkHighlightings(BookTextView, null);
 			gotoStoredPosition();
@@ -531,7 +532,7 @@ public final class FBReaderApp extends ZLApplication {
 		if (newEncoding != null && !newEncoding.equals(oldEncoding)) {
 			reloadBook();
 		} else {
-			ZLTextHyphenator.Instance().load(Model.Book.getLanguage());
+			ZLTextHyphenator.Instance().load(mContext, Model.Book.getLanguage());
 			clearTextCaches();
 			getViewWidget().repaint();
 		}
@@ -548,6 +549,10 @@ public final class FBReaderApp extends ZLApplication {
 		}
 	}
 
+	public Context getContext() {
+		return mContext;
+	}
+
 	/**
 	 * 改变字体大小
 	 *
@@ -555,7 +560,7 @@ public final class FBReaderApp extends ZLApplication {
 	 *     改变范围
 	 */
 	public void actionChangeFontSize(int delta) {
-		final ZLIntegerRangeOption option = ViewOptions.getTextStyleCollection().getBaseStyle().FontSizeOption;
+		final ZLIntegerRangeOption option = ViewOptions.getTextStyleCollection(mContext).getBaseStyle().FontSizeOption;
 		option.setValue(option.getValue() + delta);
 		clearTextCaches();
 		getViewWidget().repaint();

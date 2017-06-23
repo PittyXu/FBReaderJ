@@ -19,6 +19,8 @@
 
 package org.geometerplus.fbreader.fbreader;
 
+import android.content.Context;
+
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 import org.geometerplus.zlibrary.core.options.ZLStringListOption;
@@ -50,21 +52,21 @@ public class TapZoneMap {
 		return ourMapsOption.getValue();
 	}
 
-	public static TapZoneMap zoneMap(String name) {
+	public static TapZoneMap zoneMap(Context pContext, String name) {
 		TapZoneMap map = ourMaps.get(name);
 		if (map == null) {
-			map = new TapZoneMap(name);
+			map = new TapZoneMap(pContext, name);
 			ourMaps.put(name, map);
 		}
 		return map;
 	}
 
-	public static TapZoneMap createZoneMap(String name, int width, int height) {
+	public static TapZoneMap createZoneMap(Context pContext, String name, int width, int height) {
 		if (ourMapsOption.getValue().contains(name)) {
 			return null;
 		}
 
-		final TapZoneMap map = zoneMap(name);
+		final TapZoneMap map = zoneMap(pContext, name);
 		map.myWidth.setValue(width);
 		map.myHeight.setValue(height);
 		final List<String> lst = new LinkedList<String>(ourMapsOption.getValue());
@@ -98,15 +100,12 @@ public class TapZoneMap {
 	private final HashMap<Zone,ZLStringOption> myZoneMap = new HashMap<Zone,ZLStringOption>();
 	private final HashMap<Zone,ZLStringOption> myZoneMap2 = new HashMap<Zone,ZLStringOption>();
 
-	private TapZoneMap(String name) {
+	private TapZoneMap(Context pContext, String name) {
 		Name = name;
 		myOptionGroupName = "TapZones:" + name;
 		myHeight = new ZLIntegerRangeOption(myOptionGroupName, "Height", 2, 5, 3);
 		myWidth = new ZLIntegerRangeOption(myOptionGroupName, "Width", 2, 5, 3);
-		final ZLFile mapFile = ZLFile.createFileByPath(
-			"default/tapzones/" + name.toLowerCase() + ".xml"
-		);
-		XmlUtil.parseQuietly(mapFile, new Reader());
+		XmlUtil.parseQuietly(pContext, "default/tapzones/" + name.toLowerCase() + ".xml", new Reader());
 	}
 
 	public boolean isCustom() {

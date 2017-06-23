@@ -19,6 +19,8 @@
 
 package org.geometerplus.fbreader.fbreader.options;
 
+import android.content.Context;
+
 import org.geometerplus.fbreader.fbreader.FBView;
 import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.core.options.ZLBooleanOption;
@@ -78,9 +80,9 @@ public class ViewOptions {
 		return myColorProfile;
 	}
 
-	public ZLTextStyleCollection getTextStyleCollection() {
+	public ZLTextStyleCollection getTextStyleCollection(Context pContext) {
 		if (myTextStyleCollection == null) {
-			myTextStyleCollection = new ZLTextStyleCollection("Base");
+			myTextStyleCollection = new ZLTextStyleCollection(pContext, "Base");
 		}
 		return myTextStyleCollection;
 	}

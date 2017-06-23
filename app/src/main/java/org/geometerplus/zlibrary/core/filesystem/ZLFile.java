@@ -73,16 +73,10 @@ public abstract class ZLFile implements InputStreamHolder {
 			if (cached != null) {
 				return cached;
 			}
-			if (name.length() == 0 || name.charAt(0) != '/') {
-				return ZLResourceFile.createResourceFile(name);
-			} else {
-				return new ZLPhysicalFile(name);
-			}
+			return new ZLPhysicalFile(name);
 		} else if (parent instanceof ZLPhysicalFile && (parent.getParent() == null)) {
 			// parent is a directory
 			file = new ZLPhysicalFile(parent.getPath() + '/' + name);
-		} else if (parent instanceof ZLResourceFile) {
-			file = ZLResourceFile.createResourceFile((ZLResourceFile)parent, name);
 		} else {
 			file = ZLArchiveEntryFile.createArchiveEntryFile(parent, name);
 		}
@@ -112,16 +106,6 @@ public abstract class ZLFile implements InputStreamHolder {
 			return cached;
 		}
 
-		int len = path.length();
-		char first = len == 0 ? '*' : path.charAt(0);
-		if (first != '/') {
-			while (len > 1 && first == '.' && path.charAt(1) == '/') {
-				path = path.substring(2);
-				len -= 2;
-				first = len == 0 ? '*' : path.charAt(0);
-			}
-			return ZLResourceFile.createResourceFile(path);
-		}
 		int index = path.lastIndexOf(':');
 		if (index > 1) {
 			final ZLFile archive = createFileByPath(path.substring(0, index));

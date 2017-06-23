@@ -19,6 +19,7 @@
 
 package org.geometerplus.zlibrary.text.hyphenation;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
@@ -35,10 +36,10 @@ final class ZLTextHyphenationReader {
     myHyphenator = hyphenator;
   }
 
-  public boolean readQuietly(ZLFile file) {
+  public boolean readQuietly(Context pContext, String filePath) {
     try {
       XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
-      parser.setInput(file.getInputStream(), "utf-8");
+      parser.setInput(pContext.getAssets().open(filePath), "utf-8");
 
       int eventCode = parser.getEventType();//获取事件类型
       // 直到文档的结尾处

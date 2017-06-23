@@ -19,6 +19,8 @@
 
 package org.geometerplus.zlibrary.text.hyphenation;
 
+import android.content.Context;
+
 import org.geometerplus.zlibrary.text.view.ZLTextWord;
 
 import java.util.List;
@@ -43,8 +45,7 @@ public abstract class ZLTextHyphenator {
 	protected ZLTextHyphenator() {
 	}
 
-	public abstract List<String> languageCodes();
-	public abstract void load(final String languageCode);
+	public abstract void load(Context pContext, final String languageCode);
 	public abstract void unload();
 
 	public ZLTextHyphenationInfo getInfo(final ZLTextWord word) {

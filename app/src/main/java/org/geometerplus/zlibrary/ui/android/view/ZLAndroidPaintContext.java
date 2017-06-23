@@ -19,6 +19,7 @@
 
 package org.geometerplus.zlibrary.ui.android.view;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -43,6 +44,7 @@ import org.geometerplus.zlibrary.core.view.ZLPaintContext;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
 import org.geometerplus.zlibrary.ui.android.util.ZLAndroidColorUtil;
 
+import java.io.InputStream;
 import java.util.List;
 
 public final class ZLAndroidPaintContext extends ZLPaintContext {
@@ -106,18 +108,15 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
 		myOutlinePaint.setMaskFilter(new EmbossMaskFilter(new float[] {1, 1, 1}, .4f, 6f, 3.5f));
 	}
 
-	private static ZLFile ourWallpaperFile;
 	private static Bitmap ourWallpaper;
 	private static FillMode ourFillMode;
+
 	@Override
-	public void clear(ZLFile wallpaperFile, FillMode mode) {
-		if (!wallpaperFile.equals(ourWallpaperFile) || mode != ourFillMode) {
-			ourWallpaperFile = wallpaperFile;
+	public void clear(Bitmap fileBitmap, FillMode mode) {
+		if (!fileBitmap.equals(ourWallpaper) || mode != ourFillMode) {
 			ourFillMode = mode;
 			ourWallpaper = null;
 			try {
-				final Bitmap fileBitmap =
-					BitmapFactory.decodeStream(wallpaperFile.getInputStream());
 				switch (mode) {
 					default:
 						ourWallpaper = fileBitmap;
@@ -296,10 +295,10 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
 	}
 
 	@Override
-	protected void setFontInternal(List<FontEntry> entries, int size, boolean bold, boolean italic, boolean underline, boolean strikeThrought) {
+	protected void setFontInternal(Context pContext, List<FontEntry> entries, int size, boolean bold, boolean italic, boolean underline, boolean strikeThrought) {
 		Typeface typeface = null;
 		for (FontEntry e : entries) {
-			typeface = AndroidFontUtil.typeface(getSystemInfo(), e, bold, italic);
+			typeface = AndroidFontUtil.typeface(pContext, getSystemInfo(), e, bold, italic);
 			if (typeface != null) {
 				break;
 			}

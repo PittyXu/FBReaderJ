@@ -22,24 +22,16 @@ package org.geometerplus.zlibrary.ui.android.library;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
-import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 
-import org.geometerplus.android.util.DeviceType;
-import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.filesystem.ZLResourceFile;
 import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.core.options.ZLBooleanOption;
-import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -59,16 +51,6 @@ public final class ZLAndroidLibrary extends ZLibrary {
 
 	public AssetManager getAssets() {
 		return myApplication.getAssets();
-	}
-
-	@Override
-	public ZLResourceFile createResourceFile(String path) {
-		return new AndroidAssetsFile(path);
-	}
-
-	@Override
-	public ZLResourceFile createResourceFile(ZLResourceFile parent, String name) {
-		return new AndroidAssetsFile((AndroidAssetsFile)parent, name);
 	}
 
 	@Override
@@ -160,146 +142,5 @@ public final class ZLAndroidLibrary extends ZLibrary {
 	@Override
 	public boolean supportsAllOrientations() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
-	}
-
-	private interface StreamStatus {
-		int UNKNOWN = -1;
-		int NULL = 0;
-		int OK = 1;
-		int EXCEPTION = 2;
-	}
-
-	private final class AndroidAssetsFile extends ZLResourceFile {
-		private final AndroidAssetsFile myParent;
-
-		AndroidAssetsFile(AndroidAssetsFile parent, String name) {
-			super(parent.getPath().length() == 0 ? name : parent.getPath() + '/' + name);
-			myParent = parent;
-		}
-
-		AndroidAssetsFile(String path) {
-			super(path);
-			if (path.length() == 0) {
-				myParent = null;
-			} else {
-				final int index = path.lastIndexOf('/');
-				myParent = new AndroidAssetsFile(index >= 0 ? path.substring(0, path.lastIndexOf('/')) : "");
-			}
-		}
-
-		@Override
-		protected List<ZLFile> directoryEntries() {
-			try {
-				String[] names = myApplication.getAssets().list(getPath());
-				if (names != null && names.length != 0) {
-					ArrayList<ZLFile> files = new ArrayList<ZLFile>(names.length);
-					for (String n : names) {
-						files.add(new AndroidAssetsFile(this, n));
-					}
-					return files;
-				}
-			} catch (IOException e) {
-			}
-			return Collections.emptyList();
-		}
-
-		private int myStreamStatus = StreamStatus.UNKNOWN;
-		private int streamStatus() {
-			if (myStreamStatus == StreamStatus.UNKNOWN) {
-				try {
-					final InputStream stream = myApplication.getAssets().open(getPath());
-					if (stream == null) {
-						myStreamStatus = StreamStatus.NULL;
-					} else {
-						stream.close();
-						myStreamStatus = StreamStatus.OK;
-					}
-				} catch (IOException e) {
-					myStreamStatus = StreamStatus.EXCEPTION;
-				}
-			}
-			return myStreamStatus;
-		}
-
-		@Override
-		public boolean isDirectory() {
-			return streamStatus() != StreamStatus.OK;
-		}
-
-		@Override
-		public boolean exists() {
-			if (streamStatus() == StreamStatus.OK) {
-				return true;
-			}
-			final String path = getPath();
-			if ("".equals(path)) {
-				return true;
-			}
-			try {
-				String[] names = myApplication.getAssets().list(getPath());
-				if (names != null && names.length != 0) {
-					// directory exists
-					return true;
-				}
-			} catch (IOException e) {
-			}
-			return false;
-		}
-
-		private long mySize = -1;
-		@Override
-		public long size() {
-			if (mySize == -1) {
-				mySize = sizeInternal();
-			}
-			return mySize;
-		}
-
-		private long sizeInternal() {
-			try {
-				AssetFileDescriptor descriptor = myApplication.getAssets().openFd(getPath());
-				// for some files (archives, crt) descriptor cannot be opened
-				if (descriptor == null) {
-					return sizeSlow();
-				}
-				long length = descriptor.getLength();
-				descriptor.close();
-				return length;
-			} catch (IOException e) {
-				return sizeSlow();
-			}
-		}
-
-		private long sizeSlow() {
-			try {
-				final InputStream stream = getInputStream();
-				if (stream == null) {
-					return 0;
-				}
-				long size = 0;
-				final long step = 1024 * 1024;
-				while (true) {
-					// TODO: does skip work as expected for these files?
-					long offset = stream.skip(step);
-					size += offset;
-					if (offset < step) {
-						break;
-					}
-				}
-				return size;
-			} catch (IOException e) {
-				return 0;
-			}
-		}
-
-		@Override
-		public InputStream getInputStream() throws IOException {
-			return myApplication.getAssets().open(getPath());
-		}
-
-		@Override
-		public ZLFile getParent() {
-			return myParent;
-		}
 	}
 }
