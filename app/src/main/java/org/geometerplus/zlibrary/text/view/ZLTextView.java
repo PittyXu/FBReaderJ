@@ -989,7 +989,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 	}
 
 	private boolean isHyphenationPossible() {
-		return getTextStyleCollection().getBaseStyle().AutoHyphenationOption.getValue()
+		return getTextStyleCollection().getBaseStyle().autoHyphenation
 			&& getTextStyle().allowHyphenations();
 	}
 

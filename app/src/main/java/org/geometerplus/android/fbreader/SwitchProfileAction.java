@@ -19,6 +19,7 @@
 
 package org.geometerplus.android.fbreader;
 
+import org.geometerplus.android.fbreader.config.ViewPreferences;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 
 class SwitchProfileAction extends FBAndroidAction {
@@ -31,12 +32,12 @@ class SwitchProfileAction extends FBAndroidAction {
 
 	@Override
 	public boolean isVisible() {
-		return !myProfileName.equals(Reader.ViewOptions.ColorProfileName.getValue());
+		return !myProfileName.equals(ViewPreferences.getColorProfileName(BaseActivity));
 	}
 
 	@Override
 	protected void run(Object ... params) {
-		Reader.ViewOptions.ColorProfileName.setValue(myProfileName);
+		ViewPreferences.setColorProfileName(BaseActivity, myProfileName);
 		Reader.getViewWidget().reset();
 		Reader.getViewWidget().repaint();
 	}

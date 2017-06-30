@@ -59,7 +59,7 @@ class SimpleCSSReader {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				for (String token : MiscUtil.smartSplit(line)) {
-					processToken(token);
+					processToken(pContext, token);
 				}
 			}
 		} catch (IOException e) {
@@ -77,7 +77,7 @@ class SimpleCSSReader {
 		return myDescriptionMap;
 	}
 
-	private void processToken(String token) {
+	private void processToken(Context pContext, String token) {
 		if (myState != State.READ_COMMENT && token.startsWith("/*")) {
 			mySavedState = myState;
 			myState = State.READ_COMMENT;
@@ -104,11 +104,10 @@ class SimpleCSSReader {
 				if ("}".equals(token)) {
 					if (mySelector != null) {
 						try {
-							myDescriptionMap.put(
-								Integer.valueOf(myCurrentMap.get("fbreader-id")),
-								new ZLTextNGStyleDescription(mySelector, myCurrentMap)
-							);
+							myDescriptionMap.put(Integer.valueOf(myCurrentMap.get("fbreader-id")),
+								new ZLTextNGStyleDescription(myCurrentMap));
 						} catch (Exception e) {
+							e.printStackTrace();
 							// ignore
 						}
 					}

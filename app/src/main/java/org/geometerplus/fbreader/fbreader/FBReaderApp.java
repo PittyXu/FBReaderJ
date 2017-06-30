@@ -31,10 +31,6 @@ import org.geometerplus.fbreader.book.BookmarkUtil;
 import org.geometerplus.fbreader.book.IBookCollection;
 import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.bookmodel.TOCTree;
-import org.geometerplus.fbreader.fbreader.options.ImageOptions;
-import org.geometerplus.fbreader.fbreader.options.MiscOptions;
-import org.geometerplus.fbreader.fbreader.options.PageTurningOptions;
-import org.geometerplus.fbreader.fbreader.options.ViewOptions;
 import org.geometerplus.fbreader.formats.BookReadingException;
 import org.geometerplus.fbreader.formats.FormatPlugin;
 import org.geometerplus.fbreader.formats.PluginCollection;
@@ -45,7 +41,6 @@ import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.application.ZLKeyBindings;
 import org.geometerplus.zlibrary.core.drm.EncryptionMethod;
 import org.geometerplus.zlibrary.core.drm.FileEncryptionInfo;
-import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 import org.geometerplus.zlibrary.core.util.RationalNumber;
 import org.geometerplus.zlibrary.core.util.SystemInfo;
 import org.geometerplus.zlibrary.text.hyphenation.ZLTextHyphenator;
@@ -56,18 +51,15 @@ import org.geometerplus.zlibrary.text.view.ZLTextPosition;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.text.view.ZLTextView.PagePosition;
 import org.geometerplus.zlibrary.text.view.ZLTextWordCursor;
+import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
 import org.geometerplus.zlibrary.ui.android.R;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 public final class FBReaderApp extends ZLApplication {
-	public final MiscOptions MiscOptions = new MiscOptions();
-	public final ImageOptions ImageOptions = new ImageOptions();
-	public final ViewOptions ViewOptions = new ViewOptions();
-	public final PageTurningOptions PageTurningOptions = new PageTurningOptions();
+	public final ZLTextStyleCollection myTextStyleCollection;
 
 	private final ZLKeyBindings myBindings;
 
@@ -86,6 +78,7 @@ public final class FBReaderApp extends ZLApplication {
 		mContext = pContext;
 		Collection = collection;
 		myBindings = new ZLKeyBindings(pContext);
+		myTextStyleCollection = new ZLTextStyleCollection(pContext, "Base");
 
 		collection.addListener(new IBookCollection.Listener<Book>() {
 			public void onBookEvent(BookEvent event, Book book) {
@@ -560,8 +553,8 @@ public final class FBReaderApp extends ZLApplication {
 	 *     改变范围
 	 */
 	public void actionChangeFontSize(int delta) {
-		final ZLIntegerRangeOption option = ViewOptions.getTextStyleCollection(mContext).getBaseStyle().FontSizeOption;
-		option.setValue(option.getValue() + delta);
+		myTextStyleCollection.getBaseStyle().changeFontSize(getContext(), delta);
+
 		clearTextCaches();
 		getViewWidget().repaint();
 	}

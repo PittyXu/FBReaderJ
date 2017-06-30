@@ -40,7 +40,7 @@ public class ZLTextExplicitlyDecoratedStyle extends ZLTextDecoratedStyle impleme
 	@Override
 	protected List<FontEntry> getFontEntriesInternal() {
 		final List<FontEntry> parentEntries = Parent.getFontEntries();
-		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.UseCSSFontFamilyOption.getValue()) {
+		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.useCssFontFamily) {
 			return parentEntries;
 		}
 
@@ -94,7 +94,7 @@ public class ZLTextExplicitlyDecoratedStyle extends ZLTextDecoratedStyle impleme
 
 	@Override
 	protected int getFontSizeInternal(ZLTextMetrics metrics) {
-		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.UseCSSFontSizeOption.getValue()) {
+		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.useCssFontSize) {
 			return Parent.getFontSize(metrics);
 		}
 
@@ -163,7 +163,7 @@ public class ZLTextExplicitlyDecoratedStyle extends ZLTextDecoratedStyle impleme
 
 	@Override
 	public int getLeftMarginInternal(ZLTextMetrics metrics, int fontSize) {
-		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.UseCSSMarginsOption.getValue()) {
+		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.useCssMargins) {
 			return Parent.getLeftMargin(metrics);
 		}
 
@@ -174,7 +174,7 @@ public class ZLTextExplicitlyDecoratedStyle extends ZLTextDecoratedStyle impleme
 	}
 	@Override
 	public int getRightMarginInternal(ZLTextMetrics metrics, int fontSize) {
-		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.UseCSSMarginsOption.getValue()) {
+		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.useCssMargins) {
 			return Parent.getRightMargin(metrics);
 		}
 
@@ -185,7 +185,7 @@ public class ZLTextExplicitlyDecoratedStyle extends ZLTextDecoratedStyle impleme
 	}
 	@Override
 	public int getLeftPaddingInternal(ZLTextMetrics metrics, int fontSize) {
-		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.UseCSSMarginsOption.getValue()) {
+		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.useCssMargins) {
 			return Parent.getLeftPadding(metrics);
 		}
 
@@ -196,7 +196,7 @@ public class ZLTextExplicitlyDecoratedStyle extends ZLTextDecoratedStyle impleme
 	}
 	@Override
 	public int getRightPaddingInternal(ZLTextMetrics metrics, int fontSize) {
-		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.UseCSSMarginsOption.getValue()) {
+		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.useCssMargins) {
 			return Parent.getRightPadding(metrics);
 		}
 
@@ -207,7 +207,7 @@ public class ZLTextExplicitlyDecoratedStyle extends ZLTextDecoratedStyle impleme
 	}
 	@Override
 	protected int getFirstLineIndentInternal(ZLTextMetrics metrics, int fontSize) {
-		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.UseCSSMarginsOption.getValue()) {
+		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.useCssMargins) {
 			return Parent.getFirstLineIndent(metrics);
 		}
 
@@ -280,7 +280,7 @@ public class ZLTextExplicitlyDecoratedStyle extends ZLTextDecoratedStyle impleme
 
 	@Override
 	protected int getSpaceBeforeInternal(ZLTextMetrics metrics, int fontSize) {
-		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.UseCSSMarginsOption.getValue()) {
+		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.useCssMargins) {
 			return Parent.getSpaceBefore(metrics);
 		}
 
@@ -291,7 +291,7 @@ public class ZLTextExplicitlyDecoratedStyle extends ZLTextDecoratedStyle impleme
 	}
 	@Override
 	protected int getSpaceAfterInternal(ZLTextMetrics metrics, int fontSize) {
-		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.UseCSSMarginsOption.getValue()) {
+		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.useCssMargins) {
 			return Parent.getSpaceAfter(metrics);
 		}
 
@@ -301,7 +301,7 @@ public class ZLTextExplicitlyDecoratedStyle extends ZLTextDecoratedStyle impleme
 		return myEntry.getLength(LENGTH_SPACE_AFTER, metrics, fontSize);
 	}
 	public byte getAlignment() {
-		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.UseCSSTextAlignmentOption.getValue()) {
+		if (myEntry instanceof ZLTextCSSStyleEntry && !BaseStyle.useCssTextAlignment) {
 			return Parent.getAlignment();
 		}
 		return

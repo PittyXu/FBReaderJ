@@ -19,11 +19,12 @@
 
 package org.geometerplus.android.fbreader;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 
+import org.geometerplus.android.fbreader.config.ImagePreferences;
+import org.geometerplus.android.fbreader.config.MiscPreferences;
+import org.geometerplus.android.fbreader.config.MiscPreferences.FootnoteToastEnum;
 import org.geometerplus.android.fbreader.image.ImageViewActivity;
-import org.geometerplus.android.util.OrientationUtil;
 import org.geometerplus.fbreader.bookmodel.FBHyperlinkType;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.util.AutoTextSnippet;
@@ -68,7 +69,8 @@ class ProcessHyperlinkAction extends FBAndroidAction {
           }
 
           Reader.Collection.markHyperlinkAsVisited(Reader.getCurrentBook(), hyperlink.Id);
-          switch (Reader.MiscOptions.ShowFootnoteToast.getValue()) {
+          int show = MiscPreferences.getShowFootnoteToast(Reader.getContext());
+          switch (FootnoteToastEnum.values()[show]) {
             default:
             case never:
               break;
@@ -92,11 +94,9 @@ class ProcessHyperlinkAction extends FBAndroidAction {
           final Intent intent = new Intent();
           intent.setClass(BaseActivity, ImageViewActivity.class);
           intent.putExtra(ImageViewActivity.URL_KEY, url);
-          intent.putExtra(
-              ImageViewActivity.BACKGROUND_COLOR_KEY,
-              Reader.ImageOptions.ImageViewBackground.getValue().intValue()
-          );
-          OrientationUtil.startActivity(BaseActivity, intent);
+          intent.putExtra(ImageViewActivity.BACKGROUND_COLOR_KEY,
+              ImagePreferences.getImageViewBackgroundColor(Reader.getContext()));
+          BaseActivity.startActivity(intent);
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -111,11 +111,7 @@ class ProcessHyperlinkAction extends FBAndroidAction {
       public void run() {
         BaseActivity.runOnUiThread(new Runnable() {
           public void run() {
-            try {
-              OrientationUtil.startActivity(BaseActivity, intent);
-            } catch (ActivityNotFoundException e) {
-              e.printStackTrace();
-            }
+            BaseActivity.startActivity(intent);
           }
         });
       }

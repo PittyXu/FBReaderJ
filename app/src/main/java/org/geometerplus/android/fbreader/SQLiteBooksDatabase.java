@@ -38,8 +38,6 @@ import org.geometerplus.fbreader.book.HighlightingStyle;
 import org.geometerplus.fbreader.book.Label;
 import org.geometerplus.fbreader.book.UID;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.options.Config;
-import org.geometerplus.zlibrary.core.options.ZLIntegerOption;
 import org.geometerplus.zlibrary.core.util.RationalNumber;
 import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
 import org.geometerplus.zlibrary.text.view.ZLTextPosition;
@@ -1192,10 +1190,10 @@ final class SQLiteBooksDatabase extends BooksDatabase {
 		while (cursor.moveToNext()) {
 			final long bookId = cursor.getLong(0);
 			final String fileName = cursor.getString(1);
-			final int position = new ZLIntegerOption(fileName, "PositionInBuffer", 0).getValue();
-			final int paragraph = new ZLIntegerOption(fileName, "Paragraph_" + position, 0).getValue();
-			final int word = new ZLIntegerOption(fileName, "Word_" + position, 0).getValue();
-			final int chr = new ZLIntegerOption(fileName, "Char_" + position, 0).getValue();
+			final int position = 0;
+			final int paragraph = 0;
+			final int word = 0;
+			final int chr = 0;
 			if ((paragraph != 0) || (word != 0) || (chr != 0)) {
 				statement.bindLong(1, bookId);
 				statement.bindLong(2, paragraph);
@@ -1203,7 +1201,6 @@ final class SQLiteBooksDatabase extends BooksDatabase {
 				statement.bindLong(4, chr);
 				statement.execute();
 			}
-			Config.Instance().removeGroup(fileName);
 		}
 		cursor.close();
 	}

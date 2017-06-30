@@ -21,7 +21,10 @@ package org.geometerplus.zlibrary.text.view.style;
 
 import android.content.Context;
 
+import org.geometerplus.android.fbreader.config.StylePreferences;
+import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.core.util.XmlUtil;
+import org.geometerplus.zlibrary.text.model.ZLTextAlignmentType;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -41,18 +44,17 @@ public class ZLTextStyleCollection {
   private ZLTextBaseStyle myBaseStyle;
   private final List<ZLTextNGStyleDescription> myDescriptionList;
   private final ZLTextNGStyleDescription[] myDescriptionMap = new ZLTextNGStyleDescription[256];
+  private Context mContext;
 
   public ZLTextStyleCollection(Context pContext, String screen) {
+    mContext = pContext;
     this.screen = screen;
-    final Map<Integer, ZLTextNGStyleDescription> descriptions =
-        new SimpleCSSReader().read(pContext, "default/styles.css");
-    myDescriptionList = Collections.unmodifiableList(new ArrayList<>(descriptions.values())
-    );
+    final Map<Integer, ZLTextNGStyleDescription> descriptions = new SimpleCSSReader().read(pContext, "default/styles.css");
+    myDescriptionList = Collections.unmodifiableList(new ArrayList<>(descriptions.values()));
     for (Map.Entry<Integer, ZLTextNGStyleDescription> entry : descriptions.entrySet()) {
       myDescriptionMap[entry.getKey() & 0xFF] = entry.getValue();
     }
-    XmlUtil.parseQuietly(pContext, "default/styles.xml", new TextStyleReader()
-    );
+    XmlUtil.parseQuietly(pContext, "default/styles.xml", new TextStyleReader());
   }
 
   public ZLTextBaseStyle getBaseStyle() {
@@ -84,11 +86,22 @@ public class ZLTextStyleCollection {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
       if (BASE.equals(localName) && screen.equals(attributes.getValue(SCREEN))) {
-        myBaseStyle = new ZLTextBaseStyle(
-            screen,
-            attributes.getValue(FONT_FAMILY),
-            intValue(attributes, FONT_SIZE, 0)
-        );
+        myBaseStyle = StylePreferences.getStyle(mContext, screen);
+        String fontFamily = attributes.getValue(FONT_FAMILY);
+        int fontSize = intValue(attributes, FONT_SIZE, 0);
+        if (null == myBaseStyle.fontFamily) {
+          myBaseStyle.fontFamily = fontFamily;
+        }
+        if (null == myBaseStyle.fontSize) {
+          fontSize = fontSize * ZLibrary.Instance().getDisplayDPI() / 160;
+          myBaseStyle.fontSize = fontSize;
+        }
+        if (null == myBaseStyle.lineSpacing) {
+          myBaseStyle.lineSpacing = 12;
+        }
+        if (myBaseStyle.alignment <= 0) {
+          myBaseStyle.alignment = (int) ZLTextAlignmentType.ALIGN_JUSTIFY;
+        }
       }
     }
   }

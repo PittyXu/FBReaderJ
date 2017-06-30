@@ -39,7 +39,7 @@ public class ZLTextNGStyle extends ZLTextDecoratedStyle {
 	@Override
 	protected List<FontEntry> getFontEntriesInternal() {
 		final List<FontEntry> parentEntries = Parent.getFontEntries();
-		final String decoratedValue = myDescription.FontFamilyOption.getValue();
+		final String decoratedValue = myDescription.fontFamily;
 		if ("".equals(decoratedValue)) {
 			return parentEntries;
 		}
@@ -125,7 +125,7 @@ public class ZLTextNGStyle extends ZLTextDecoratedStyle {
 	}
 	@Override
 	protected int getLineSpacePercentInternal() {
-		final String lineHeight = myDescription.LineHeightOption.getValue();
+		final String lineHeight = myDescription.lineHeight;
 		if (!lineHeight.matches("[1-9][0-9]*%")) {
 			return Parent.getLineSpacePercent();
 		}
@@ -171,6 +171,6 @@ public class ZLTextNGStyle extends ZLTextDecoratedStyle {
 
 	@Override
 	public String toString() {
-		return "ZLTextNGStyle[" + myDescription.Name + "]";
+		return "ZLTextNGStyle[" + myDescription.name + "]";
 	}
 }

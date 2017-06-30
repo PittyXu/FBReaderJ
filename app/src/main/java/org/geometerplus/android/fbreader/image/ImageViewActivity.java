@@ -32,7 +32,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 
-import org.geometerplus.android.util.OrientationUtil;
 import org.geometerplus.zlibrary.core.image.ZLFileImage;
 import org.geometerplus.zlibrary.core.image.ZLImageData;
 import org.geometerplus.zlibrary.core.image.ZLImageManager;
@@ -78,17 +77,6 @@ public class ImageViewActivity extends Activity {
 			// TODO: error message (?)
 			finish();
 		}
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		OrientationUtil.setOrientation(this, getIntent());
-	}
-
-	@Override
-	protected void onNewIntent(Intent intent) {
-		OrientationUtil.setOrientation(this, intent);
 	}
 
 	@Override

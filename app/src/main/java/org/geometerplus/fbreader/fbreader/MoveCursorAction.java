@@ -19,6 +19,7 @@
 
 package org.geometerplus.fbreader.fbreader;
 
+import org.geometerplus.android.fbreader.config.MiscPreferences;
 import org.geometerplus.zlibrary.text.view.ZLTextRegion;
 import org.geometerplus.zlibrary.text.view.ZLTextWordRegionSoul;
 
@@ -36,7 +37,7 @@ class MoveCursorAction extends FBAction {
 		ZLTextRegion region = fbView.getOutlinedRegion();
 		final ZLTextRegion.Filter filter =
 			(region != null && region.getSoul() instanceof ZLTextWordRegionSoul)
-				|| Reader.MiscOptions.NavigateAllWords.getValue()
+				|| MiscPreferences.getNavigateAllWords(Reader.getContext())
 					? ZLTextRegion.AnyRegionFilter : ZLTextRegion.ImageOrHyperlinkFilter;
 		region = fbView.nextRegion(myDirection, filter);
 		if (region != null) {

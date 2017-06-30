@@ -19,12 +19,12 @@
 
 package org.geometerplus.zlibrary.text.view.style;
 
+import android.content.Context;
+
+import com.alibaba.fastjson.annotation.JSONField;
+
+import org.geometerplus.android.fbreader.config.StylePreferences;
 import org.geometerplus.zlibrary.core.fonts.FontEntry;
-import org.geometerplus.zlibrary.core.library.ZLibrary;
-import org.geometerplus.zlibrary.core.options.ZLBooleanOption;
-import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
-import org.geometerplus.zlibrary.core.options.ZLStringOption;
-import org.geometerplus.zlibrary.text.model.ZLTextAlignmentType;
 import org.geometerplus.zlibrary.text.model.ZLTextMetrics;
 import org.geometerplus.zlibrary.text.view.ZLTextHyperlink;
 import org.geometerplus.zlibrary.text.view.ZLTextStyle;
@@ -33,57 +33,64 @@ import java.util.Collections;
 import java.util.List;
 
 public class ZLTextBaseStyle extends ZLTextStyle {
-	private static final String GROUP = "Style";
-	private static final String OPTIONS = "Options";
+	@JSONField(name = "useCssTextAlignment")
+	public boolean useCssTextAlignment = true;
+	@JSONField(name = "useCssMargins")
+	public boolean useCssMargins = true;
+	@JSONField(name = "useCssFontSize")
+	public boolean useCssFontSize = true;
+	@JSONField(name = "useCssFontFamily")
+	public boolean useCssFontFamily = true;
+	@JSONField(name = "autoHyphenation")
+	public boolean autoHyphenation = true;
 
-	public final ZLBooleanOption UseCSSTextAlignmentOption =
-		new ZLBooleanOption("Style", "css:textAlignment", true);
-	public final ZLBooleanOption UseCSSMarginsOption =
-		new ZLBooleanOption("Style", "css:margins", true);
-	public final ZLBooleanOption UseCSSFontSizeOption =
-		new ZLBooleanOption("Style", "css:fontSize", true);
-	public final ZLBooleanOption UseCSSFontFamilyOption =
-		new ZLBooleanOption("Style", "css:fontFamily", true);
+	@JSONField(name = "name")
+	public String name;
+	@JSONField(name = "bold")
+	public boolean bold = false;
+	@JSONField(name = "italic")
+	public boolean italic = false;
+	@JSONField(name = "underline")
+	public boolean underline = false;
+	@JSONField(name = "strikeThrough")
+	public boolean strikeThrough = false;
+	@JSONField(name = "alignment")
+	public int alignment;
+	@JSONField(name = "lineSpacing")
+	public Integer lineSpacing;
 
-	public final ZLBooleanOption AutoHyphenationOption =
-		new ZLBooleanOption(OPTIONS, "AutoHyphenation", true);
+	@JSONField(name = "fontFamily")
+	public String fontFamily;
+	@JSONField(name = "fontSize")
+	public Integer fontSize;
 
-	public final ZLBooleanOption BoldOption;
-	public final ZLBooleanOption ItalicOption;
-	public final ZLBooleanOption UnderlineOption;
-	public final ZLBooleanOption StrikeThroughOption;
-	public final ZLIntegerRangeOption AlignmentOption;
-	public final ZLIntegerRangeOption LineSpaceOption;
+	private List<FontEntry> myFontEntries;
 
-	public final ZLStringOption FontFamilyOption;
-	public final ZLIntegerRangeOption FontSizeOption;
-
-	public ZLTextBaseStyle(String prefix, String fontFamily, int fontSize) {
-		super(null, ZLTextHyperlink.NO_LINK);
-		FontFamilyOption = new ZLStringOption(GROUP, prefix + ":fontFamily", fontFamily);
-		fontSize = fontSize * ZLibrary.Instance().getDisplayDPI() / 160;
-		FontSizeOption = new ZLIntegerRangeOption(GROUP, prefix + ":fontSize", 5, Math.max(144, fontSize * 2), fontSize);
-		BoldOption = new ZLBooleanOption(GROUP, prefix + ":bold", false);
-		ItalicOption = new ZLBooleanOption(GROUP, prefix + ":italic", false);
-		UnderlineOption = new ZLBooleanOption(GROUP, prefix + ":underline", false);
-		StrikeThroughOption = new ZLBooleanOption(GROUP, prefix + ":strikeThrough", false);
-		AlignmentOption = new ZLIntegerRangeOption(GROUP, prefix + ":alignment", 1, 4, ZLTextAlignmentType.ALIGN_JUSTIFY);
-		LineSpaceOption = new ZLIntegerRangeOption(GROUP, prefix + ":lineSpacing", 5, 20, 12);
+	public ZLTextBaseStyle(){
+		this("Base");
 	}
 
-	private String myFontFamily;
-	private List<FontEntry> myFontEntries;
+	public ZLTextBaseStyle(String prefix) {
+		super(null, ZLTextHyperlink.NO_LINK);
+		name = prefix;
+	}
+
 	@Override
 	public List<FontEntry> getFontEntries() {
-		final String family = FontFamilyOption.getValue();
-		if (myFontEntries == null || !family.equals(myFontFamily)) {
+		final String family = fontFamily;
+		if (myFontEntries == null) {
 			myFontEntries = Collections.singletonList(FontEntry.systemEntry(family));
 		}
 		return myFontEntries;
 	}
 
+	public void changeFontSize(Context pContext, int delta) {
+		fontSize = fontSize + delta;
+		StylePreferences.setStyle(pContext, this);
+	}
+
 	public int getFontSize() {
-		return FontSizeOption.getValue();
+		return fontSize;
 	}
 
 	@Override
@@ -93,22 +100,22 @@ public class ZLTextBaseStyle extends ZLTextStyle {
 
 	@Override
 	public boolean isBold() {
-		return BoldOption.getValue();
+		return bold;
 	}
 
 	@Override
 	public boolean isItalic() {
-		return ItalicOption.getValue();
+		return italic;
 	}
 
 	@Override
 	public boolean isUnderline() {
-		return UnderlineOption.getValue();
+		return underline;
 	}
 
 	@Override
 	public boolean isStrikeThrough() {
-		return StrikeThroughOption.getValue();
+		return strikeThrough;
 	}
 
 	@Override
@@ -138,7 +145,7 @@ public class ZLTextBaseStyle extends ZLTextStyle {
 
 	@Override
 	public int getLineSpacePercent() {
-		return LineSpaceOption.getValue() * 10;
+		return lineSpacing * 10;
 	}
 
 	@Override
@@ -163,7 +170,7 @@ public class ZLTextBaseStyle extends ZLTextStyle {
 
 	@Override
 	public byte getAlignment() {
-		return (byte)AlignmentOption.getValue();
+		return (byte)alignment;
 	}
 
 	@Override

@@ -237,7 +237,7 @@ public class ZLAndroidWidget extends MainView implements ZLViewWidget, View.OnLo
 			return;
 		}
 
-		final ZLAndroidPaintContext context = new ZLAndroidPaintContext(
+		final ZLAndroidPaintContext context = new ZLAndroidPaintContext(getContext(),
 			mySystemInfo,
 			new Canvas(bitmap),
 			new ZLAndroidPaintContext.Geometry(
@@ -270,7 +270,7 @@ public class ZLAndroidWidget extends MainView implements ZLViewWidget, View.OnLo
 		if (myFooterBitmap == null) {
 			myFooterBitmap = Bitmap.createBitmap(getWidth(), footer.getHeight(), Bitmap.Config.RGB_565);
 		}
-		final ZLAndroidPaintContext context = new ZLAndroidPaintContext(
+		final ZLAndroidPaintContext context = new ZLAndroidPaintContext(getContext(),
 			mySystemInfo,
 			new Canvas(myFooterBitmap),
 			new ZLAndroidPaintContext.Geometry(
@@ -300,7 +300,7 @@ public class ZLAndroidWidget extends MainView implements ZLViewWidget, View.OnLo
 				PrepareService.execute(new Runnable() {
 					public void run() {
 						final ZLView view = ZLApplication.Instance().getCurrentView();
-						final ZLAndroidPaintContext context = new ZLAndroidPaintContext(
+						final ZLAndroidPaintContext context = new ZLAndroidPaintContext(getContext(),
 							mySystemInfo,
 							canvas,
 							new ZLAndroidPaintContext.Geometry(

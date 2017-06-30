@@ -35,10 +35,10 @@ import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import org.geometerplus.android.fbreader.BookCollectionShadow;
 import org.geometerplus.android.fbreader.FBReader;
 import org.geometerplus.android.fbreader.api.FBReaderIntents.Key;
-import org.geometerplus.android.fbreader.BookCollectionShadow;
-import org.geometerplus.android.util.OrientationUtil;
+import org.geometerplus.android.fbreader.config.MiscPreferences;
 import org.geometerplus.android.util.UIMessageUtil;
 import org.geometerplus.android.util.ViewUtil;
 import org.geometerplus.fbreader.book.Book;
@@ -47,7 +47,6 @@ import org.geometerplus.fbreader.book.Bookmark;
 import org.geometerplus.fbreader.book.BookmarkQuery;
 import org.geometerplus.fbreader.book.HighlightingStyle;
 import org.geometerplus.fbreader.book.IBookCollection;
-import org.geometerplus.zlibrary.core.options.ZLStringOption;
 import org.geometerplus.zlibrary.core.util.MiscUtil;
 import org.geometerplus.zlibrary.ui.android.R;
 
@@ -67,7 +66,7 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 	private TabHost myTabHost;
 
 	private final Map<Integer,HighlightingStyle> myStyles =
-		Collections.synchronizedMap(new HashMap<Integer,HighlightingStyle>());
+		Collections.synchronizedMap(new HashMap<Integer, HighlightingStyle>());
 
 	private BookCollectionShadow myCollection;
 	private volatile Book myBook;
@@ -78,9 +77,6 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 	private volatile BookmarksAdapter myThisBookAdapter;
 	private volatile BookmarksAdapter myAllBooksAdapter;
 	private volatile BookmarksAdapter mySearchResultsAdapter;
-
-	private final ZLStringOption myBookmarkSearchPatternOption =
-		new ZLStringOption("BookmarkSearch", "Pattern", "");
 
 	private void createTab(String tag, int id) {
 		final String label = getString(R.string.tag);
@@ -134,8 +130,6 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 			updateStyles();
 			loadBookmarks();
 		}
-
-		OrientationUtil.setOrientation(this, getIntent());
 	}
 
 	private void updateStyles() {
@@ -192,7 +186,7 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 							}
 						}
 					}
-					final String pattern = myBookmarkSearchPatternOption.getValue().toLowerCase();
+					final String pattern = MiscPreferences.getBookmarkSearchPattern(BookmarksActivity.this).toLowerCase();
 
 					for (BookmarkQuery query = new BookmarkQuery(book, 50); ; query = query.next()) {
 						final List<Bookmark> loaded = myCollection.bookmarks(query);
@@ -224,13 +218,11 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		OrientationUtil.setOrientation(this, intent);
-
 		if (!Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			return;
 		}
 		String pattern = intent.getStringExtra(SearchManager.QUERY);
-		myBookmarkSearchPatternOption.setValue(pattern);
+		MiscPreferences.setBookmarkSearchPattern(this, pattern);
 
 		final LinkedList<Bookmark> bookmarks = new LinkedList<Bookmark>();
 		pattern = pattern.toLowerCase();
@@ -260,7 +252,7 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 
 	@Override
 	public boolean onSearchRequested() {
-		startSearch(myBookmarkSearchPatternOption.getValue(), true, null, false);
+		startSearch(MiscPreferences.getBookmarkSearchPattern(this), true, null, false);
 		return true;
 	}
 
@@ -287,7 +279,7 @@ public class BookmarksActivity extends Activity implements IBookCollection.Liste
 			case EDIT_ITEM_ID:
 				final Intent intent = new Intent(this, EditBookmarkActivity.class);
 				intent.putExtra(Key.BOOKMARK, bookmark);
-				OrientationUtil.startActivity(this, intent);
+				startActivity(intent);
 				return true;
 			case DELETE_ITEM_ID:
 				myCollection.deleteBookmark(bookmark);

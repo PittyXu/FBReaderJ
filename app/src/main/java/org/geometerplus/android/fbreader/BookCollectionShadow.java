@@ -33,7 +33,6 @@ import org.geometerplus.fbreader.book.DbBook;
 import org.geometerplus.fbreader.book.Filter;
 import org.geometerplus.fbreader.book.HighlightingStyle;
 import org.geometerplus.fbreader.book.UID;
-import org.geometerplus.zlibrary.core.options.Config;
 import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
 import org.geometerplus.zlibrary.text.view.ZLTextPosition;
 
@@ -50,21 +49,17 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> {
 		myContext = pContext;
 		myDatabase = new SQLiteBooksDatabase(pContext);
 		myCollection = new BookCollection(
-				Paths.systemInfo(pContext), myDatabase, Paths.bookPath()
+				Paths.systemInfo(pContext), myDatabase, Paths.bookPath(pContext)
 		);
 		reset(true);
 	}
 
 	public synchronized void reset(final boolean force) {
-		Config.Instance().runOnConnect(new Runnable() {
-			public void run() {
-				resetInternal(force);
-			}
-		});
+		resetInternal(force);
 	}
 
 	private void resetInternal(boolean force) {
-		final List<String> bookDirectories = Paths.bookPath();
+		final List<String> bookDirectories = Paths.bookPath(myContext);
 		if (!force &&
 				myCollection.status() != BookCollection.Status.NotStarted &&
 				bookDirectories.equals(myCollection.BookDirectories)) {

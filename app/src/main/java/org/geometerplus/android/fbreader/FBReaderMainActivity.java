@@ -22,13 +22,10 @@ package org.geometerplus.android.fbreader;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.WindowManager;
 
 import com.github.johnpersano.supertoasts.SuperActivityToast;
 
-import org.geometerplus.zlibrary.core.options.ZLIntegerOption;
-import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
-import org.geometerplus.zlibrary.core.options.ZLStringOption;
+import org.geometerplus.android.fbreader.config.StylePreferences;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 import org.geometerplus.zlibrary.ui.android.view.AndroidFontUtil;
@@ -70,15 +67,16 @@ public abstract class FBReaderMainActivity extends Activity {
 		myToast = toast;
 		// TODO: avoid this hack (accessing text style via option)
 		final int dpi = getZLibrary().getDisplayDPI();
-		final int defaultFontSize = dpi * 18 / 160;
-		final int fontSize = new ZLIntegerOption("Style", "Base:fontSize", defaultFontSize).getValue();
-		final int percent = new ZLIntegerRangeOption("Options", "ToastFontSizePercent", 25, 100, 90).getValue();
+		int fontSize = dpi * 18 / 160;
+		final int percent = 90;
 		final int dpFontSize = fontSize * 160 * percent / dpi / 100;
 		toast.setTextSize(dpFontSize);
 		toast.setButtonTextSize(dpFontSize * 7 / 8);
 
-		final String fontFamily =
-			new ZLStringOption("Style", "Base:fontFamily", "sans-serif").getValue();
+		String fontFamily = StylePreferences.getStyle(this, "Base").fontFamily;
+		if (null == fontFamily) {
+			fontFamily = "sans-serif";
+		}
 
 		Typeface typeface = AndroidFontUtil.systemTypeface(this, fontFamily, false, false);
 		if (typeface != null) {

@@ -20,7 +20,6 @@
 package org.geometerplus.zlibrary.text.view.style;
 
 import org.geometerplus.fbreader.util.Boolean3;
-import org.geometerplus.zlibrary.core.options.ZLStringOption;
 import org.geometerplus.zlibrary.text.model.ZLTextAlignmentType;
 import org.geometerplus.zlibrary.text.model.ZLTextMetrics;
 import org.geometerplus.zlibrary.text.model.ZLTextStyleEntry;
@@ -29,48 +28,52 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ZLTextNGStyleDescription {
-	public final String Name;
+	public final String name;
 
-	public final ZLStringOption FontFamilyOption;
-	public final ZLStringOption FontSizeOption;
-	public final ZLStringOption FontWeightOption;
-	public final ZLStringOption FontStyleOption;
-	public final ZLStringOption TextDecorationOption;
-	public final ZLStringOption HyphenationOption;
-	public final ZLStringOption MarginTopOption;
-	public final ZLStringOption MarginBottomOption;
-	public final ZLStringOption MarginLeftOption;
-	public final ZLStringOption MarginRightOption;
-	public final ZLStringOption TextIndentOption;
-	public final ZLStringOption AlignmentOption;
-	public final ZLStringOption VerticalAlignOption;
-	public final ZLStringOption LineHeightOption;
+	public final String fontFamily;
+	public final String fontSize;
+	public final String fontWeight;
+	public final String fontStyle;
+	public final String textDecoration;
+	public final String hyphenation;
+	public final String marginTop;
+	public final String marginBottom;
+	public final String marginLeft;
+	public final String marginRight;
+	public final String textIndent;
+	public final String alignment;
+	public final String verticalAlign;
+	public final String lineHeight;
 
-	private static ZLStringOption createOption(String selector, String name, Map<String,String> valueMap) {
-		return new ZLStringOption("Style", selector + "::" + name, valueMap.get(name));
+	private static String createOption(String name, Map<String,String> valueMap) {
+		String value = valueMap.get(name);
+		if (null == value) {
+			value = "";
+		}
+		return value;
 	}
 
-	ZLTextNGStyleDescription(String selector, Map<String,String> valueMap) {
-		Name = valueMap.get("fbreader-name");
+	public ZLTextNGStyleDescription(Map<String,String> valueMap) {
+		name = valueMap.get("fbreader-name");
 
-		FontFamilyOption = createOption(selector, "font-family", valueMap);
-		FontSizeOption = createOption(selector, "font-size", valueMap);
-		FontWeightOption = createOption(selector, "font-weight", valueMap);
-		FontStyleOption = createOption(selector, "font-style", valueMap);
-		TextDecorationOption = createOption(selector, "text-decoration", valueMap);
-		HyphenationOption = createOption(selector, "hyphens", valueMap);
-		MarginTopOption = createOption(selector, "margin-top", valueMap);
-		MarginBottomOption = createOption(selector, "margin-bottom", valueMap);
-		MarginLeftOption = createOption(selector, "margin-left", valueMap);
-		MarginRightOption = createOption(selector, "margin-right", valueMap);
-		TextIndentOption = createOption(selector, "text-indent", valueMap);
-		AlignmentOption = createOption(selector, "text-align", valueMap);
-		VerticalAlignOption = createOption(selector, "vertical-align", valueMap);
-		LineHeightOption = createOption(selector, "line-height", valueMap);
+		fontFamily = createOption("font-family", valueMap);
+		fontSize = createOption("font-size", valueMap);
+		fontWeight = createOption("font-weight", valueMap);
+		fontStyle = createOption("font-style", valueMap);
+		textDecoration = createOption("text-decoration", valueMap);
+		hyphenation = createOption("hyphens", valueMap);
+		marginTop = createOption("margin-top", valueMap);
+		marginBottom = createOption("margin-bottom", valueMap);
+		marginLeft = createOption("margin-left", valueMap);
+		marginRight = createOption("margin-right", valueMap);
+		textIndent = createOption("text-indent", valueMap);
+		alignment = createOption("text-align", valueMap);
+		verticalAlign = createOption("vertical-align", valueMap);
+		lineHeight = createOption("line-height", valueMap);
 	}
 
 	int getFontSize(ZLTextMetrics metrics, int parentFontSize) {
-		final ZLTextStyleEntry.Length length = parseLength(FontSizeOption.getValue());
+		final ZLTextStyleEntry.Length length = parseLength(fontSize);
 		if (length == null) {
 			return parentFontSize;
 		}
@@ -80,7 +83,7 @@ public class ZLTextNGStyleDescription {
 	}
 
 	int getVerticalAlign(ZLTextMetrics metrics, int base, int fontSize) {
-		final ZLTextStyleEntry.Length length = parseLength(VerticalAlignOption.getValue());
+		final ZLTextStyleEntry.Length length = parseLength(verticalAlign);
 		if (length == null) {
 			return base;
 		}
@@ -91,12 +94,12 @@ public class ZLTextNGStyleDescription {
 	}
 
 	boolean hasNonZeroVerticalAlign() {
-		final ZLTextStyleEntry.Length length = parseLength(VerticalAlignOption.getValue());
+		final ZLTextStyleEntry.Length length = parseLength(verticalAlign);
 		return length != null && length.Size != 0;
 	}
 
 	int getLeftMargin(ZLTextMetrics metrics, int base, int fontSize) {
-		final ZLTextStyleEntry.Length length = parseLength(MarginLeftOption.getValue());
+		final ZLTextStyleEntry.Length length = parseLength(marginLeft);
 		if (length == null) {
 			return base;
 		}
@@ -106,7 +109,7 @@ public class ZLTextNGStyleDescription {
 	}
 
 	int getRightMargin(ZLTextMetrics metrics, int base, int fontSize) {
-		final ZLTextStyleEntry.Length length = parseLength(MarginRightOption.getValue());
+		final ZLTextStyleEntry.Length length = parseLength(marginRight);
 		if (length == null) {
 			return base;
 		}
@@ -124,7 +127,7 @@ public class ZLTextNGStyleDescription {
 	}
 
 	int getFirstLineIndent(ZLTextMetrics metrics, int base, int fontSize) {
-		final ZLTextStyleEntry.Length length = parseLength(TextIndentOption.getValue());
+		final ZLTextStyleEntry.Length length = parseLength(textIndent);
 		if (length == null) {
 			return base;
 		}
@@ -134,7 +137,7 @@ public class ZLTextNGStyleDescription {
 	}
 
 	int getSpaceBefore(ZLTextMetrics metrics, int base, int fontSize) {
-		final ZLTextStyleEntry.Length length = parseLength(MarginTopOption.getValue());
+		final ZLTextStyleEntry.Length length = parseLength(marginTop);
 		if (length == null) {
 			return base;
 		}
@@ -144,7 +147,7 @@ public class ZLTextNGStyleDescription {
 	}
 
 	int getSpaceAfter(ZLTextMetrics metrics, int base, int fontSize) {
-		final ZLTextStyleEntry.Length length = parseLength(MarginBottomOption.getValue());
+		final ZLTextStyleEntry.Length length = parseLength(marginBottom);
 		if (length == null) {
 			return base;
 		}
@@ -154,7 +157,7 @@ public class ZLTextNGStyleDescription {
 	}
 
 	Boolean3 isBold() {
-		final String fontWeight = FontWeightOption.getValue();
+		final String fontWeight = this.fontWeight;
 		if ("bold".equals(fontWeight)) {
 			return Boolean3.TRUE;
 		} else if ("normal".equals(fontWeight)) {
@@ -164,7 +167,7 @@ public class ZLTextNGStyleDescription {
 		}
 	}
 	Boolean3 isItalic() {
-		final String fontStyle = FontStyleOption.getValue();
+		final String fontStyle = this.fontStyle;
 		if ("italic".equals(fontStyle) || "oblique".equals(fontStyle)) {
 			return Boolean3.TRUE;
 		} else if ("normal".equals(fontStyle)) {
@@ -174,7 +177,7 @@ public class ZLTextNGStyleDescription {
 		}
 	}
 	Boolean3 isUnderlined() {
-		final String textDecoration = TextDecorationOption.getValue();
+		final String textDecoration = this.textDecoration;
 		if ("underline".equals(textDecoration)) {
 			return Boolean3.TRUE;
 		} else if ("".equals(textDecoration) || "inherit".equals(textDecoration)) {
@@ -184,7 +187,7 @@ public class ZLTextNGStyleDescription {
 		}
 	}
 	Boolean3 isStrikedThrough() {
-		final String textDecoration = TextDecorationOption.getValue();
+		final String textDecoration = this.textDecoration;
 		if ("line-through".equals(textDecoration)) {
 			return Boolean3.TRUE;
 		} else if ("".equals(textDecoration) || "inherit".equals(textDecoration)) {
@@ -195,7 +198,7 @@ public class ZLTextNGStyleDescription {
 	}
 
 	byte getAlignment() {
-		final String alignment = AlignmentOption.getValue();
+		final String alignment = this.alignment;
 		if (alignment.length() == 0) {
 			return ZLTextAlignmentType.ALIGN_UNDEFINED;
 		} else if ("center".equals(alignment)) {
@@ -212,7 +215,7 @@ public class ZLTextNGStyleDescription {
 	}
 
 	Boolean3 allowHyphenations() {
-		final String hyphen = HyphenationOption.getValue();
+		final String hyphen = hyphenation;
 		if ("auto".equals(hyphen)) {
 			return Boolean3.TRUE;
 		} else if ("none".equals(hyphen)) {

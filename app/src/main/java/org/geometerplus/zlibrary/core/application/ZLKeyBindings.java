@@ -21,12 +21,8 @@ package org.geometerplus.zlibrary.core.application;
 
 import android.content.Context;
 
-import org.geometerplus.android.util.DeviceType;
+import org.geometerplus.android.fbreader.config.MiscPreferences;
 import org.geometerplus.fbreader.Paths;
-import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.options.Config;
-import org.geometerplus.zlibrary.core.options.ZLStringListOption;
-import org.geometerplus.zlibrary.core.options.ZLStringOption;
 import org.geometerplus.zlibrary.core.util.XmlUtil;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -34,6 +30,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
@@ -44,9 +41,9 @@ public final class ZLKeyBindings {
 	private static final String LONG_PRESS_ACTION = "LongPressAction";
 
 	private final String myName;
-	private ZLStringListOption myKeysOption;
-	private final TreeMap<Integer,ZLStringOption> myActionMap = new TreeMap<Integer,ZLStringOption>();
-	private final TreeMap<Integer,ZLStringOption> myLongPressActionMap = new TreeMap<Integer,ZLStringOption>();
+	private List<String> myKeysOption;
+	private final TreeMap<Integer, String> myActionMap = new TreeMap<>();
+	private final TreeMap<Integer, String> myLongPressActionMap = new TreeMap<>();
 	private Context mContext;
 
 	public ZLKeyBindings(Context pContext) {
@@ -56,7 +53,7 @@ public final class ZLKeyBindings {
 	private ZLKeyBindings(Context pContext, String name) {
 		mContext = pContext;
 		myName = name;
-		Config.Instance().runOnConnect(new Initializer());
+		new Initializer();
 	}
 
 	private class Initializer implements Runnable {
@@ -66,19 +63,24 @@ public final class ZLKeyBindings {
 			final String keymapFilename = "keymap.xml";
 			new Reader(keys).readQuietly(mContext, "default/" + keymapFilename);
 			new Reader(keys).readQuietly(mContext, Paths.systemShareDirectory() + "/keymap.xml");
-			new Reader(keys).readQuietly(mContext, Paths.bookPath().get(0) + "/keymap.xml");
-			myKeysOption = new ZLStringListOption(myName, "KeyList", new ArrayList<>(keys), ",");
+			new Reader(keys).readQuietly(mContext, Paths.bookPath(mContext).get(0) + "/keymap.xml");
+
+			Set<String> list = MiscPreferences.getKeyList(mContext, myName);
+			if (null == list) {
+				myKeysOption = new ArrayList<>(keys);
+			} else {
+				myKeysOption = new ArrayList<>(list);
+			}
 		}
 	}
 
-	private ZLStringOption createOption(int key, boolean longPress, String defaultValue) {
-		final String group = myName + ":" + (longPress ? LONG_PRESS_ACTION : ACTION);
-		return new ZLStringOption(group, String.valueOf(key), defaultValue);
+	private String createOption(int key, boolean longPress, String defaultValue) {
+		return MiscPreferences.getKeyBindings(mContext, (longPress ? LONG_PRESS_ACTION : ACTION), String.valueOf(key), defaultValue);
 	}
 
-	public ZLStringOption getOption(int key, boolean longPress) {
-		final TreeMap<Integer,ZLStringOption> map = longPress ? myLongPressActionMap : myActionMap;
-		ZLStringOption option = map.get(key);
+	public String getOption(int key, boolean longPress) {
+		final TreeMap<Integer, String> map = longPress ? myLongPressActionMap : myActionMap;
+		String option = map.get(key);
 		if (option == null) {
 			option = createOption(key, longPress, ZLApplication.NoAction);
 			map.put(key, option);
@@ -91,18 +93,18 @@ public final class ZLKeyBindings {
 			return;
 		}
 		final String stringKey = String.valueOf(key);
-		List<String> keys = myKeysOption.getValue();
+		List<String> keys = myKeysOption;
 		if (!keys.contains(stringKey)) {
-			keys = new ArrayList<String>(keys);
+			keys = new ArrayList<>(keys);
 			keys.add(stringKey);
 			Collections.sort(keys);
-			myKeysOption.setValue(keys);
+			MiscPreferences.setKeyList(mContext, myName, new HashSet<>(keys));
 		}
-		getOption(key, longPress).setValue(actionId);
+		MiscPreferences.setKeyBindings(mContext, (longPress ? LONG_PRESS_ACTION : ACTION), String.valueOf(key), actionId);
 	}
 
 	public String getBinding(int key, boolean longPress) {
-		return getOption(key, longPress).getValue();
+		return getOption(key, longPress);
 	}
 
 	public boolean hasBinding(int key, boolean longPress) {

@@ -32,6 +32,7 @@ import android.widget.RelativeLayout;
 
 import org.geometerplus.android.fbreader.api.FBReaderIntents;
 import org.geometerplus.android.fbreader.api.FBReaderIntents.Key;
+import org.geometerplus.android.fbreader.config.MiscPreferences;
 import org.geometerplus.android.util.UIMessageUtil;
 import org.geometerplus.android.util.UIUtil;
 import org.geometerplus.fbreader.Paths;
@@ -41,15 +42,12 @@ import org.geometerplus.fbreader.book.Bookmark;
 import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
-import org.geometerplus.fbreader.fbreader.options.ColorProfile;
+import org.geometerplus.android.fbreader.config.ColorProfile;
 import org.geometerplus.zlibrary.core.application.ZLApplicationWindow;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.library.ZLibrary;
-import org.geometerplus.zlibrary.core.options.Config;
 import org.geometerplus.zlibrary.core.view.ZLViewWidget;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.ui.android.R;
-import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 import org.geometerplus.zlibrary.ui.android.view.AndroidFontUtil;
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
@@ -104,12 +102,8 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 				myBook = null;
 			}
 		}
-		Config.Instance().runOnConnect(new Runnable() {
-			public void run() {
-				myFBReaderApp.openBook(myBook, bookmark, action);
-				AndroidFontUtil.clearFontCache();
-			}
-		});
+		myFBReaderApp.openBook(myBook, bookmark, action);
+		AndroidFontUtil.clearFontCache();
 	}
 
 	private Book createBookForFile(ZLFile file) {
@@ -134,18 +128,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	@Override
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-
-		final Config config = Config.Instance();
-		config.runOnConnect(new Runnable() {
-			public void run() {
-				config.requestAllValuesForGroup("Options");
-				config.requestAllValuesForGroup("Style");
-				config.requestAllValuesForGroup("LookNFeel");
-				config.requestAllValuesForGroup("Fonts");
-				config.requestAllValuesForGroup("Colors");
-				config.requestAllValuesForGroup("Files");
-			}
-		});
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
@@ -183,15 +165,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		myFBReaderApp.addAction(ActionCode.OPEN_VIDEO, new OpenVideoAction(this, myFBReaderApp));
 		myFBReaderApp.addAction(ActionCode.HIDE_TOAST, new HideToastAction(this, myFBReaderApp));
 
-		myFBReaderApp.addAction(ActionCode.SET_SCREEN_ORIENTATION_SYSTEM, new SetScreenOrientationAction(this, myFBReaderApp, ZLibrary.SCREEN_ORIENTATION_SYSTEM));
-		myFBReaderApp.addAction(ActionCode.SET_SCREEN_ORIENTATION_SENSOR, new SetScreenOrientationAction(this, myFBReaderApp, ZLibrary.SCREEN_ORIENTATION_SENSOR));
-		myFBReaderApp.addAction(ActionCode.SET_SCREEN_ORIENTATION_PORTRAIT, new SetScreenOrientationAction(this, myFBReaderApp, ZLibrary.SCREEN_ORIENTATION_PORTRAIT));
-		myFBReaderApp.addAction(ActionCode.SET_SCREEN_ORIENTATION_LANDSCAPE, new SetScreenOrientationAction(this, myFBReaderApp, ZLibrary.SCREEN_ORIENTATION_LANDSCAPE));
-		if (getZLibrary().supportsAllOrientations()) {
-			myFBReaderApp.addAction(ActionCode.SET_SCREEN_ORIENTATION_REVERSE_PORTRAIT, new SetScreenOrientationAction(this, myFBReaderApp, ZLibrary.SCREEN_ORIENTATION_REVERSE_PORTRAIT));
-			myFBReaderApp.addAction(ActionCode.SET_SCREEN_ORIENTATION_REVERSE_LANDSCAPE, new SetScreenOrientationAction(this, myFBReaderApp, ZLibrary.SCREEN_ORIENTATION_REVERSE_LANDSCAPE));
-		}
-
 		myFBReaderApp.addAction(ActionCode.SWITCH_TO_DAY_PROFILE, new SwitchProfileAction(this, myFBReaderApp, ColorProfile.DAY));
 		myFBReaderApp.addAction(ActionCode.SWITCH_TO_NIGHT_PROFILE, new SwitchProfileAction(this, myFBReaderApp, ColorProfile.NIGHT));
 
@@ -216,7 +189,7 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 				public void run() {
 					final TextSearchPopup popup = (TextSearchPopup)myFBReaderApp.getPopupById(TextSearchPopup.ID);
 					popup.initPosition();
-					myFBReaderApp.MiscOptions.TextSearchPattern.setValue(pattern);
+					MiscPreferences.setTextSearchPattern(FBReader.this, pattern);
 					if (myFBReaderApp.getTextView().search(pattern, true, false, false, false) != 0) {
 						runOnUiThread(new Runnable() {
 							public void run() {
@@ -243,15 +216,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	protected void onStart() {
 		super.onStart();
 
-		final ZLAndroidLibrary zlibrary = getZLibrary();
-
-		Config.Instance().runOnConnect(new Runnable() {
-			public void run() {
-				myFBReaderApp.ViewOptions.ColorProfileName.saveSpecialValue();
-				SetScreenOrientationAction.setOrientation(FBReader.this, zlibrary.getOrientationOption().getValue());
-			}
-		});
-
 		((PopupPanel)myFBReaderApp.getPopupById(TextSearchPopup.ID)).setPanelInfo(this, myRootView);
 		((PopupPanel)myFBReaderApp.getPopupById(SelectionPopup.ID)).setPanelInfo(this, myRootView);
 	}
@@ -260,15 +224,10 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	protected void onResume() {
 		super.onResume();
 
-		Config.Instance().runOnConnect(new Runnable() {
-			public void run() {
-				final BookModel model = myFBReaderApp.Model;
-				if (model == null || model.Book == null) {
-					return;
-				}
-				onPreferencesUpdate(myFBReaderApp.Collection.getBookById(model.Book.getId()));
-			}
-		});
+		final BookModel model = myFBReaderApp.Model;
+		if (model != null && model.Book != null) {
+			onPreferencesUpdate(myFBReaderApp.Collection.getBookById(model.Book.getId()));
+		}
 
 		IsPaused = false;
 		if (OnResumeAction != null) {
@@ -277,7 +236,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 			action.run();
 		}
 
-		SetScreenOrientationAction.setOrientation(this, getZLibrary().getOrientationOption().getValue());
 		if (myOpenBookIntent != null) {
 			final Intent intent = myOpenBookIntent;
 			myOpenBookIntent = null;
@@ -325,7 +283,7 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 				manager.setOnCancelListener(null);
 			}
 		});
-		startSearch(myFBReaderApp.MiscOptions.TextSearchPattern.getValue(), true, null, false);
+		startSearch(MiscPreferences.getTextSearchPattern(this), true, null, false);
 		return true;
 	}
 

@@ -21,7 +21,6 @@ package org.geometerplus.android.fbreader;
 
 import android.content.Intent;
 
-import org.geometerplus.android.util.OrientationUtil;
 import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 
@@ -45,8 +44,6 @@ class ShowTOCAction extends FBAndroidAction {
 
 	@Override
 	protected void run(Object ... params) {
-		OrientationUtil.startActivity(
-			BaseActivity, new Intent(BaseActivity.getApplicationContext(), TOCActivity.class)
-		);
+		BaseActivity.startActivity(new Intent(BaseActivity.getApplicationContext(), TOCActivity.class));
 	}
 }

@@ -21,7 +21,6 @@ package org.geometerplus.zlibrary.ui.android.library;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.pm.PackageInfo;
 import android.content.res.AssetManager;
 import android.os.Build;
 import android.telephony.TelephonyManager;
@@ -29,7 +28,6 @@ import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 
 import org.geometerplus.zlibrary.core.library.ZLibrary;
-import org.geometerplus.zlibrary.core.options.ZLBooleanOption;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,11 +36,6 @@ import java.util.Locale;
 import java.util.TreeSet;
 
 public final class ZLAndroidLibrary extends ZLibrary {
-	public final ZLBooleanOption EnableFullscreenModeOption = new ZLBooleanOption("LookNFeel", "FullscreenMode", true);
-	{
-		EnableFullscreenModeOption.setSpecialName("enableFullscreen");
-	}
-
 	private final Application myApplication;
 
 	ZLAndroidLibrary(Application application) {

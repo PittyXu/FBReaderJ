@@ -21,7 +21,6 @@ package org.geometerplus.zlibrary.ui.android.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.CornerPathEffect;
@@ -35,24 +34,17 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.support.annotation.ColorInt;
 
-import org.geometerplus.zlibrary.core.filesystem.ZLFile;
+import org.geometerplus.android.fbreader.config.ViewPreferences;
 import org.geometerplus.zlibrary.core.fonts.FontEntry;
 import org.geometerplus.zlibrary.core.image.ZLImageData;
-import org.geometerplus.zlibrary.core.options.ZLBooleanOption;
 import org.geometerplus.zlibrary.core.util.SystemInfo;
 import org.geometerplus.zlibrary.core.view.ZLPaintContext;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
 import org.geometerplus.zlibrary.ui.android.util.ZLAndroidColorUtil;
 
-import java.io.InputStream;
 import java.util.List;
 
 public final class ZLAndroidPaintContext extends ZLPaintContext {
-	public static ZLBooleanOption AntiAliasOption = new ZLBooleanOption("Fonts", "AntiAlias", true);
-	public static ZLBooleanOption DeviceKerningOption = new ZLBooleanOption("Fonts", "DeviceKerning", false);
-	public static ZLBooleanOption DitheringOption = new ZLBooleanOption("Fonts", "Dithering", false);
-	public static ZLBooleanOption SubpixelOption = new ZLBooleanOption("Fonts", "Subpixel", false);
-
 	private final Canvas myCanvas;
 	private final Paint myTextPaint = new Paint();
 	private final Paint myLinePaint = new Paint();
@@ -79,7 +71,7 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
 	@ColorInt
 	private Integer myBackgroundColor = Color.rgb(0, 0, 0);
 
-	public ZLAndroidPaintContext(SystemInfo systemInfo, Canvas canvas, Geometry geometry, int scrollbarWidth) {
+	public ZLAndroidPaintContext(Context pContext, SystemInfo systemInfo, Canvas canvas, Geometry geometry, int scrollbarWidth) {
 		super(systemInfo);
 
 		myCanvas = canvas;
@@ -87,18 +79,19 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
 		myScrollbarWidth = scrollbarWidth;
 
 		myTextPaint.setLinearText(false);
-		myTextPaint.setAntiAlias(AntiAliasOption.getValue());
-		if (DeviceKerningOption.getValue()) {
+		boolean antiAlias = ViewPreferences.getFontAntiAlias(pContext);
+		myTextPaint.setAntiAlias(antiAlias);
+		if (ViewPreferences.getFontDeviceKerning(pContext)) {
 			myTextPaint.setFlags(myTextPaint.getFlags() | Paint.DEV_KERN_TEXT_FLAG);
 		} else {
 			myTextPaint.setFlags(myTextPaint.getFlags() & ~Paint.DEV_KERN_TEXT_FLAG);
 		}
-		myTextPaint.setDither(DitheringOption.getValue());
-		myTextPaint.setSubpixelText(SubpixelOption.getValue());
+		myTextPaint.setDither(ViewPreferences.getFontDithering(pContext));
+		myTextPaint.setSubpixelText(ViewPreferences.getFontSubpixel(pContext));
 
 		myLinePaint.setStyle(Paint.Style.STROKE);
 
-		myFillPaint.setAntiAlias(AntiAliasOption.getValue());
+		myFillPaint.setAntiAlias(antiAlias);
 
 		myOutlinePaint.setAntiAlias(true);
 		myOutlinePaint.setDither(true);

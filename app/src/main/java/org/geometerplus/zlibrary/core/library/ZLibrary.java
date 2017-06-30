@@ -19,9 +19,6 @@
 
 package org.geometerplus.zlibrary.core.library;
 
-import org.geometerplus.zlibrary.core.options.ZLIntegerOption;
-import org.geometerplus.zlibrary.core.options.ZLStringOption;
-
 import java.util.List;
 
 public abstract class ZLibrary {
@@ -37,13 +34,6 @@ public abstract class ZLibrary {
 	public static final String SCREEN_ORIENTATION_LANDSCAPE = "landscape";
 	public static final String SCREEN_ORIENTATION_REVERSE_PORTRAIT = "reversePortrait";
 	public static final String SCREEN_ORIENTATION_REVERSE_LANDSCAPE = "reverseLandscape";
-
-	public final ZLIntegerOption ScreenHintStageOption =
-		new ZLIntegerOption("LookNFeel", "ScreenHintStage", 0);
-
-	public final ZLStringOption getOrientationOption() {
-		return new ZLStringOption("LookNFeel", "Orientation", "system");
-	}
 
 	protected ZLibrary() {
 		ourImplementation = this;

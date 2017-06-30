@@ -20,39 +20,25 @@
 package org.geometerplus.android.fbreader.bookmark;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TabHost;
-import android.widget.TextView;
 
-import org.geometerplus.android.fbreader.api.FBReaderIntents;
 import org.geometerplus.android.fbreader.api.FBReaderIntents.Key;
-import org.geometerplus.android.util.ViewUtil;
+import org.geometerplus.android.fbreader.config.MiscPreferences;
 import org.geometerplus.fbreader.book.Book;
 import org.geometerplus.fbreader.book.BookEvent;
 import org.geometerplus.fbreader.book.Bookmark;
-import org.geometerplus.fbreader.book.BookmarkUtil;
-import org.geometerplus.fbreader.book.HighlightingStyle;
 import org.geometerplus.fbreader.book.IBookCollection;
-import org.geometerplus.zlibrary.core.options.ZLStringOption;
 import org.geometerplus.zlibrary.ui.android.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class EditBookmarkActivity extends Activity implements IBookCollection.Listener<Book> {
 	private Bookmark myBookmark;
@@ -96,13 +82,11 @@ public class EditBookmarkActivity extends Activity implements IBookCollection.Li
 		addTab(tabHost, getString(R.string.bookmarks_style), R.id.edit_bookmark_content_style);
 		addTab(tabHost, getString(R.string.delete), R.id.edit_bookmark_content_delete);
 
-		final ZLStringOption currentTabOption =
-			new ZLStringOption("LookNFeel", "EditBookmark", "text");
-		tabHost.setCurrentTabByTag(currentTabOption.getValue());
+		tabHost.setCurrentTabByTag(MiscPreferences.getBookmarkCurrentTab(this));
 		tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
 			public void onTabChanged(String tag) {
 				if (!"delete".equals(tag)) {
-					currentTabOption.setValue(tag);
+					MiscPreferences.setBookmarkCurrentTab(EditBookmarkActivity.this, tag);
 				}
 			}
 		});

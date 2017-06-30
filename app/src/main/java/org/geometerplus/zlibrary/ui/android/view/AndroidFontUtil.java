@@ -74,7 +74,7 @@ public final class AndroidFontUtil {
 		return ourFontAssetMap;
 	}
 
-	private static synchronized Map<String,File[]> getFontFileMap(boolean forceReload) {
+	private static synchronized Map<String,File[]> getFontFileMap(Context pContext, boolean forceReload) {
 		final long timeStamp = System.currentTimeMillis();
 		if (forceReload && timeStamp < ourTimeStamp + 1000) {
 			forceReload = false;
@@ -91,7 +91,7 @@ public final class AndroidFontUtil {
 					return lcName.endsWith(".ttf") || lcName.endsWith(".otf");
 				}
 			};
-			for (String dir : Paths.FontPathOption.getValue()) {
+			for (String dir : Paths.fontPath(pContext)) {
 				final File[] fileList = new File(dir).listFiles(filter);
 				if (fileList != null) {
 					fileSet.addAll(Arrays.asList(fileList));
@@ -111,7 +111,7 @@ public final class AndroidFontUtil {
 				return name;
 			}
 		}
-		for (String name : getFontFileMap(false).keySet()) {
+		for (String name : getFontFileMap(pContext, false).keySet()) {
 			if (name.equalsIgnoreCase(fontFamily)) {
 				return name;
 			}
@@ -129,7 +129,7 @@ public final class AndroidFontUtil {
 	}
 
 	public static void fillFamiliesList(Context pContext, ArrayList<String> families) {
-		final TreeSet<String> familySet = new TreeSet<>(getFontFileMap(true).keySet());
+		final TreeSet<String> familySet = new TreeSet<>(getFontFileMap(pContext, true).keySet());
 		familySet.addAll(getFontAssetMap(pContext).keySet());
 		familySet.add("Droid Sans");
 		familySet.add("Droid Serif");
@@ -153,8 +153,8 @@ public final class AndroidFontUtil {
 		return null;
 	}
 
-	private static Typeface createTypefaceFromFile(Typeface[] typefaces, String family, int style) {
-		final File[] files = getFontFileMap(false).get(family);
+	private static Typeface createTypefaceFromFile(Context pContext, Typeface[] typefaces, String family, int style) {
+		final File[] files = getFontFileMap(pContext, false).get(family);
 		if (files == null) {
 			return null;
 		}
@@ -193,7 +193,7 @@ public final class AndroidFontUtil {
 		}
 		Typeface tf = typefaces[style];
 		if (tf == null) {
-			tf = createTypefaceFromFile(typefaces, family, style);
+			tf = createTypefaceFromFile(pContext, typefaces, family, style);
 		}
 		if (tf == null) {
 			tf = createTypefaceFromAsset(pContext, typefaces, family, style);
