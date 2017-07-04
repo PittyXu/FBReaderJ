@@ -19,28 +19,16 @@
 
 package org.geometerplus.android.fbreader.api;
 
-import android.content.Intent;
-
 public abstract class FBReaderIntents {
-	public static final String DEFAULT_PACKAGE = "org.geometerplus.zlibrary.ui.android";
 
 	public interface Action {
 		String VIEW                             = "android.fbreader.action.VIEW";
-		String CONFIG_SERVICE                   = "android.fbreader.action.CONFIG_SERVICE";
 		String LIBRARY                          = "android.fbreader.action.LIBRARY";
 		String EXTERNAL_BOOKMARKS               = "android.fbreader.action.EXTERNAL_BOOKMARKS";
-	}
-
-	public interface Event {
-		String CONFIG_OPTION_CHANGE             = "fbreader.config_service.option_change_event";
 	}
 
 	public interface Key {
 		String BOOK                             = "fbreader.book";
 		String BOOKMARK                         = "fbreader.bookmark";
-	}
-
-	public static Intent internalIntent(String action) {
-		return new Intent(action).setPackage(DEFAULT_PACKAGE);
 	}
 }

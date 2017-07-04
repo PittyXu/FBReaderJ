@@ -61,6 +61,4 @@ public interface ActionCode {
 	String SELECTION_BOOKMARK = "selectionBookmark";
 
 	String OPEN_VIDEO = "video";
-
-	String HIDE_TOAST = "hideToast";
 }

@@ -19,19 +19,8 @@
 
 package org.geometerplus.android.fbreader;
 
-import android.content.Intent;
-import android.os.Parcelable;
-import android.view.View;
-
-import com.github.johnpersano.supertoasts.SuperActivityToast;
-import com.github.johnpersano.supertoasts.SuperToast;
-import com.github.johnpersano.supertoasts.util.OnClickWrapper;
-
-import org.geometerplus.android.fbreader.api.FBReaderIntents.Key;
-import org.geometerplus.android.fbreader.bookmark.EditBookmarkActivity;
 import org.geometerplus.fbreader.book.Bookmark;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
-import org.geometerplus.zlibrary.ui.android.R;
 
 public class SelectionBookmarkAction extends FBAndroidAction {
 	SelectionBookmarkAction(FBReader baseApplication, FBReaderApp fbreader) {
@@ -49,23 +38,5 @@ public class SelectionBookmarkAction extends FBAndroidAction {
 		if (bookmark == null) {
 			return;
 		}
-
-		final SuperActivityToast toast =
-			new SuperActivityToast(BaseActivity, SuperToast.Type.BUTTON);
-		toast.setText(bookmark.getText());
-		toast.setDuration(SuperToast.Duration.EXTRA_LONG);
-		toast.setButtonIcon(
-			android.R.drawable.ic_menu_edit, BaseActivity.getString(R.string.edit)
-		);
-		toast.setOnClickWrapper(new OnClickWrapper("bkmk", new SuperToast.OnClickListener() {
-			@Override
-			public void onClick(View view, Parcelable token) {
-				final Intent intent =
-					new Intent(BaseActivity.getApplicationContext(), EditBookmarkActivity.class);
-				intent.putExtra(Key.BOOKMARK, bookmark);
-				BaseActivity.startActivity(intent);
-			}
-		}));
-		BaseActivity.showToast(toast);
 	}
 }

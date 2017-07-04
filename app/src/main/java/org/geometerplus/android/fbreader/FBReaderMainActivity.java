@@ -20,20 +20,13 @@
 package org.geometerplus.android.fbreader;
 
 import android.app.Activity;
-import android.graphics.Typeface;
 import android.os.Bundle;
 
-import com.github.johnpersano.supertoasts.SuperActivityToast;
-
-import org.geometerplus.android.fbreader.config.StylePreferences;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
-import org.geometerplus.zlibrary.ui.android.view.AndroidFontUtil;
 
 public abstract class FBReaderMainActivity extends Activity {
 	public static final int REQUEST_PREFERENCES = 1;
-
-	private volatile SuperActivityToast myToast;
 
 	@Override
 	protected void onCreate(Bundle saved) {
@@ -43,51 +36,4 @@ public abstract class FBReaderMainActivity extends Activity {
 	public ZLAndroidLibrary getZLibrary() {
 		return ((ZLAndroidApplication)getApplication()).library();
 	}
-
-	/* ++++++ SUPER TOAST ++++++ */
-	public boolean isToastShown() {
-		final SuperActivityToast toast = myToast;
-		return toast != null && toast.isShowing();
-	}
-
-	public void hideToast() {
-		final SuperActivityToast toast = myToast;
-		if (toast != null && toast.isShowing()) {
-			myToast = null;
-			runOnUiThread(new Runnable() {
-				public void run() {
-					toast.dismiss();
-				}
-			});
-		}
-	}
-
-	public void showToast(final SuperActivityToast toast) {
-		hideToast();
-		myToast = toast;
-		// TODO: avoid this hack (accessing text style via option)
-		final int dpi = getZLibrary().getDisplayDPI();
-		int fontSize = dpi * 18 / 160;
-		final int percent = 90;
-		final int dpFontSize = fontSize * 160 * percent / dpi / 100;
-		toast.setTextSize(dpFontSize);
-		toast.setButtonTextSize(dpFontSize * 7 / 8);
-
-		String fontFamily = StylePreferences.getStyle(this, "Base").fontFamily;
-		if (null == fontFamily) {
-			fontFamily = "sans-serif";
-		}
-
-		Typeface typeface = AndroidFontUtil.systemTypeface(this, fontFamily, false, false);
-		if (typeface != null) {
-			toast.getTextView().setTypeface(typeface);
-		}
-
-		runOnUiThread(new Runnable() {
-			public void run() {
-				toast.show();
-			}
-		});
-	}
-	/* ------ SUPER TOAST ------ */
 }

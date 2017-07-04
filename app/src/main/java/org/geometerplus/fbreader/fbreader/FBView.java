@@ -124,11 +124,6 @@ public final class FBView extends ZLTextView {
 			return;
 		}
 
-		if (myReader.isActionEnabled(ActionCode.HIDE_TOAST)) {
-			myReader.runAction(ActionCode.HIDE_TOAST);
-			return;
-		}
-
 		onFingerSingleTapLastResort(x, y);
 	}
 
@@ -139,8 +134,6 @@ public final class FBView extends ZLTextView {
 
 	@Override
 	public void onFingerDoubleTap(int x, int y) {
-		myReader.runAction(ActionCode.HIDE_TOAST);
-
 		myReader.runAction(getZoneMap().getActionByCoordinates(
 			x, y, getContextWidth(), getContextHeight(), TapZoneMap.Tap.doubleTap
 		), x, y);
@@ -148,8 +141,6 @@ public final class FBView extends ZLTextView {
 
 	@Override
 	public void onFingerPress(int x, int y) {
-		myReader.runAction(ActionCode.HIDE_TOAST);
-
 		final float maxDist = ZLibrary.Instance().getDisplayDPI() / 4;
 		final SelectionCursor.Which cursor = findSelectionCursor(x, y, maxDist * maxDist);
 		if (cursor != null) {
@@ -209,8 +200,6 @@ public final class FBView extends ZLTextView {
 
 	@Override
 	public boolean onFingerLongPress(int x, int y) {
-		myReader.runAction(ActionCode.HIDE_TOAST);
-
 		final ZLTextRegion region = findRegion(x, y, maxSelectionDistance(), ZLTextRegion.AnyRegionFilter);
 		if (region != null) {
 			final ZLTextRegion.Soul soul = region.getSoul();
