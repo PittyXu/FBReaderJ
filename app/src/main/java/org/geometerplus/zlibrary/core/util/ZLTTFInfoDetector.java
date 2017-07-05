@@ -39,7 +39,7 @@ public class ZLTTFInfoDetector {
 		"oblique"
 	);
 	public Map<String,File[]> collectFonts(Iterable<File> files) {
-		final HashMap<String,File[]> fonts = new HashMap<String,File[]>();
+		final HashMap<String,File[]> fonts = new HashMap<>();
 		if (files == null) {
 			return fonts;
 		}
@@ -93,6 +93,7 @@ public class ZLTTFInfoDetector {
 					try {
 						stream.close();
 					} catch (IOException e1) {
+						e1.printStackTrace();
 					}
 				}
 			}

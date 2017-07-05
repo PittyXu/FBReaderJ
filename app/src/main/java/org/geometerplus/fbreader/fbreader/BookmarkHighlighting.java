@@ -30,7 +30,7 @@ import org.geometerplus.zlibrary.text.view.ZLTextSimpleHighlighting;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 
 public final class BookmarkHighlighting extends ZLTextSimpleHighlighting {
-	final IBookCollection Collection;
+	private final IBookCollection Collection;
 	final Bookmark Bookmark;
 
 	private static ZLTextPosition startPosition(Bookmark bookmark) {

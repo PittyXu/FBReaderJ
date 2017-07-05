@@ -37,7 +37,6 @@ import android.support.annotation.ColorInt;
 import org.geometerplus.android.fbreader.config.ViewPreferences;
 import org.geometerplus.zlibrary.core.fonts.FontEntry;
 import org.geometerplus.zlibrary.core.image.ZLImageData;
-import org.geometerplus.zlibrary.core.util.SystemInfo;
 import org.geometerplus.zlibrary.core.view.ZLPaintContext;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
 import org.geometerplus.zlibrary.ui.android.util.ZLAndroidColorUtil;
@@ -71,9 +70,7 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
 	@ColorInt
 	private Integer myBackgroundColor = Color.rgb(0, 0, 0);
 
-	public ZLAndroidPaintContext(Context pContext, SystemInfo systemInfo, Canvas canvas, Geometry geometry, int scrollbarWidth) {
-		super(systemInfo);
-
+	public ZLAndroidPaintContext(Context pContext, Canvas canvas, Geometry geometry, int scrollbarWidth) {
 		myCanvas = canvas;
 		myGeometry = geometry;
 		myScrollbarWidth = scrollbarWidth;
@@ -291,7 +288,7 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
 	protected void setFontInternal(Context pContext, List<FontEntry> entries, int size, boolean bold, boolean italic, boolean underline, boolean strikeThrought) {
 		Typeface typeface = null;
 		for (FontEntry e : entries) {
-			typeface = AndroidFontUtil.typeface(pContext, getSystemInfo(), e, bold, italic);
+			typeface = AndroidFontUtil.typeface(pContext, e, bold, italic);
 			if (typeface != null) {
 				break;
 			}

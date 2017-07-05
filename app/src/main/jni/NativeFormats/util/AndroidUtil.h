@@ -146,8 +146,6 @@ public:
 	static shared_ptr<VoidMethod> Method_Book_setTitle;
 	static shared_ptr<VoidMethod> Method_Book_setLanguage;
 	static shared_ptr<VoidMethod> Method_Book_setEncoding;
-	static shared_ptr<VoidMethod> Method_Book_addAuthor;
-	static shared_ptr<VoidMethod> Method_Book_addUid;
 
 	static shared_ptr<ObjectField> Field_BookModel_Book;
 	static shared_ptr<VoidMethod> Method_BookModel_initInternalHyperlinks;

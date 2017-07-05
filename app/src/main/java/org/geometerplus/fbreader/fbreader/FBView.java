@@ -444,7 +444,7 @@ public final class FBView extends ZLTextView {
 				return;
 			}
 
-			myTOCMarks = new ArrayList<TOCTree>();
+			myTOCMarks = new ArrayList<>();
 			myMaxTOCMarksNumber = maxNumber;
 
 			TOCTree toc = model.TOCTree;

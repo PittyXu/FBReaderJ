@@ -23,10 +23,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.ColorInt;
 
-import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.fonts.FontEntry;
 import org.geometerplus.zlibrary.core.image.ZLImageData;
-import org.geometerplus.zlibrary.core.util.SystemInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +32,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 abstract public class ZLPaintContext {
-	private final SystemInfo mySystemInfo;
 	private final ArrayList<String> myFamilies = new ArrayList<String>();
 
-	protected ZLPaintContext(SystemInfo systemInfo) {
-		mySystemInfo = systemInfo;
+	protected ZLPaintContext() {
 	}
 
 	public enum FillMode {
@@ -48,10 +44,6 @@ abstract public class ZLPaintContext {
 		stretch,
 		tileVertically,
 		tileHorizontally
-	}
-
-	protected final SystemInfo getSystemInfo() {
-		return mySystemInfo;
 	}
 
 	abstract public void clear(Bitmap fileBitmap, FillMode mode);

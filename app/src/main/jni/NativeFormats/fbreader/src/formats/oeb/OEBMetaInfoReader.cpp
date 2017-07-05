@@ -28,9 +28,7 @@
 #include "../../library/Book.h"
 
 OEBMetaInfoReader::OEBMetaInfoReader(Book &book) : myBook(book) {
-	myBook.removeAllAuthors();
 	myBook.setTitle("");
-	myBook.removeAllUids();
 }
 
 static const std::string META = "meta";
@@ -129,9 +127,6 @@ void OEBMetaInfoReader::endElementHandler(const char *tag) {
 			}
 			break;
 		case READ_IDENTIFIER:
-			if (!myBuffer.empty()) {
-				myBook.addUid(myIdentifierScheme, myBuffer);
-			}
 			break;
 	}
 	myBuffer.erase();
@@ -143,16 +138,6 @@ bool OEBMetaInfoReader::readMetainfo(const ZLFile &file) {
 	if (!readDocument(file)) {
 		ZLLogger::Instance().println("epub", "Failure while reading info from " + file.path());
 		return false;
-	}
-
-	if (!myAuthorList.empty()) {
-		for (std::vector<std::string>::const_iterator it = myAuthorList.begin(); it != myAuthorList.end(); ++it) {
-			myBook.addAuthor(*it);
-		}
-	} else {
-		for (std::vector<std::string>::const_iterator it = myAuthorList2.begin(); it != myAuthorList2.end(); ++it) {
-			myBook.addAuthor(*it);
-		}
 	}
 	return true;
 }

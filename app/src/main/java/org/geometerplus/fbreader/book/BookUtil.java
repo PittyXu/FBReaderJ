@@ -24,54 +24,9 @@ import org.geometerplus.fbreader.formats.FormatPlugin;
 import org.geometerplus.fbreader.formats.PluginCollection;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Formatter;
-
 public abstract class BookUtil {
-	public static UID createUid(AbstractBook book, String algorithm) {
-		return createUid(fileByBook(book), algorithm);
-	}
 
-	public static UID createUid(ZLFile file, String algorithm) {
-		InputStream stream = null;
-
-		try {
-			final MessageDigest hash = MessageDigest.getInstance(algorithm);
-			stream = file.getInputStream();
-
-			final byte[] buffer = new byte[2048];
-			while (true) {
-				final int nread = stream.read(buffer);
-				if (nread == -1) {
-					break;
-				}
-				hash.update(buffer, 0, nread);
-			}
-
-			final Formatter f = new Formatter();
-			for (byte b : hash.digest()) {
-				f.format("%02X", b & 0xFF);
-			}
-			return new UID(algorithm, f.toString());
-		} catch (IOException e) {
-			return null;
-		} catch (NoSuchAlgorithmException e) {
-			return null;
-		} finally {
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	public static FormatPlugin getPlugin(PluginCollection pluginCollection, AbstractBook book) throws BookReadingException {
+	public static FormatPlugin getPlugin(PluginCollection pluginCollection, Book book) throws BookReadingException {
 		final ZLFile file = fileByBook(book);
 		final FormatPlugin plugin = pluginCollection.getPlugin(file);
 		if (plugin == null) {
@@ -80,23 +35,18 @@ public abstract class BookUtil {
 		return plugin;
 	}
 
-	static void readMetainfo(AbstractBook book, PluginCollection pluginCollection) throws BookReadingException {
+	public static void readMetainfo(Book book, PluginCollection pluginCollection) throws BookReadingException {
 		readMetainfo(book, getPlugin(pluginCollection, book));
 	}
 
-	static void readMetainfo(AbstractBook book, FormatPlugin plugin) throws BookReadingException {
+	public static void readMetainfo(Book book, FormatPlugin plugin) throws BookReadingException {
 		book.myEncoding = null;
 		book.myLanguage = null;
 		book.setTitle(null);
-		book.myAuthors = null;
-		book.myUids = null;
 
 		book.mySaveState = AbstractBook.SaveState.NotSaved;
 
 		plugin.readMetainfo(book);
-		if (book.myUids == null || book.myUids.isEmpty()) {
-			plugin.readUids(book);
-		}
 
 		if (book.isTitleEmpty()) {
 			final String fileName = fileByBook(book).getShortName();
@@ -105,11 +55,7 @@ public abstract class BookUtil {
 		}
 	}
 
-	public static ZLFile fileByBook(AbstractBook book) {
-		if (book instanceof DbBook) {
-			return ((DbBook)book).File;
-		} else {
-			return ZLFile.createFileByPath(book.getPath());
-		}
+	public static ZLFile fileByBook(Book book) {
+		return book.File;
 	}
 }

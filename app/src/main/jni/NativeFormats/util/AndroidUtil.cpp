@@ -107,8 +107,6 @@ shared_ptr<StringMethod> AndroidUtil::Method_Book_getEncodingNoDetection;
 shared_ptr<VoidMethod> AndroidUtil::Method_Book_setTitle;
 shared_ptr<VoidMethod> AndroidUtil::Method_Book_setLanguage;
 shared_ptr<VoidMethod> AndroidUtil::Method_Book_setEncoding;
-shared_ptr<VoidMethod> AndroidUtil::Method_Book_addAuthor;
-shared_ptr<VoidMethod> AndroidUtil::Method_Book_addUid;
 
 shared_ptr<ObjectField> AndroidUtil::Field_BookModel_Book;
 shared_ptr<VoidMethod> AndroidUtil::Method_BookModel_initInternalHyperlinks;
@@ -147,7 +145,7 @@ bool AndroidUtil::init(JavaVM* jvm) {
 
 	StaticMethod_ZLibrary_Instance = new StaticObjectMethod(Class_ZLibrary, "Instance", Class_ZLibrary, "()");
 
-	StaticMethod_NativeFormatPlugin_create = new StaticObjectMethod(Class_NativeFormatPlugin, "create", Class_NativeFormatPlugin, "(Lorg/geometerplus/zlibrary/core/util/SystemInfo;Ljava/lang/String;)");
+	StaticMethod_NativeFormatPlugin_create = new StaticObjectMethod(Class_NativeFormatPlugin, "create", Class_NativeFormatPlugin, "(Ljava/lang/String;)");
 	Method_NativeFormatPlugin_supportedFileType = new StringMethod(Class_NativeFormatPlugin, "supportedFileType", "()");
 
 	Method_Encoding_createConverter = new ObjectMethod(Class_Encoding, "createConverter", Class_EncodingConverter, "()");
@@ -176,8 +174,6 @@ bool AndroidUtil::init(JavaVM* jvm) {
 	Method_Book_setTitle = new VoidMethod(Class_AbstractBook, "setTitle", "(Ljava/lang/String;)");
 	Method_Book_setLanguage = new VoidMethod(Class_AbstractBook, "setLanguage", "(Ljava/lang/String;)");
 	Method_Book_setEncoding = new VoidMethod(Class_AbstractBook, "setEncoding", "(Ljava/lang/String;)");
-	Method_Book_addAuthor = new VoidMethod(Class_AbstractBook, "addAuthor", "(Ljava/lang/String;Ljava/lang/String;)");
-	Method_Book_addUid = new VoidMethod(Class_AbstractBook, "addUid", "(Ljava/lang/String;Ljava/lang/String;)");
 
 	Field_BookModel_Book = new ObjectField(Class_BookModel, "Book", Class_Book);
 	Method_BookModel_initInternalHyperlinks = new VoidMethod(Class_BookModel, "initInternalHyperlinks", "(Ljava/lang/String;Ljava/lang/String;I)");

@@ -20,12 +20,9 @@
 package org.geometerplus.fbreader;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Environment;
-import android.text.TextUtils;
 
 import org.geometerplus.android.fbreader.config.DirectoriesPreferences;
-import org.geometerplus.zlibrary.core.util.SystemInfo;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,25 +34,6 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class Paths {
-
-  private static String internalTempDirectoryValue(Context context) {
-    String value = null;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-      value = getExternalCacheDirPath(context);
-    }
-    return value != null ? value : (mainBookDirectory(context) + "/.FBReader");
-  }
-
-  private static String getExternalCacheDirPath(Context context) {
-    final File d = context != null ? context.getExternalCacheDir() : null;
-    if (d != null) {
-      d.mkdirs();
-      if (d.exists() && d.isDirectory()) {
-        return d.getPath();
-      }
-    }
-    return null;
-  }
 
   public static String cardDirectory() {
     if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
@@ -118,24 +96,6 @@ public abstract class Paths {
       return Collections.singletonList(cardDirectory() + "/Fonts");
     }
     return new ArrayList<>(path);
-  }
-
-  public static String mainBookDirectory(Context pContext) {
-    final List<String> bookPath = bookPath(pContext);
-    return bookPath.isEmpty() ? defaultBookDirectory() : bookPath.get(0);
-  }
-
-  public static SystemInfo systemInfo(final Context context) {
-    final Context appContext = context.getApplicationContext();
-    return new SystemInfo() {
-      public String tempDirectory() {
-        final String value = DirectoriesPreferences.getTempDir(context);
-        if (!TextUtils.isEmpty(value)) {
-          return value;
-        }
-        return internalTempDirectoryValue(appContext);
-      }
-    };
   }
 
   public static String systemShareDirectory() {

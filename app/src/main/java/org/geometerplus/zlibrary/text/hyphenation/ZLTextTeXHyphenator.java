@@ -28,7 +28,7 @@ import java.util.HashMap;
 
 final class ZLTextTeXHyphenator extends ZLTextHyphenator {
 	private final HashMap<ZLTextTeXHyphenationPattern,ZLTextTeXHyphenationPattern> myPatternTable =
-		new HashMap<ZLTextTeXHyphenationPattern,ZLTextTeXHyphenationPattern>();
+			new HashMap<>();
 	private int myMaxPatternLength;
 	private String myLanguage;
 

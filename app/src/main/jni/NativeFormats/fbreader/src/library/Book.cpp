@@ -64,19 +64,6 @@ shared_ptr<Book> Book::loadFromJavaBook(JNIEnv *env, jobject javaBook) {
 	return createBook(ZLFile(path), 0, encoding, language, title);
 }
 
-bool Book::replaceAuthor(shared_ptr<Author> from, shared_ptr<Author> to) {
-	AuthorList::iterator it = std::find(myAuthors.begin(), myAuthors.end(), from);
-	if (it == myAuthors.end()) {
-		return false;
-	}
-	if (to.isNull()) {
-		myAuthors.erase(it);
-	} else {
-		*it = to;
-	}
-	return true;
-}
-
 void Book::setTitle(const std::string &title) {
 	myTitle = title;
 }
@@ -97,39 +84,4 @@ void Book::setLanguage(const std::string &language) {
 
 void Book::setEncoding(const std::string &encoding) {
 	myEncoding = encoding;
-}
-
-void Book::addAuthor(const std::string &displayName, const std::string &sortKey) {
-	addAuthor(Author::getAuthor(displayName, sortKey));
-}
-
-void Book::addAuthor(shared_ptr<Author> author) {
-	if (!author.isNull()) {
-		myAuthors.push_back(author);
-	}
-}
-
-void Book::removeAllAuthors() {
-	myAuthors.clear();
-}
-
-void Book::addUid(shared_ptr<UID> uid) {
-	if (uid.isNull()) {
-		return;
-	}
-	UIDList::const_iterator it = std::find(myUIDs.begin(), myUIDs.end(), uid);
-	if (it == myUIDs.end()) {
-		myUIDs.push_back(uid);
-	}
-}
-
-void Book::addUid(const std::string &type, const std::string &id) {
-	if (type == "" || id == "") {
-		return;
-	}
-	addUid(new UID(type, id));
-}
-
-void Book::removeAllUids() {
-	myUIDs.clear();
 }

@@ -19,9 +19,11 @@
 
 package org.geometerplus.fbreader.book;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable.Creator;
 
+import org.geometerplus.android.fbreader.config.StylePreferences;
 import org.geometerplus.fbreader.util.ComparisonUtil;
 import org.geometerplus.fbreader.util.TextSnippet;
 import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
@@ -42,6 +44,7 @@ public final class Bookmark extends ZLTextFixedPosition {
 	public final String Uid;
 	private String myVersionUid;
 
+	public final AbstractBook book;
 	public final long BookId;
 	public final String BookTitle;
 	private String myText;
@@ -58,11 +61,12 @@ public final class Bookmark extends ZLTextFixedPosition {
 	public final boolean IsVisible;
 
 	// used for migration only
-	private Bookmark(long bookId, Bookmark original) {
+	private Bookmark(AbstractBook pBook, Bookmark original) {
 		super(original);
 		myId = -1;
 		Uid = newUUID();
-		BookId = bookId;
+		book = pBook;
+		BookId = pBook.getId();
 		BookTitle = original.BookTitle;
 		myText = original.myText;
 		myOriginalText = original.myOriginalText;
@@ -78,7 +82,7 @@ public final class Bookmark extends ZLTextFixedPosition {
 
 	// create java object for existing bookmark
 	// uid parameter can be null when comes from old format plugin!
-	public Bookmark(
+	public Bookmark(Book pBook,
 		long id, String uid, String versionUid,
 		long bookId, String bookTitle, String text, String originalText,
 		long creationTimestamp, Long modificationTimestamp, Long accessTimestamp,
@@ -94,6 +98,7 @@ public final class Bookmark extends ZLTextFixedPosition {
 		Uid = verifiedUUID(uid);
 		myVersionUid = verifiedUUID(versionUid);
 
+		book = pBook;
 		BookId = bookId;
 		BookTitle = bookTitle;
 		myText = text;
@@ -114,20 +119,21 @@ public final class Bookmark extends ZLTextFixedPosition {
 	}
 
 	// creates new bookmark
-	public Bookmark(IBookCollection collection, Book book, String modelId, TextSnippet snippet, boolean visible) {
+	public Bookmark(Context pContext, Book pBook, String modelId, TextSnippet snippet, boolean visible) {
 		super(snippet.getStart());
 
 		myId = -1;
 		Uid = newUUID();
-		BookId = book.getId();
-		BookTitle = book.getTitle();
+		book = pBook;
+		BookId = pBook.getId();
+		BookTitle = pBook.getTitle();
 		myText = snippet.getText();
 		myOriginalText = null;
 		CreationTimestamp = System.currentTimeMillis();
 		ModelId = modelId;
 		IsVisible = visible;
 		myEnd = new ZLTextFixedPosition(snippet.getEnd());
-		myStyleId = collection.getDefaultHighlightingStyleId();
+		myStyleId = StylePreferences.getDefaultHighlightingStyle(pContext);
 	}
 
 	public long getId() {
@@ -224,7 +230,7 @@ public final class Bookmark extends ZLTextFixedPosition {
 		}
 	}
 
-	void setId(long id) {
+	public void setId(long id) {
 		myId = id;
 	}
 
@@ -237,7 +243,7 @@ public final class Bookmark extends ZLTextFixedPosition {
 
 	Bookmark transferToBook(AbstractBook book) {
 		final long bookId = book.getId();
-		return bookId != -1 ? new Bookmark(bookId, this) : null;
+		return bookId != -1 ? new Bookmark(book, this) : null;
 	}
 
 	// not equals, we do not compare ids
@@ -271,6 +277,7 @@ public final class Bookmark extends ZLTextFixedPosition {
 		dest.writeLong(this.myId);
 		dest.writeString(this.Uid);
 		dest.writeString(this.myVersionUid);
+		dest.writeParcelable(book, flags);
 		dest.writeLong(this.BookId);
 		dest.writeString(this.BookTitle);
 		dest.writeString(this.myText);
@@ -290,6 +297,7 @@ public final class Bookmark extends ZLTextFixedPosition {
 		this.myId = in.readLong();
 		this.Uid = in.readString();
 		this.myVersionUid = in.readString();
+		this.book = in.readParcelable(Book.class.getClassLoader());
 		this.BookId = in.readLong();
 		this.BookTitle = in.readString();
 		this.myText = in.readString();

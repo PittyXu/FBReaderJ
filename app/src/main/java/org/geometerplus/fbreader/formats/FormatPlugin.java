@@ -20,21 +20,18 @@
 package org.geometerplus.fbreader.formats;
 
 import org.geometerplus.fbreader.book.AbstractBook;
+import org.geometerplus.fbreader.book.Book;
 import org.geometerplus.zlibrary.core.drm.FileEncryptionInfo;
-import org.geometerplus.zlibrary.core.encodings.EncodingCollection;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.image.ZLImage;
-import org.geometerplus.zlibrary.core.util.SystemInfo;
 
 import java.util.Collections;
 import java.util.List;
 
 public abstract class FormatPlugin {
-	protected final SystemInfo SystemInfo;
 	private final String myFileType;
 
-	protected FormatPlugin(SystemInfo systemInfo, String fileType) {
-		SystemInfo = systemInfo;
+	protected FormatPlugin(String fileType) {
 		myFileType = fileType;
 	}
 
@@ -46,15 +43,11 @@ public abstract class FormatPlugin {
 		return myFileType;
 	}
 
-	public ZLFile realBookFile(ZLFile file) throws BookReadingException {
-		return file;
-	}
-	public List<FileEncryptionInfo> readEncryptionInfos(AbstractBook book) {
+	public List<FileEncryptionInfo> readEncryptionInfos(Book book) {
 		return Collections.emptyList();
 	}
-	public abstract void readMetainfo(AbstractBook book) throws BookReadingException;
-	public abstract void readUids(AbstractBook book) throws BookReadingException;
-	public abstract void detectLanguageAndEncoding(AbstractBook book) throws BookReadingException;
+	public abstract void readMetainfo(Book book) throws BookReadingException;
+	public abstract void detectLanguageAndEncoding(Book book) throws BookReadingException;
 	public abstract ZLImage readCover(ZLFile file);
 
 	/* lesser is higher: 0 for ePub, 5 for other native, 10 for external */

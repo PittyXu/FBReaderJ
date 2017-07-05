@@ -27,7 +27,6 @@
 #include "../../library/Book.h"
 
 OEBUidReader::OEBUidReader(Book &book) : myBook(book) {
-	myBook.removeAllUids();
 }
 
 void OEBUidReader::characterDataHandler(const char *text, std::size_t len) {
@@ -75,17 +74,8 @@ void OEBUidReader::endElementHandler(const char *tag) {
 			}
 			break;
 		case READ_IDENTIFIER:
-			if (!myBuffer.empty()) {
-				myBook.addUid(myIdentifierScheme, myBuffer);
-			}
 			myReadState = READ_METADATA;
 			break;
 	}
 	myBuffer.erase();
-}
-
-bool OEBUidReader::readUids(const ZLFile &file) {
-	myReadState = READ_NONE;
-	myBuffer.erase();
-	return readDocument(file);
 }

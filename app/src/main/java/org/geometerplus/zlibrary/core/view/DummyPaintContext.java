@@ -24,20 +24,13 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
 
-import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.fonts.FontEntry;
 import org.geometerplus.zlibrary.core.image.ZLImageData;
-import org.geometerplus.zlibrary.core.util.SystemInfo;
 
 import java.util.List;
 
 final class DummyPaintContext extends ZLPaintContext {
 	DummyPaintContext() {
-		super(new SystemInfo() {
-			public String tempDirectory() {
-				return "";
-			}
-		});
 	}
 
 	@Override

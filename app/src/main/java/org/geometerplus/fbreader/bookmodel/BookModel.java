@@ -19,6 +19,8 @@
 
 package org.geometerplus.fbreader.bookmodel;
 
+import android.content.Context;
+
 import org.geometerplus.fbreader.book.Book;
 import org.geometerplus.fbreader.formats.BookReadingException;
 import org.geometerplus.fbreader.formats.BuiltinFormatPlugin;
@@ -36,10 +38,10 @@ import java.util.HashMap;
 import java.util.List;
 
 public final class BookModel {
-	public static BookModel createModel(Book book, FormatPlugin plugin) throws BookReadingException {
+	public static BookModel createModel(Context pContext, Book book, FormatPlugin plugin) throws BookReadingException {
 		if (plugin instanceof BuiltinFormatPlugin) {
 			final BookModel model = new BookModel(book);
-			((BuiltinFormatPlugin)plugin).readModel(model);
+			((BuiltinFormatPlugin)plugin).readModel(pContext, model);
 			return model;
 		}
 

@@ -19,14 +19,11 @@
 
 package org.geometerplus.zlibrary.core.application;
 
-import org.geometerplus.fbreader.util.Boolean3;
-import org.geometerplus.zlibrary.core.util.SystemInfo;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.view.ZLViewWidget;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,15 +36,12 @@ public abstract class ZLApplication {
 
 	public static final String NoAction = "none";
 
-	public final SystemInfo SystemInfo;
-
 	private volatile ZLApplicationWindow myWindow;
 	private volatile ZLView myView;
 
 	private final HashMap<String,ZLAction> myIdToActionMap = new HashMap<String,ZLAction>();
 
-	protected ZLApplication(SystemInfo systemInfo) {
-		SystemInfo = systemInfo;
+	protected ZLApplication() {
 		ourInstance = this;
 	}
 
@@ -75,38 +69,9 @@ public abstract class ZLApplication {
 		setView(myView);
 	}
 
-	protected void setTitle(String title) {
-		if (myWindow != null) {
-			myWindow.setWindowTitle(title);
-		}
-	}
-
 	protected void showErrorMessage(String msg) {
 		if (myWindow != null) {
 			myWindow.showErrorMessage(msg);
-		}
-	}
-
-	public interface SynchronousExecutor {
-		void execute(Runnable action, Runnable uiPostAction);
-		void executeAux(String key, Runnable action);
-	}
-
-	private final SynchronousExecutor myDummyExecutor = new SynchronousExecutor() {
-		public void execute(Runnable action, Runnable uiPostAction) {
-			action.run();
-		}
-
-		public void executeAux(String key, Runnable action) {
-			action.run();
-		}
-	};
-
-	protected SynchronousExecutor createExecutor(String key) {
-		if (myWindow != null) {
-			return myWindow.createExecutor(key);
-		} else {
-			return myDummyExecutor;
 		}
 	}
 
@@ -145,23 +110,9 @@ public abstract class ZLApplication {
 		myIdToActionMap.put(actionId, action);
 	}
 
-	public final void removeAction(String actionId) {
-		myIdToActionMap.remove(actionId);
-	}
-
-	public final boolean isActionVisible(String actionId) {
-		final ZLAction action = myIdToActionMap.get(actionId);
-		return action != null && action.isVisible();
-	}
-
 	public final boolean isActionEnabled(String actionId) {
 		final ZLAction action = myIdToActionMap.get(actionId);
 		return action != null && action.isEnabled();
-	}
-
-	public final Boolean3 isActionChecked(String actionId) {
-		final ZLAction action = myIdToActionMap.get(actionId);
-		return action != null ? action.isChecked() : Boolean3.UNDEFINED;
 	}
 
 	public void runAction(String actionId, Object... params) {
@@ -204,10 +155,6 @@ public abstract class ZLApplication {
 			return isVisible();
 		}
 
-		public Boolean3 isChecked() {
-			return Boolean3.UNDEFINED;
-		}
-
 		public final boolean checkAndRun(Object ... params) {
 			if (isEnabled()) {
 				run(params);
@@ -246,8 +193,8 @@ public abstract class ZLApplication {
 	}
 
 	private volatile Timer myTimer;
-	private final HashMap<Runnable,Long> myTimerTaskPeriods = new HashMap<Runnable,Long>();
-	private final HashMap<Runnable,TimerTask> myTimerTasks = new HashMap<Runnable,TimerTask>();
+	private final HashMap<Runnable, Long> myTimerTaskPeriods = new HashMap<>();
+	private final HashMap<Runnable, TimerTask> myTimerTasks = new HashMap<>();
 	private static class MyTimerTask extends TimerTask {
 		private final Runnable myRunnable;
 
@@ -268,16 +215,6 @@ public abstract class ZLApplication {
 	}
 
 	private final Object myTimerLock = new Object();
-	public final void startTimer() {
-		synchronized (myTimerLock) {
-			if (myTimer == null) {
-				myTimer = new Timer();
-				for (Map.Entry<Runnable,Long> entry : myTimerTaskPeriods.entrySet()) {
-					addTimerTaskInternal(entry.getKey(), entry.getValue());
-				}
-			}
-		}
-	}
 
 	public final void stopTimer() {
 		synchronized (myTimerLock) {

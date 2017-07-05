@@ -17,22 +17,17 @@
  * 02110-1301, USA.
  */
 
-package org.geometerplus.fbreader.book;
+package org.geometerplus.android.fbreader;
 
-import org.geometerplus.zlibrary.core.tree.ZLTree;
+public abstract class FBReaderIntents {
 
-public final class FileInfo extends ZLTree<FileInfo> {
-	public final String Name;
-	public long Id;
-	public long FileSize = -1;
-
-	FileInfo(String name, FileInfo parent) {
-		this(name, parent, -1);
+	public interface Action {
+		String VIEW                             = "android.fbreader.action.VIEW";
+		String LIBRARY                          = "android.fbreader.action.LIBRARY";
 	}
 
-	FileInfo(String name, FileInfo parent, long id) {
-		super(parent);
-		Name = name;
-		Id = id;
+	public interface Key {
+		String BOOK                             = "fbreader.book";
+		String BOOKMARK                         = "fbreader.bookmark";
 	}
 }

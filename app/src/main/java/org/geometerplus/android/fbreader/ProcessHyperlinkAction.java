@@ -24,7 +24,6 @@ import android.content.Intent;
 import org.geometerplus.android.fbreader.config.ImagePreferences;
 import org.geometerplus.android.fbreader.config.MiscPreferences;
 import org.geometerplus.android.fbreader.config.MiscPreferences.FootnoteToastEnum;
-import org.geometerplus.android.fbreader.image.ImageViewActivity;
 import org.geometerplus.fbreader.bookmodel.FBHyperlinkType;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.util.AutoTextSnippet;

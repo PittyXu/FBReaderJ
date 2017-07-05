@@ -21,20 +21,62 @@ package org.geometerplus.fbreader.book;
 
 import android.os.Parcel;
 
+import org.geometerplus.fbreader.formats.BookReadingException;
+import org.geometerplus.fbreader.formats.FormatPlugin;
+import org.geometerplus.zlibrary.core.filesystem.ZLFile;
+
+import java.util.Set;
+import java.util.TreeSet;
+
 public final class Book extends AbstractBook {
+	public final ZLFile File;
 	private final String myPath;
+	private Set<String> myVisitedHyperlinks;
 
 	public Book(long id, String path, String title, String encoding, String language) {
 		super(id, title, encoding, language);
 		if (path == null) {
 			throw new IllegalArgumentException("Creating book with no file");
 		}
+		File = ZLFile.createFileByPath(path);
 		myPath = path;
 	}
 
+	public Book(ZLFile file, FormatPlugin plugin) throws BookReadingException {
+		super(-1, null, null, null);
+		BookUtil.readMetainfo(this, plugin);
+		File = file;
+		myPath = file.getPath();
+	}
+
+	private void initHyperlinkSet(BooksDatabase database) {
+		if (myVisitedHyperlinks == null) {
+			myVisitedHyperlinks = new TreeSet<>();
+			if (myId != -1) {
+				myVisitedHyperlinks.addAll(database.loadVisitedHyperlinks(myId));
+			}
+		}
+	}
+
+	public boolean isHyperlinkVisited(BooksDatabase database, String linkId) {
+		initHyperlinkSet(database);
+		return myVisitedHyperlinks.contains(linkId);
+	}
+
+	public void markHyperlinkAsVisited(BooksDatabase database, String linkId) {
+		initHyperlinkSet(database);
+		if (!myVisitedHyperlinks.contains(linkId)) {
+			myVisitedHyperlinks.add(linkId);
+			if (myId != -1) {
+				database.addVisitedHyperlink(myId, linkId);
+			}
+		}
+	}
+
+
 	@Override
 	public String getPath() {
-		return myPath;
+		return File.getPath();
 	}
 
 	@Override
@@ -62,11 +104,13 @@ public final class Book extends AbstractBook {
 	public void writeToParcel(Parcel dest, int flags) {
 		super.writeToParcel(dest, flags);
 		dest.writeString(this.myPath);
+		dest.writeParcelable(File, flags);
 	}
 
 	protected Book(Parcel in) {
 		super(in);
 		this.myPath = in.readString();
+		this.File = in.readParcelable(ZLFile.class.getClassLoader());
 	}
 
 	public static final Creator<Book> CREATOR = new Creator<Book>() {

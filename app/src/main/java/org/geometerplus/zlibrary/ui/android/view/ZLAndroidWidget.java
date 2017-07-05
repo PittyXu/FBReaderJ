@@ -29,10 +29,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-import org.geometerplus.fbreader.Paths;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.application.ZLKeyBindings;
-import org.geometerplus.zlibrary.core.util.SystemInfo;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.view.ZLViewWidget;
 import org.geometerplus.zlibrary.ui.android.view.animation.AnimationProvider;
@@ -42,33 +40,28 @@ import org.geometerplus.zlibrary.ui.android.view.animation.ShiftAnimationProvide
 import org.geometerplus.zlibrary.ui.android.view.animation.SlideAnimationProvider;
 import org.geometerplus.zlibrary.ui.android.view.animation.SlideOldStyleAnimationProvider;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 public class ZLAndroidWidget extends MainView implements ZLViewWidget, View.OnLongClickListener {
-	public final ExecutorService PrepareService = Executors.newSingleThreadExecutor();
-
 	private final Paint myPaint = new Paint();
 
 	private final BitmapManagerImpl myBitmapManager = new BitmapManagerImpl(this);
 	private Bitmap myFooterBitmap;
-	private final SystemInfo mySystemInfo;
 
 	public ZLAndroidWidget(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		mySystemInfo = Paths.systemInfo(context);
 		init();
 	}
 
 	public ZLAndroidWidget(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		mySystemInfo = Paths.systemInfo(context);
 		init();
 	}
 
 	public ZLAndroidWidget(Context context) {
 		super(context);
-		mySystemInfo = Paths.systemInfo(context);
 		init();
 	}
 
@@ -238,7 +231,6 @@ public class ZLAndroidWidget extends MainView implements ZLViewWidget, View.OnLo
 		}
 
 		final ZLAndroidPaintContext context = new ZLAndroidPaintContext(getContext(),
-			mySystemInfo,
 			new Canvas(bitmap),
 			new ZLAndroidPaintContext.Geometry(
 				getWidth(),
@@ -271,7 +263,6 @@ public class ZLAndroidWidget extends MainView implements ZLViewWidget, View.OnLo
 			myFooterBitmap = Bitmap.createBitmap(getWidth(), footer.getHeight(), Bitmap.Config.RGB_565);
 		}
 		final ZLAndroidPaintContext context = new ZLAndroidPaintContext(getContext(),
-			mySystemInfo,
 			new Canvas(myFooterBitmap),
 			new ZLAndroidPaintContext.Geometry(
 				getWidth(),
@@ -295,27 +286,20 @@ public class ZLAndroidWidget extends MainView implements ZLViewWidget, View.OnLo
 	private void onDrawStatic(final Canvas canvas) {
 		canvas.drawBitmap(myBitmapManager.getBitmap(ZLView.PageIndex.current), 0, 0, myPaint);
 		drawFooter(canvas, null);
-		post(new Runnable() {
-			public void run() {
-				PrepareService.execute(new Runnable() {
-					public void run() {
-						final ZLView view = ZLApplication.Instance().getCurrentView();
-						final ZLAndroidPaintContext context = new ZLAndroidPaintContext(getContext(),
-							mySystemInfo,
-							canvas,
-							new ZLAndroidPaintContext.Geometry(
-								getWidth(),
-								getHeight(),
-								getWidth(),
-								getMainAreaHeight(),
-								0,
-								0
-							),
-							view.isScrollbarShown() ? getVerticalScrollbarWidth() : 0
-						);
-						view.preparePage(context, ZLView.PageIndex.next);
-					}
-				});
+
+		Observable.just(canvas)
+		.observeOn(AndroidSchedulers.mainThread())
+		.subscribe(new Action1<Canvas>() {
+			@Override
+			public void call(final Canvas pCanvas) {
+				final ZLView view = ZLApplication.Instance().getCurrentView();
+				final ZLAndroidPaintContext context = new ZLAndroidPaintContext(getContext(),
+						canvas,
+						new ZLAndroidPaintContext.Geometry(getWidth(), getHeight(), getWidth(),
+								getMainAreaHeight(), 0, 0),
+						view.isScrollbarShown() ? getVerticalScrollbarWidth() : 0
+				);
+				view.preparePage(context, ZLView.PageIndex.next);
 			}
 		});
 	}

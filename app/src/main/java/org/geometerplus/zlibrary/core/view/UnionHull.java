@@ -27,7 +27,7 @@ public class UnionHull implements Hull {
 	private final List<Hull> myComponents;
 
 	public UnionHull(Hull ... components) {
-		myComponents = new ArrayList<Hull>(Arrays.asList(components));
+		myComponents = new ArrayList<>(Arrays.asList(components));
 	}
 
 	public void draw(ZLPaintContext context, int mode) {

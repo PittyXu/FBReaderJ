@@ -28,8 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public final class CachedCharStorage {
-	protected final ArrayList<WeakReference<char[]>> myArray =
-		new ArrayList<WeakReference<char[]>>();
+	protected final ArrayList<WeakReference<char[]>> myArray = new ArrayList<>();
 
 	private final String myDirectoryName;
 	private final String myFileExtension;

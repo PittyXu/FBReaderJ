@@ -21,8 +21,8 @@ package org.geometerplus.android.fbreader;
 
 import android.app.Application;
 import android.text.ClipboardManager;
+import android.widget.Toast;
 
-import org.geometerplus.android.util.UIMessageUtil;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.fbreader.FBView;
 import org.geometerplus.fbreader.util.TextSnippet;
@@ -47,9 +47,7 @@ public class SelectionCopyAction extends FBAndroidAction {
 		final ClipboardManager clipboard =
 			(ClipboardManager)BaseActivity.getApplication().getSystemService(Application.CLIPBOARD_SERVICE);
 		clipboard.setText(text);
-		UIMessageUtil.showMessageText(
-			BaseActivity,
-				BaseActivity.getString(R.string.text_in_buffer, clipboard.getText())
-		);
+
+		Toast.makeText(BaseActivity, BaseActivity.getString(R.string.text_in_buffer, clipboard.getText()), Toast.LENGTH_LONG).show();
 	}
 }

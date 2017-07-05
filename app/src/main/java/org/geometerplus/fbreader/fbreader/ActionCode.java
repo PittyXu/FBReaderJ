@@ -20,9 +20,6 @@
 package org.geometerplus.fbreader.fbreader;
 
 public interface ActionCode {
-	String SHOW_TOC = "toc";
-	String SHOW_BOOKMARKS = "bookmarks";
-
 	String SWITCH_TO_NIGHT_PROFILE = "night";
 	String SWITCH_TO_DAY_PROFILE = "day";
 
@@ -46,7 +43,6 @@ public interface ActionCode {
 	String VOLUME_KEY_SCROLL_BACK = "volumeKeyScrollBackward";
 	String SHOW_MENU = "menu";
 
-	String GO_BACK = "goBack";
 	String EXIT = "exit";
 
 	String INCREASE_FONT = "increaseFont";

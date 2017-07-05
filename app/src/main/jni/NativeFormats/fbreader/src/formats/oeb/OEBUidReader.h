@@ -28,7 +28,6 @@ class OEBUidReader : public OPFReader {
 
 public:
 	OEBUidReader(Book &book);
-	bool readUids(const ZLFile &file);
 
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);

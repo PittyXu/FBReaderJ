@@ -37,10 +37,6 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 
 	protected volatile String myEncoding;
 	protected volatile String myLanguage;
-	protected volatile List<Author> myAuthors;
-	protected volatile List<Label> myLabels;
-//	protected volatile SeriesInfo mySeriesInfo;
-	protected volatile List<UID> myUids;
 	protected volatile RationalNumber myProgress;
 
 	public volatile boolean HasBookmark;
@@ -70,83 +66,11 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 		setTitle(book.getTitle());
 		setEncoding(book.myEncoding);
 		setLanguage(book.myLanguage);
-		if (!ComparisonUtil.equal(myAuthors, book.myAuthors)) {
-			myAuthors = book.myAuthors != null ? new ArrayList<Author>(book.myAuthors) : null;
-			mySaveState = SaveState.NotSaved;
-		}
-		if (!MiscUtil.listsEquals(myLabels, book.myLabels)) {
-			myLabels = book.myLabels != null ? new ArrayList<Label>(book.myLabels) : null;
-			mySaveState = SaveState.NotSaved;
-		}
-		if (!MiscUtil.listsEquals(myUids, book.myUids)) {
-			myUids = book.myUids != null ? new ArrayList<UID>(book.myUids) : null;
-			mySaveState = SaveState.NotSaved;
-		}
 		setProgress(book.myProgress);
 		if (HasBookmark != book.HasBookmark) {
 			HasBookmark = book.HasBookmark;
 			mySaveState = SaveState.NotSaved;
 		}
-	}
-
-	public final List<Author> authors() {
-		return myAuthors != null
-			? Collections.unmodifiableList(myAuthors)
-			: Collections.<Author>emptyList();
-	}
-
-	public final String authorsString(String separator) {
-		final List<Author> authors = myAuthors;
-		if (authors == null || authors.isEmpty()) {
-			return null;
-		}
-
-		final StringBuilder buffer = new StringBuilder();
-		boolean first = true;
-		for (Author a : authors) {
-			if (!first) {
-				buffer.append(separator);
-			}
-			buffer.append(a.DisplayName);
-			first = false;
-		}
-		return buffer.toString();
-	}
-
-	void addAuthorWithNoCheck(Author author) {
-		if (myAuthors == null) {
-			myAuthors = new ArrayList<Author>();
-		}
-		myAuthors.add(author);
-	}
-
-	public void removeAllAuthors() {
-		if (myAuthors != null) {
-			myAuthors = null;
-			mySaveState = SaveState.NotSaved;
-		}
-	}
-
-	public void addAuthor(Author author) {
-		if (author == null) {
-			return;
-		}
-		if (myAuthors == null) {
-			myAuthors = new ArrayList<Author>();
-			myAuthors.add(author);
-			mySaveState = SaveState.NotSaved;
-		} else if (!myAuthors.contains(author)) {
-			myAuthors.add(author);
-			mySaveState = SaveState.NotSaved;
-		}
-	}
-
-	public void addAuthor(String name) {
-		addAuthor(name, null);
-	}
-
-	public void addAuthor(String name, String sortKey) {
-		addAuthor(Author.create(name, sortKey));
 	}
 
 	public long getId() {
@@ -192,75 +116,6 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 		}
 	}
 
-	public boolean hasLabel(String name) {
-		for (Label l : labels()) {
-			if (name.equals(l.Name)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public List<Label> labels() {
-		return myLabels != null ? Collections.unmodifiableList(myLabels) : Collections.<Label>emptyList();
-	}
-
-	void addLabelWithNoCheck(Label label) {
-		if (myLabels == null) {
-			myLabels = new ArrayList<Label>();
-		}
-		myLabels.add(label);
-	}
-
-	public void addNewLabel(String label) {
-		addLabel(new Label(label));
-	}
-
-	public void addLabel(Label label) {
-		if (myLabels == null) {
-			myLabels = new ArrayList<Label>();
-		}
-		if (!myLabels.contains(label)) {
-			myLabels.add(label);
-			mySaveState = SaveState.NotSaved;
-		}
-	}
-
-	public List<UID> uids() {
-		return myUids != null ? Collections.unmodifiableList(myUids) : Collections.<UID>emptyList();
-	}
-
-	public void addUid(String type, String id) {
-		addUid(new UID(type, id));
-	}
-
-	void addUidWithNoCheck(UID uid) {
-		if (uid == null) {
-			return;
-		}
-		if (myUids == null) {
-			myUids = new ArrayList<UID>();
-		}
-		myUids.add(uid);
-	}
-
-	public void addUid(UID uid) {
-		if (uid == null) {
-			return;
-		}
-		if (myUids == null) {
-			myUids = new ArrayList<UID>();
-		}
-		if (!myUids.contains(uid)) {
-			myUids.add(uid);
-			mySaveState = SaveState.NotSaved;
-		}
-	}
-
-	public boolean matchesUid(UID uid) {
-		return myUids.contains(uid);
-	}
-
 	public RationalNumber getProgress() {
 		return myProgress;
 	}
@@ -281,13 +136,6 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 	public boolean matches(String pattern) {
 		if (MiscUtil.matchesIgnoreCase(getTitle(), pattern)) {
 			return true;
-		}
-		if (myAuthors != null) {
-			for (Author author : myAuthors) {
-				if (MiscUtil.matchesIgnoreCase(author.DisplayName, pattern)) {
-					return true;
-				}
-			}
 		}
 
 		String fileName = getPath();
@@ -319,9 +167,6 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 		dest.writeLong(this.myId);
 		dest.writeString(this.myEncoding);
 		dest.writeString(this.myLanguage);
-		dest.writeList(this.myAuthors);
-		dest.writeList(this.myLabels);
-		dest.writeList(this.myUids);
 		dest.writeParcelable(this.myProgress, flags);
 		dest.writeByte(this.HasBookmark ? (byte) 1 : (byte) 0);
 		dest.writeInt(this.mySaveState == null ? -1 : this.mySaveState.ordinal());
@@ -332,12 +177,6 @@ public abstract class AbstractBook extends TitledEntity<AbstractBook> {
 		this.myId = in.readLong();
 		this.myEncoding = in.readString();
 		this.myLanguage = in.readString();
-		this.myAuthors = new ArrayList<Author>();
-		in.readList(this.myAuthors, Author.class.getClassLoader());
-		this.myLabels = new ArrayList<Label>();
-		in.readList(this.myLabels, Label.class.getClassLoader());
-		this.myUids = new ArrayList<UID>();
-		in.readList(this.myUids, UID.class.getClassLoader());
 		this.myProgress = in.readParcelable(RationalNumber.class.getClassLoader());
 		this.HasBookmark = in.readByte() != 0;
 		int tmpMySaveState = in.readInt();

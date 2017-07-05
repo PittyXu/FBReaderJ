@@ -134,11 +134,6 @@ std::vector<shared_ptr<FileEncryptionInfo> > OEBPlugin::readEncryptionInfos(Book
 	return OEBEncryptionReader().readEncryptionInfos(epubFile(opf), opf);
 }
 
-bool OEBPlugin::readUids(Book &book) const {
-	const ZLFile &file = book.file();
-	return OEBUidReader(book).readUids(opfFile(file));
-}
-
 bool OEBPlugin::readModel(BookModel &model) const {
 	const ZLFile &file = model.book()->file();
 	return OEBBookReader(model).readBook(opfFile(file));

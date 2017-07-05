@@ -20,29 +20,30 @@
 package org.geometerplus.android.fbreader;
 
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
-import org.geometerplus.android.fbreader.api.FBReaderIntents;
-import org.geometerplus.android.fbreader.api.FBReaderIntents.Key;
+import com.afollestad.materialdialogs.folderselector.FileChooserDialog;
+import com.afollestad.materialdialogs.folderselector.FileChooserDialog.FileCallback;
+
+import org.geometerplus.android.fbreader.FBReaderIntents.Key;
+import org.geometerplus.android.fbreader.config.ColorProfile;
 import org.geometerplus.android.fbreader.config.MiscPreferences;
-import org.geometerplus.android.util.UIMessageUtil;
 import org.geometerplus.android.util.UIUtil;
-import org.geometerplus.fbreader.Paths;
 import org.geometerplus.fbreader.book.Book;
 import org.geometerplus.fbreader.book.BookUtil;
 import org.geometerplus.fbreader.book.Bookmark;
 import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
-import org.geometerplus.android.fbreader.config.ColorProfile;
 import org.geometerplus.zlibrary.core.application.ZLApplicationWindow;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.view.ZLViewWidget;
@@ -51,22 +52,9 @@ import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.view.AndroidFontUtil;
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
-public final class FBReader extends FBReaderMainActivity implements ZLApplicationWindow {
-	public static final int RESULT_DO_NOTHING = RESULT_FIRST_USER;
-	public static final int RESULT_REPAINT = RESULT_FIRST_USER + 1;
+import java.io.File;
 
-	public static Intent defaultIntent(Context context) {
-		return new Intent(context, FBReader.class)
-			.setAction(FBReaderIntents.Action.VIEW)
-			.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	}
-
-	public static void openBookActivity(Context context, Book book, Bookmark bookmark) {
-		final Intent intent = defaultIntent(context);
-		intent.putExtra(Key.BOOK, book);
-		intent.putExtra(Key.BOOKMARK, bookmark);
-		context.startActivity(intent);
-	}
+public final class FBReader extends FBReaderMainActivity implements ZLApplicationWindow, FileCallback {
 
 	private FBReaderApp myFBReaderApp;
 	private volatile Book myBook;
@@ -75,11 +63,10 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	private ZLAndroidWidget myMainView;
 
 	volatile boolean IsPaused = false;
-	volatile Runnable OnResumeAction = null;
 
 	private Intent myOpenBookIntent = null;
 
-	private synchronized void openBook(Intent intent, final Runnable action, boolean force) {
+	private synchronized void openBook(Intent intent, boolean force) {
 		if (!force && myBook != null) {
 			return;
 		}
@@ -98,11 +85,11 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 				if (file.getPhysicalFile() != null) {
 					file = file.getPhysicalFile();
 				}
-				UIMessageUtil.showErrorMessage(this, "文件未找到: " + file.getPath());
+				showErrorMessage("文件未找到: " + file.getPath());
 				myBook = null;
 			}
 		}
-		myFBReaderApp.openBook(myBook, bookmark, action);
+		myFBReaderApp.openBook(myBook, bookmark);
 		AndroidFontUtil.clearFontCache();
 	}
 
@@ -113,14 +100,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		Book book = myFBReaderApp.Collection.getBookByFile(file.getPath());
 		if (book != null) {
 			return book;
-		}
-		if (file.isArchive()) {
-			for (ZLFile child : file.children()) {
-				book = myFBReaderApp.Collection.getBookByFile(child.getPath());
-				if (book != null) {
-					return book;
-				}
-			}
 		}
 		return null;
 	}
@@ -136,7 +115,7 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 
 		myFBReaderApp = (FBReaderApp)FBReaderApp.Instance();
 		if (myFBReaderApp == null) {
-			myFBReaderApp = new FBReaderApp(this, Paths.systemInfo(this), new BookCollectionShadow(this));
+			myFBReaderApp = new FBReaderApp(this);
 		}
 		myBook = null;
 
@@ -149,9 +128,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		if (myFBReaderApp.getPopupById(SelectionPopup.ID) == null) {
 			new SelectionPopup(myFBReaderApp);
 		}
-
-		myFBReaderApp.addAction(ActionCode.SHOW_TOC, new ShowTOCAction(this, myFBReaderApp));
-		myFBReaderApp.addAction(ActionCode.SHOW_BOOKMARKS, new ShowBookmarksAction(this, myFBReaderApp));
 
 		myFBReaderApp.addAction(ActionCode.SHOW_MENU, new ShowMenuAction(this, myFBReaderApp));
 		myFBReaderApp.addAction(ActionCode.SEARCH, new SearchAction(this, myFBReaderApp));
@@ -196,12 +172,8 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 							}
 						});
 					} else {
-						runOnUiThread(new Runnable() {
-							public void run() {
-								UIMessageUtil.showErrorMessage(FBReader.this, getString(R.string.text_not_found));
-								popup.StartPosition = null;
-							}
-						});
+						showErrorMessage(getString(R.string.text_not_found));
+						popup.StartPosition = null;
 					}
 				}
 			};
@@ -225,22 +197,16 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 
 		final BookModel model = myFBReaderApp.Model;
 		if (model != null && model.Book != null) {
-			onPreferencesUpdate(myFBReaderApp.Collection.getBookById(model.Book.getId()));
+			onPreferencesUpdate(model.Book);
 		}
 
 		IsPaused = false;
-		if (OnResumeAction != null) {
-			final Runnable action = OnResumeAction;
-			OnResumeAction = null;
-			action.run();
-		}
-
 		if (myOpenBookIntent != null) {
 			final Intent intent = myOpenBookIntent;
 			myOpenBookIntent = null;
-			openBook(intent, null, true);
+			openBook(intent, true);
 		} else if (myFBReaderApp.Model == null && myFBReaderApp.ExternalBook != null) {
-			myFBReaderApp.openBook(myFBReaderApp.ExternalBook, null, null);
+			myFBReaderApp.openBook(myFBReaderApp.ExternalBook, null);
 		}
 
 		PopupPanel.restoreVisibilities(myFBReaderApp);
@@ -295,7 +261,7 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 
 	public void hideSelectionPanel() {
 		final FBReaderApp.PopupPanel popup = myFBReaderApp.getActivePopup();
-		if (popup != null && popup.getId() == SelectionPopup.ID) {
+		if (popup != null && SelectionPopup.ID.equals(popup.getId())) {
 			myFBReaderApp.hideActivePopup();
 		}
 	}
@@ -310,14 +276,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		switch (requestCode) {
 			default:
 				super.onActivityResult(requestCode, resultCode, data);
-				break;
-			case REQUEST_PREFERENCES:
-				if (resultCode != RESULT_DO_NOTHING && data != null) {
-					final Book book = data.getParcelableExtra(Key.BOOK);
-					if (book != null) {
-            onPreferencesUpdate(book);
-					}
-				}
 				break;
 		}
 	}
@@ -334,12 +292,11 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		String actionId;
 		switch (item.getItemId()) {
-			case R.id.action_toc:
-				actionId = ActionCode.SHOW_TOC;
-				break;
-			case R.id.action_bookmarks:
-				actionId = ActionCode.SHOW_BOOKMARKS;
-				break;
+			case R.id.action_file:
+				FileChooserDialog.Builder builder = new FileChooserDialog.Builder(this);
+				builder.mimeType("application/epub+zip")
+						.show();
+				return true;
 			case R.id.action_search:
 				actionId = ActionCode.SEARCH;
 				break;
@@ -368,18 +325,9 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		return (myMainView != null && myMainView.onKeyUp(keyCode, event)) || super.onKeyUp(keyCode, event);
 	}
 
-	private BookCollectionShadow getCollection() {
-		return (BookCollectionShadow)myFBReaderApp.Collection;
-	}
-
 	@Override
 	public void showErrorMessage(String msg) {
-		UIMessageUtil.showErrorMessage(this, msg);
-	}
-
-	@Override
-	public FBReaderApp.SynchronousExecutor createExecutor(String key) {
-		return UIUtil.createExecutor(this, key);
+		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
 	}
 
 	@Override
@@ -398,11 +346,24 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	}
 
 	@Override
-	public void setWindowTitle(final String title) {
-		runOnUiThread(new Runnable() {
-			public void run() {
-				setTitle(title);
+	public void onFileSelection(@NonNull final FileChooserDialog pFileChooserDialog,
+			@NonNull final File pFile) {
+		myBook = createBookForFile(ZLFile.createFileByPath(pFile.getAbsolutePath()));
+		if (myBook != null) {
+			ZLFile file = BookUtil.fileByBook(myBook);
+			if (!file.exists()) {
+				if (file.getPhysicalFile() != null) {
+					file = file.getPhysicalFile();
+				}
+				showErrorMessage("文件未找到: " + file.getPath());
+				myBook = null;
 			}
-		});
+		}
+		myFBReaderApp.openBook(myBook, null);
+		AndroidFontUtil.clearFontCache();
+	}
+
+	@Override
+	public void onFileChooserDismissed(@NonNull final FileChooserDialog pFileChooserDialog) {
 	}
 }

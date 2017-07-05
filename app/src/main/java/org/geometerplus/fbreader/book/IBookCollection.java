@@ -38,38 +38,13 @@ public interface IBookCollection<B extends AbstractBook> {
 		}
 	}
 
-	interface Listener<B> {
-		void onBookEvent(BookEvent event, B book);
-		void onBuildEvent(Status status);
+	interface Listener {
+		void onBookEvent(BookEvent event, AbstractBook book);
 	}
 
-	void addListener(Listener<B> listener);
-	void removeListener(Listener<B> listener);
-
-	Status status();
-
-	boolean hasBooks(Filter filter);
-
-	List<B> recentlyOpenedBooks(int count);
-	List<B> recentlyAddedBooks(int count);
-	B getRecentBook(int index);
-	void addToRecentlyOpened(B book);
-	void removeFromRecentlyOpened(B book);
+	void addListener(Listener listener);
 
 	B getBookByFile(String path);
-	B getBookById(long id);
-	B getBookByUid(UID uid);
-	B getBookByHash(String hash);
-
-	List<String> labels();
-
-	boolean saveBook(B book);
-	boolean canRemoveBook(B book, boolean deleteFromDisk);
-	void removeBook(B book, boolean deleteFromDisk);
-
-	String getHash(B book, boolean force);
-	void setHash(B book, String hash);
-	boolean sameBook(B book0, B book1);
 
 	ZLTextFixedPosition.WithTimestamp getStoredPosition(long bookId);
 	void storePosition(long bookId, ZLTextPosition position);
@@ -80,23 +55,8 @@ public interface IBookCollection<B extends AbstractBook> {
 	List<Bookmark> bookmarks(BookmarkQuery query);
 	void saveBookmark(Bookmark bookmark);
 	void deleteBookmark(Bookmark bookmark);
-	List<String> deletedBookmarkUids();
-	void purgeBookmarks(List<String> uids);
 
 	HighlightingStyle getHighlightingStyle(int styleId);
 	List<HighlightingStyle> highlightingStyles();
 	void saveHighlightingStyle(HighlightingStyle style);
-	int getDefaultHighlightingStyleId();
-	void setDefaultHighlightingStyleId(int styleId);
-
-	class FormatDescriptor {
-		public String Id;
-		public String Name;
-		public boolean IsActive;
-	}
-	List<FormatDescriptor> formats();
-	// returns true iff active format set is changed
-	boolean setActiveFormats(List<String> formatIds);
-
-	void rescan(String path);
 }

@@ -19,13 +19,17 @@
 
 package org.geometerplus.zlibrary.text.view;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import org.geometerplus.zlibrary.core.fonts.FontEntry;
 import org.geometerplus.zlibrary.text.model.ZLTextMetrics;
 
 import java.util.List;
 
 public abstract class ZLTextStyle {
+	@JSONField(serialize = false, deserialize = false)
 	public final ZLTextStyle Parent;
+	@JSONField(serialize = false, deserialize = false)
 	public final ZLTextHyperlink Hyperlink;
 
 	protected ZLTextStyle(ZLTextStyle parent, ZLTextHyperlink hyperlink) {

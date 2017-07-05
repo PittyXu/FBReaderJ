@@ -19,14 +19,13 @@
 
 package org.geometerplus.android.fbreader;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
-public abstract class FBReaderMainActivity extends Activity {
-	public static final int REQUEST_PREFERENCES = 1;
+public abstract class FBReaderMainActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle saved) {

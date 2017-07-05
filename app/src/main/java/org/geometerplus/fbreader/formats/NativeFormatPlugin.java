@@ -19,7 +19,10 @@
 
 package org.geometerplus.fbreader.formats;
 
+import android.content.Context;
+
 import org.geometerplus.fbreader.book.AbstractBook;
+import org.geometerplus.fbreader.book.Book;
 import org.geometerplus.fbreader.book.BookUtil;
 import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.formats.oeb.OEBNativePlugin;
@@ -27,7 +30,6 @@ import org.geometerplus.zlibrary.core.drm.FileEncryptionInfo;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.image.ZLFileImage;
 import org.geometerplus.zlibrary.core.image.ZLFileImageProxy;
-import org.geometerplus.zlibrary.core.util.SystemInfo;
 import org.geometerplus.zlibrary.text.model.CachedCharStorageException;
 
 import java.util.Arrays;
@@ -37,20 +39,20 @@ import java.util.List;
 public class NativeFormatPlugin extends BuiltinFormatPlugin {
 	private static final Object ourNativeLock = new Object();
 
-	public static NativeFormatPlugin create(SystemInfo systemInfo, String fileType) {
+	public static NativeFormatPlugin create(String fileType) {
 		if ("ePub".equals(fileType)) {
-			return new OEBNativePlugin(systemInfo);
+			return new OEBNativePlugin();
 		} else {
-			return new NativeFormatPlugin(systemInfo, fileType);
+			return new NativeFormatPlugin(fileType);
 		}
 	}
 
-	protected NativeFormatPlugin(SystemInfo systemInfo, String fileType) {
-		super(systemInfo, fileType);
+	protected NativeFormatPlugin(String fileType) {
+		super(fileType);
 	}
 
 	@Override
-	synchronized public void readMetainfo(AbstractBook book) throws BookReadingException {
+	synchronized public void readMetainfo(Book book) throws BookReadingException {
 		final int code;
 		synchronized (ourNativeLock) {
 			code = readMetainfoNative(book);
@@ -65,7 +67,7 @@ public class NativeFormatPlugin extends BuiltinFormatPlugin {
 	private native int readMetainfoNative(AbstractBook book);
 
 	@Override
-	public List<FileEncryptionInfo> readEncryptionInfos(AbstractBook book) {
+	public List<FileEncryptionInfo> readEncryptionInfos(Book book) {
 		final FileEncryptionInfo[] infos;
 		synchronized (ourNativeLock) {
 			infos = readEncryptionInfosNative(book);
@@ -78,19 +80,7 @@ public class NativeFormatPlugin extends BuiltinFormatPlugin {
 	private native FileEncryptionInfo[] readEncryptionInfosNative(AbstractBook book);
 
 	@Override
-	synchronized public void readUids(AbstractBook book) throws BookReadingException {
-		synchronized (ourNativeLock) {
-			readUidsNative(book);
-		}
-		if (book.uids().isEmpty()) {
-			book.addUid(BookUtil.createUid(book, "SHA-256"));
-		}
-	}
-
-	private native boolean readUidsNative(AbstractBook book);
-
-	@Override
-	public void detectLanguageAndEncoding(AbstractBook book) {
+	public void detectLanguageAndEncoding(Book book) {
 		synchronized (ourNativeLock) {
 			detectLanguageAndEncodingNative(book);
 		}
@@ -99,9 +89,9 @@ public class NativeFormatPlugin extends BuiltinFormatPlugin {
 	private native void detectLanguageAndEncodingNative(AbstractBook book);
 
 	@Override
-	synchronized public void readModel(BookModel model) throws BookReadingException {
+	synchronized public void readModel(Context pContext, BookModel model) throws BookReadingException {
 		final int code;
-		final String tempDirectory = SystemInfo.tempDirectory();
+		final String tempDirectory = pContext.getExternalCacheDir().getAbsolutePath();
 		synchronized (ourNativeLock) {
 			code = readModelNative(model, tempDirectory);
 		}

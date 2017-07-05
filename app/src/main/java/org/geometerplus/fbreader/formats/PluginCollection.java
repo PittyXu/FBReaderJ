@@ -22,11 +22,7 @@ package org.geometerplus.fbreader.formats;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.filetypes.FileType;
 import org.geometerplus.zlibrary.core.filetypes.FileTypeCollection;
-import org.geometerplus.zlibrary.core.util.SystemInfo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,29 +36,23 @@ public class PluginCollection implements IFormatPluginCollection {
 	private final List<BuiltinFormatPlugin> myBuiltinPlugins =
 			new LinkedList<>();
 
-	public static PluginCollection Instance(SystemInfo systemInfo) {
+	public static PluginCollection Instance() {
 		if (ourInstance == null) {
-			createInstance(systemInfo);
+			createInstance();
 		}
 		return ourInstance;
 	}
 
-	private static synchronized void createInstance(SystemInfo systemInfo) {
+	private static synchronized void createInstance() {
 		if (ourInstance == null) {
 			ourInstance = new PluginCollection();
 
 			// This code cannot be moved to constructor
 			// because nativePlugins() is a native method
-			for (NativeFormatPlugin p : ourInstance.nativePlugins(systemInfo)) {
+			for (NativeFormatPlugin p : ourInstance.nativePlugins()) {
 				ourInstance.myBuiltinPlugins.add(p);
 				System.err.println("native plugin: " + p);
 			}
-		}
-	}
-
-	public static void deleteInstance() {
-		if (ourInstance != null) {
-			ourInstance = null;
 		}
 	}
 
@@ -87,22 +77,7 @@ public class PluginCollection implements IFormatPluginCollection {
 		return null;
 	}
 
-	public List<FormatPlugin> plugins() {
-		final ArrayList<FormatPlugin> all = new ArrayList<FormatPlugin>();
-		all.addAll(myBuiltinPlugins);
-		Collections.sort(all, new Comparator<FormatPlugin>() {
-			public int compare(FormatPlugin p0, FormatPlugin p1) {
-				final int diff = p0.priority() - p1.priority();
-				if (diff != 0) {
-					return diff;
-				}
-				return p0.supportedFileType().compareTo(p1.supportedFileType());
-			}
-		});
-		return all;
-	}
-
-	private native NativeFormatPlugin[] nativePlugins(SystemInfo systemInfo);
+	private native NativeFormatPlugin[] nativePlugins();
 	private native void free();
 
 	protected void finalize() throws Throwable {

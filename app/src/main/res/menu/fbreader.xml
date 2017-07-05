@@ -3,15 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
   <item
-      android:id="@+id/action_toc"
+      android:id="@+id/action_file"
       android:icon="@drawable/ic_menu_toc"
-      android:title="本书目录"
-      app:showAsAction="ifRoom" />
-
-  <item
-      android:id="@+id/action_bookmarks"
-      android:icon="@drawable/ic_menu_bookmarks"
-      android:title="我的书签"
+      android:title="打开书籍"
       app:showAsAction="ifRoom" />
 
   <item

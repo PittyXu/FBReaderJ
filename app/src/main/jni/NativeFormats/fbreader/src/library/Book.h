@@ -64,22 +64,11 @@ public: // unmodifiable book methods
 	const std::string &encoding() const;
 
 	const AuthorList &authors() const;
-	const UIDList &uids() const;
 
 public: // modifiable book methods
 	void setTitle(const std::string &title);
 	void setLanguage(const std::string &language);
 	void setEncoding(const std::string &encoding);
-
-public:
-	void addAuthor(shared_ptr<Author> author);
-	void addAuthor(const std::string &displayName, const std::string &sortKey = std::string());
-	bool replaceAuthor(shared_ptr<Author> from, shared_ptr<Author> to);
-	void removeAllAuthors();
-
-	void addUid(shared_ptr<UID> uid);
-	void addUid(const std::string &type, const std::string &id);
-	void removeAllUids();
 
 public:
 	int bookId() const;
@@ -92,8 +81,6 @@ private:
 	std::string myTitle;
 	std::string myLanguage;
 	std::string myEncoding;
-	AuthorList myAuthors;
-	UIDList myUIDs;
 
 private: // disable copying
 	Book(const Book &);
@@ -122,9 +109,6 @@ inline const std::string &Book::title() const { return myTitle; }
 inline const ZLFile &Book::file() const { return myFile; }
 inline const std::string &Book::language() const { return myLanguage; }
 inline const std::string &Book::encoding() const { return myEncoding; }
-
-inline const AuthorList &Book::authors() const { return myAuthors; }
-inline const UIDList &Book::uids() const { return myUIDs; }
 
 inline int Book::bookId() const { return myBookId; }
 inline void Book::setBookId(int bookId) { myBookId = bookId; }
