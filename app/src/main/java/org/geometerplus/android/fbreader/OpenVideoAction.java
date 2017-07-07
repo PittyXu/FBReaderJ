@@ -24,8 +24,8 @@ import org.geometerplus.zlibrary.core.util.MimeType;
 import org.geometerplus.zlibrary.text.view.ZLTextVideoElement;
 import org.geometerplus.zlibrary.text.view.ZLTextVideoRegionSoul;
 
-class OpenVideoAction extends FBAndroidAction {
-	OpenVideoAction(FBReader baseActivity, FBReaderApp fbreader) {
+public class OpenVideoAction extends FBAndroidAction {
+	public OpenVideoAction(FBReader baseActivity, FBReaderApp fbreader) {
 		super(baseActivity, fbreader);
 	}
 

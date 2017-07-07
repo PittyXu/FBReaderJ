@@ -158,37 +158,9 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 			myFBReaderApp.runAction(data.getEncodedSchemeSpecificPart(), data.getFragment());
 		} else if (Intent.ACTION_VIEW.equals(action) || FBReaderIntents.Action.VIEW.equals(action)) {
 			myOpenBookIntent = intent;
-		} else if (Intent.ACTION_SEARCH.equals(action)) {
-			final String pattern = intent.getStringExtra(SearchManager.QUERY);
-			final Runnable runnable = new Runnable() {
-				public void run() {
-					final TextSearchPopup popup = (TextSearchPopup)myFBReaderApp.getPopupById(TextSearchPopup.ID);
-					popup.initPosition();
-					MiscPreferences.setTextSearchPattern(FBReader.this, pattern);
-					if (myFBReaderApp.getTextView().search(pattern, true, false, false, false) != 0) {
-						runOnUiThread(new Runnable() {
-							public void run() {
-								myFBReaderApp.showPopup(popup.getId());
-							}
-						});
-					} else {
-						showErrorMessage(getString(R.string.text_not_found));
-						popup.StartPosition = null;
-					}
-				}
-			};
-			UIUtil.wait(getString(R.string.search), runnable, this);
 		} else {
 			super.onNewIntent(intent);
 		}
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-
-		((PopupPanel)myFBReaderApp.getPopupById(TextSearchPopup.ID)).setPanelInfo(this, myRootView);
-		((PopupPanel)myFBReaderApp.getPopupById(SelectionPopup.ID)).setPanelInfo(this, myRootView);
 	}
 
 	@Override
@@ -208,25 +180,16 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		} else if (myFBReaderApp.Model == null && myFBReaderApp.ExternalBook != null) {
 			myFBReaderApp.openBook(myFBReaderApp.ExternalBook, null);
 		}
-
-		PopupPanel.restoreVisibilities(myFBReaderApp);
 	}
 
 	@Override
 	protected void onPause() {
+		super.onPause();
 
 		IsPaused = true;
 
 		myFBReaderApp.stopTimer();
 		myFBReaderApp.onWindowClosing();
-
-		super.onPause();
-	}
-
-	@Override
-	protected void onStop() {
-		PopupPanel.removeAllWindows(myFBReaderApp, this);
-		super.onStop();
 	}
 
 	@Override
@@ -235,49 +198,16 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		super.onLowMemory();
 	}
 
-	@Override
-	public boolean onSearchRequested() {
-		final FBReaderApp.PopupPanel popup = myFBReaderApp.getActivePopup();
-		myFBReaderApp.hideActivePopup();
-		final SearchManager manager = (SearchManager)getSystemService(SEARCH_SERVICE);
-		manager.setOnCancelListener(new SearchManager.OnCancelListener() {
-			public void onCancel() {
-				if (popup != null) {
-					myFBReaderApp.showPopup(popup.getId());
-				}
-				manager.setOnCancelListener(null);
-			}
-		});
-		startSearch(MiscPreferences.getTextSearchPattern(this), true, null, false);
-		return true;
-	}
-
 	public void showSelectionPanel() {
 		final ZLTextView view = myFBReaderApp.getTextView();
-		((SelectionPopup)myFBReaderApp.getPopupById(SelectionPopup.ID))
-			.move(view.getSelectionStartY(), view.getSelectionEndY());
-		myFBReaderApp.showPopup(SelectionPopup.ID);
 	}
 
 	public void hideSelectionPanel() {
-		final FBReaderApp.PopupPanel popup = myFBReaderApp.getActivePopup();
-		if (popup != null && SelectionPopup.ID.equals(popup.getId())) {
-			myFBReaderApp.hideActivePopup();
-		}
 	}
 
 	private void onPreferencesUpdate(Book book) {
 		AndroidFontUtil.clearFontCache();
 		myFBReaderApp.onBookUpdated(book);
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (requestCode) {
-			default:
-				super.onActivityResult(requestCode, resultCode, data);
-				break;
-		}
 	}
 
 	@Override
@@ -297,9 +227,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 				builder.mimeType("application/epub+zip")
 						.show();
 				return true;
-			case R.id.action_search:
-				actionId = ActionCode.SEARCH;
-				break;
 			case R.id.action_increase_font:
 				actionId = ActionCode.INCREASE_FONT;
 				break;
@@ -307,7 +234,7 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 				actionId = ActionCode.DECREASE_FONT;
 				break;
 			default:
-				actionId = ActionCode.SEARCH;
+				actionId = ActionCode.DECREASE_FONT;
 				break;
 		}
 		myFBReaderApp.runAction(actionId);
@@ -338,11 +265,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	@Override
 	public ZLViewWidget getViewWidget() {
 		return myMainView;
-	}
-
-	@Override
-	public void processException(Exception exception) {
-		exception.printStackTrace();
 	}
 
 	@Override

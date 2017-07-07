@@ -20,8 +20,19 @@
 package org.geometerplus.fbreader.fbreader;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import org.geometerplus.android.fbreader.BookCollectionShadow;
+import org.geometerplus.android.fbreader.FBReader;
+import org.geometerplus.android.fbreader.OpenVideoAction;
+import org.geometerplus.android.fbreader.ProcessHyperlinkAction;
+import org.geometerplus.android.fbreader.SelectionBookmarkAction;
+import org.geometerplus.android.fbreader.SelectionCopyAction;
+import org.geometerplus.android.fbreader.SelectionHidePanelAction;
+import org.geometerplus.android.fbreader.SelectionShowPanelAction;
+import org.geometerplus.android.fbreader.ShowMenuAction;
+import org.geometerplus.android.fbreader.SwitchProfileAction;
+import org.geometerplus.android.fbreader.config.ColorProfile;
 import org.geometerplus.fbreader.book.Book;
 import org.geometerplus.fbreader.book.BookUtil;
 import org.geometerplus.fbreader.book.Bookmark;
@@ -49,6 +60,7 @@ import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.text.view.ZLTextView.PagePosition;
 import org.geometerplus.zlibrary.text.view.ZLTextWordCursor;
 import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
+import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -94,8 +106,6 @@ public final class FBReaderApp extends ZLApplication {
 
 		addAction(ActionCode.VOLUME_KEY_SCROLL_FORWARD, new VolumeKeyTurnPageAction(this, true));
 		addAction(ActionCode.VOLUME_KEY_SCROLL_BACK, new VolumeKeyTurnPageAction(this, false));
-
-		addAction(ActionCode.EXIT, new ExitAction(this));
 
 		BookTextView = new FBView(this);
 		FootnoteView = new FBView(this);
@@ -257,7 +267,7 @@ public final class FBReaderApp extends ZLApplication {
 		try {
 			plugin = BookUtil.getPlugin(pluginCollection, book);
 		} catch (BookReadingException e) {
-			processException(e);
+			e.printStackTrace();
 			return;
 		}
 
@@ -273,7 +283,7 @@ public final class FBReaderApp extends ZLApplication {
 				gotoBookmark(bookmark, false);
 			}
 		} catch (BookReadingException e) {
-			processException(e);
+			e.printStackTrace();
 		}
 
 		getViewWidget().reset();
@@ -281,7 +291,7 @@ public final class FBReaderApp extends ZLApplication {
 
 		for (FileEncryptionInfo info : plugin.readEncryptionInfos(book)) {
 			if (info != null && !EncryptionMethod.isSupported(info.Method)) {
-				showErrorMessage("FBReader不支持文件 "+ book.getPath() +" 加密方法. 某些页面不可读");
+				Toast.makeText(mContext, "FBReader不支持文件 "+ book.getPath() +" 加密方法. 某些页面不可读", Toast.LENGTH_LONG).show();
 				break;
 			}
 		}

@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.application.ZLKeyBindings;
 import org.geometerplus.zlibrary.core.view.ZLView;
@@ -302,16 +303,6 @@ public class ZLAndroidWidget extends MainView implements ZLViewWidget, View.OnLo
 				view.preparePage(context, ZLView.PageIndex.next);
 			}
 		});
-	}
-
-	@Override
-	public boolean onTrackballEvent(MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			onKeyDown(KeyEvent.KEYCODE_DPAD_CENTER, null);
-		} else {
-			ZLApplication.Instance().getCurrentView().onTrackballRotated((int)(10 * event.getX()), (int)(10 * event.getY()));
-		}
-		return true;
 	}
 
 	private class LongClickRunnable implements Runnable {

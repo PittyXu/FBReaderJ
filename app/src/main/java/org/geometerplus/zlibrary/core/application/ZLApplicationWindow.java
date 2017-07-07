@@ -23,7 +23,6 @@ import org.geometerplus.zlibrary.core.view.ZLViewWidget;
 
 public interface ZLApplicationWindow {
 	void showErrorMessage(String msg);
-	void processException(Exception e);
 
 	ZLViewWidget getViewWidget();
 

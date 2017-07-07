@@ -33,9 +33,9 @@ import org.geometerplus.zlibrary.text.view.ZLTextImageRegionSoul;
 import org.geometerplus.zlibrary.text.view.ZLTextRegion;
 import org.geometerplus.zlibrary.text.view.ZLTextWordRegionSoul;
 
-class ProcessHyperlinkAction extends FBAndroidAction {
+public class ProcessHyperlinkAction extends FBAndroidAction {
 
-  ProcessHyperlinkAction(FBReader baseActivity, FBReaderApp fbreader) {
+  public ProcessHyperlinkAction(FBReader baseActivity, FBReaderApp fbreader) {
     super(baseActivity, fbreader);
   }
 

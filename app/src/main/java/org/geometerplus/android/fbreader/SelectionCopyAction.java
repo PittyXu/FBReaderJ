@@ -29,7 +29,7 @@ import org.geometerplus.fbreader.util.TextSnippet;
 import org.geometerplus.zlibrary.ui.android.R;
 
 public class SelectionCopyAction extends FBAndroidAction {
-	SelectionCopyAction(FBReader baseActivity, FBReaderApp fbreader) {
+	public SelectionCopyAction(FBReader baseActivity, FBReaderApp fbreader) {
 		super(baseActivity, fbreader);
 	}
 

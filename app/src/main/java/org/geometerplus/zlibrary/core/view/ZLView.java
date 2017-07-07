@@ -76,10 +76,6 @@ abstract public class ZLView implements ZLViewEnums {
 		return false;
 	}
 
-	public boolean onTrackballRotated(int diffX, int diffY) {
-		return false;
-	}
-
 	public abstract boolean isScrollbarShown();
 	public abstract int getScrollbarFullSize();
 	public abstract int getScrollbarThumbPosition(PageIndex pageIndex);

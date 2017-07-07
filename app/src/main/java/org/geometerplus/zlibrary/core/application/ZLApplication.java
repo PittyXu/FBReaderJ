@@ -21,6 +21,7 @@ package org.geometerplus.zlibrary.core.application;
 
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.view.ZLViewWidget;
+import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -39,7 +40,7 @@ public abstract class ZLApplication {
 	private volatile ZLApplicationWindow myWindow;
 	private volatile ZLView myView;
 
-	private final HashMap<String,ZLAction> myIdToActionMap = new HashMap<String,ZLAction>();
+	private final HashMap<String,ZLAction> myIdToActionMap = new HashMap<>();
 
 	protected ZLApplication() {
 		ourInstance = this;
@@ -72,12 +73,6 @@ public abstract class ZLApplication {
 	protected void showErrorMessage(String msg) {
 		if (myWindow != null) {
 			myWindow.showErrorMessage(msg);
-		}
-	}
-
-	protected void processException(Exception e) {
-		if (myWindow != null) {
-			myWindow.processException(e);
 		}
 	}
 

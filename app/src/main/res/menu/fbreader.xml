@@ -9,12 +9,6 @@
       app:showAsAction="ifRoom" />
 
   <item
-      android:id="@+id/action_search"
-      android:icon="@drawable/ic_menu_search"
-      android:title="内容查找"
-      app:showAsAction="ifRoom" />
-
-  <item
       android:id="@+id/action_increase_font"
       android:title="字体加大"
       app:showAsAction="ifRoom" />

@@ -23,7 +23,7 @@ import org.geometerplus.fbreader.book.Bookmark;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 
 public class SelectionBookmarkAction extends FBAndroidAction {
-	SelectionBookmarkAction(FBReader baseApplication, FBReaderApp fbreader) {
+	public SelectionBookmarkAction(FBReader baseApplication, FBReaderApp fbreader) {
 		super(baseApplication, fbreader);
 	}
 

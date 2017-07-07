@@ -16,8 +16,6 @@ public class MiscPreferences {
     never, footnotesOnly, footnotesAndSuperscripts, allInternalLinks
   }
 
-  private static final String TEXT_SEARCH_PATTERN = "misc_text_search_pattern";
-  private static final String BOOKMARK_SEARCH_PATTERN = "misc_bookmark_search_pattern";
   private static final String BOOKMARK_CURRENT_TAB = "misc_bookmark_current_tab";
   private static final String ENABLE_DOUBLE_TAP = "misc_enable_double_tap";
   private static final String NAVIGATE_ALL_WORDS = "misc_navigate_all_words";
@@ -29,22 +27,6 @@ public class MiscPreferences {
   private static final String TAP_ZONE_MAP_LIST = "misc_tap_zone_map_list";
   private static final String KEYS = "misc_keys_";
   private static final String KEY_LIST = "misc_key_list_";
-
-  public static void setTextSearchPattern(Context pContext, String pattern) {
-    DefaultPreferences.getInstance(pContext).setString(TEXT_SEARCH_PATTERN, pattern);
-  }
-
-  public static String getTextSearchPattern(Context pContext) {
-    return DefaultPreferences.getInstance(pContext).getString(TEXT_SEARCH_PATTERN, "");
-  }
-
-  public static void setBookmarkSearchPattern(Context pContext, String pattern) {
-    DefaultPreferences.getInstance(pContext).setString(BOOKMARK_SEARCH_PATTERN, pattern);
-  }
-
-  public static String getBookmarkSearchPattern(Context pContext) {
-    return DefaultPreferences.getInstance(pContext).getString(BOOKMARK_SEARCH_PATTERN, "");
-  }
 
   public static void setBookmarkCurrentTab(Context pContext, String tab) {
     DefaultPreferences.getInstance(pContext).setString(BOOKMARK_CURRENT_TAB, tab);
