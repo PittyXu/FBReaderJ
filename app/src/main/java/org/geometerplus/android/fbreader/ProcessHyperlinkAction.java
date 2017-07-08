@@ -20,6 +20,10 @@
 package org.geometerplus.android.fbreader;
 
 import android.content.Intent;
+import android.support.design.widget.BaseTransientBottomBar.BaseCallback;
+import android.support.design.widget.Snackbar;
+import android.view.View;
+import android.view.View.OnClickListener;
 
 import org.geometerplus.android.fbreader.config.ImagePreferences;
 import org.geometerplus.android.fbreader.config.MiscPreferences;
@@ -32,6 +36,8 @@ import org.geometerplus.zlibrary.text.view.ZLTextHyperlinkRegionSoul;
 import org.geometerplus.zlibrary.text.view.ZLTextImageRegionSoul;
 import org.geometerplus.zlibrary.text.view.ZLTextRegion;
 import org.geometerplus.zlibrary.text.view.ZLTextWordRegionSoul;
+import org.geometerplus.zlibrary.ui.android.R;
+import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
 public class ProcessHyperlinkAction extends FBAndroidAction {
 
@@ -67,20 +73,49 @@ public class ProcessHyperlinkAction extends FBAndroidAction {
             break;
           }
 
-          Reader.Collection.markHyperlinkAsVisited(Reader.getCurrentBook(), hyperlink.Id);
+          Reader.getCurrentBook().markHyperlinkAsVisited(hyperlink.Id);
           int show = MiscPreferences.getShowFootnoteToast(Reader.getContext());
+          final boolean showToast;
           switch (FootnoteToastEnum.values()[show]) {
             default:
             case never:
+              showToast = false;
               break;
             case footnotesOnly:
+              showToast = hyperlink.Type == FBHyperlinkType.FOOTNOTE;
               break;
             case footnotesAndSuperscripts:
+              showToast = hyperlink.Type == FBHyperlinkType.FOOTNOTE || region.isVerticallyAligned();
               break;
             case allInternalLinks:
+              showToast = true;
               break;
           }
-          Reader.tryOpenFootnote(hyperlink.Id);
+          if (showToast) {
+            Reader.getTextView().outlineRegion(region);
+            Snackbar.make((ZLAndroidWidget) Reader.getViewWidget(), snippet.getText(), Snackbar.LENGTH_LONG)
+                .setAction(R.string.ok, new OnClickListener() {
+                  @Override
+                  public void onClick(final View v) {
+                    Reader.getTextView().hideOutline();
+                    Reader.tryOpenFootnote(hyperlink.Id);
+                  }
+                }).addCallback(new BaseCallback<Snackbar>() {
+              @Override
+              public void onDismissed(final Snackbar transientBottomBar, final int event) {
+                super.onDismissed(transientBottomBar, event);
+                Reader.getTextView().hideOutline();
+                Reader.getViewWidget().repaint();
+              }
+
+              @Override
+              public void onShown(final Snackbar transientBottomBar) {
+                super.onShown(transientBottomBar);
+              }
+            }).show();
+          } else {
+            Reader.tryOpenFootnote(hyperlink.Id);
+          }
           break;
         }
       }

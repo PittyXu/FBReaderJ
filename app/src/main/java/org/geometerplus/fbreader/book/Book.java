@@ -21,17 +21,24 @@ package org.geometerplus.fbreader.book;
 
 import android.os.Parcel;
 
+import org.geometerplus.fbreader.bookmodel.TOCTree;
 import org.geometerplus.fbreader.formats.BookReadingException;
 import org.geometerplus.fbreader.formats.FormatPlugin;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
+import org.geometerplus.zlibrary.text.model.ZLTextModel;
 
+import java.util.HashMap;
 import java.util.Set;
 import java.util.TreeSet;
 
 public final class Book extends AbstractBook {
 	public final ZLFile File;
 	private final String myPath;
-	private Set<String> myVisitedHyperlinks;
+	private Set<String> mVisitedHyperlinks;
+	public final TOCTree TOCTree = new TOCTree();
+	private TOCTree myCurrentTree = TOCTree;
+	protected ZLTextModel myBookTextModel;
+	protected final HashMap<String, ZLTextModel> myFootnotes = new HashMap<>();
 
 	public Book(long id, String path, String title, String encoding, String language) {
 		super(id, title, encoding, language);
@@ -49,30 +56,42 @@ public final class Book extends AbstractBook {
 		myPath = file.getPath();
 	}
 
-	private void initHyperlinkSet(BooksDatabase database) {
-		if (myVisitedHyperlinks == null) {
-			myVisitedHyperlinks = new TreeSet<>();
-			if (myId != -1) {
-				myVisitedHyperlinks.addAll(database.loadVisitedHyperlinks(myId));
-			}
+	public boolean isHyperlinkVisited(String linkId) {
+		return mVisitedHyperlinks.contains(linkId);
+	}
+
+	public void markHyperlinkAsVisited(String linkId) {
+		mVisitedHyperlinks.add(linkId);
+	}
+
+	public void setFootnoteModel(ZLTextModel model) {
+		myFootnotes.put(model.getId(), model);
+	}
+
+	public ZLTextModel getFootnoteModel(String id) {
+		return myFootnotes.get(id);
+	}
+
+	public void setBookTextModel(ZLTextModel model) {
+		myBookTextModel = model;
+	}
+
+	public ZLTextModel getTextModel() {
+		return myBookTextModel;
+	}
+
+	public void addTOCItem(String text, int reference) {
+		myCurrentTree = new TOCTree(myCurrentTree);
+		myCurrentTree.setText(text);
+		myCurrentTree.setReference(myBookTextModel, reference);
+	}
+
+	public void leaveTOCItem() {
+		myCurrentTree = myCurrentTree.Parent;
+		if (myCurrentTree == null) {
+			myCurrentTree = TOCTree;
 		}
 	}
-
-	public boolean isHyperlinkVisited(BooksDatabase database, String linkId) {
-		initHyperlinkSet(database);
-		return myVisitedHyperlinks.contains(linkId);
-	}
-
-	public void markHyperlinkAsVisited(BooksDatabase database, String linkId) {
-		initHyperlinkSet(database);
-		if (!myVisitedHyperlinks.contains(linkId)) {
-			myVisitedHyperlinks.add(linkId);
-			if (myId != -1) {
-				database.addVisitedHyperlink(myId, linkId);
-			}
-		}
-	}
-
 
 	@Override
 	public String getPath() {

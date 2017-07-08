@@ -64,7 +64,6 @@ public class ZLTextBaseStyle extends ZLTextStyle {
 	@JSONField(name = "fontSize")
 	public Integer fontSize;
 
-	@JSONField(serialize = false, deserialize = false)
 	private List<FontEntry> myFontEntries;
 
 	public ZLTextBaseStyle(){
@@ -76,8 +75,8 @@ public class ZLTextBaseStyle extends ZLTextStyle {
 		name = prefix;
 	}
 
-	@JSONField(serialize = false, deserialize = false)
 	@Override
+	@JSONField(serialize = false, deserialize = false)
 	public List<FontEntry> getFontEntries() {
 		final String family = fontFamily;
 		if (myFontEntries == null) {

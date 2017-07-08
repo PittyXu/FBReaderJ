@@ -23,19 +23,10 @@ import android.content.Context;
 import android.widget.Toast;
 
 import org.geometerplus.android.fbreader.BookCollectionShadow;
-import org.geometerplus.android.fbreader.FBReader;
-import org.geometerplus.android.fbreader.OpenVideoAction;
-import org.geometerplus.android.fbreader.ProcessHyperlinkAction;
-import org.geometerplus.android.fbreader.SelectionBookmarkAction;
-import org.geometerplus.android.fbreader.SelectionCopyAction;
-import org.geometerplus.android.fbreader.SelectionHidePanelAction;
-import org.geometerplus.android.fbreader.SelectionShowPanelAction;
-import org.geometerplus.android.fbreader.ShowMenuAction;
-import org.geometerplus.android.fbreader.SwitchProfileAction;
-import org.geometerplus.android.fbreader.config.ColorProfile;
+import org.geometerplus.android.fbreader.dao.Bookmark;
+import org.geometerplus.android.fbreader.dao.BooksDaoHelper;
 import org.geometerplus.fbreader.book.Book;
 import org.geometerplus.fbreader.book.BookUtil;
-import org.geometerplus.fbreader.book.Bookmark;
 import org.geometerplus.fbreader.book.BookmarkQuery;
 import org.geometerplus.fbreader.book.BookmarkUtil;
 import org.geometerplus.fbreader.bookmodel.BookModel;
@@ -60,7 +51,6 @@ import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.text.view.ZLTextView.PagePosition;
 import org.geometerplus.zlibrary.text.view.ZLTextWordCursor;
 import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
-import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -157,9 +147,9 @@ public final class FBReaderApp extends ZLApplication {
 		}
 		final ZLTextModel model;
 		if (label.ModelId != null) {
-			model = Model.getFootnoteModel(label.ModelId);
+			model = Model.Book.getFootnoteModel(label.ModelId);
 		} else {
-			model = Model.getTextModel();
+			model = Model.Book.getTextModel();
 		}
 		if (model == null) {
 			return null;
@@ -218,24 +208,19 @@ public final class FBReaderApp extends ZLApplication {
 
 	private void setBookmarkHighlightings(ZLTextView view, String modelId) {
 		view.removeHighlightings(BookmarkHighlighting.class);
-		for (BookmarkQuery query = new BookmarkQuery(Model.Book, 20); ; query = query.next()) {
-			final List<Bookmark> bookmarks = Collection.bookmarks(query);
-			if (bookmarks.isEmpty()) {
-				break;
+		List<Bookmark> bookmarks = BooksDaoHelper.getInstance(mContext).getBookmarksDao().loadAll();
+		for (Bookmark b : bookmarks) {
+			if (b.getEnd() == null) {
+				BookmarkUtil.findEnd(b, view);
 			}
-			for (Bookmark b : bookmarks) {
-				if (b.getEnd() == null) {
-					BookmarkUtil.findEnd(b, view);
-				}
-				if (ComparisonUtil.equal(modelId, b.ModelId)) {
-					view.addHighlighting(new BookmarkHighlighting(view, Collection, b));
-				}
+			if (ComparisonUtil.equal(modelId, b.ModelId)) {
+				view.addHighlighting(new BookmarkHighlighting(view, Collection, b));
 			}
 		}
 	}
 
 	private void setFootnoteModel(String modelId) {
-		final ZLTextModel model = Model.getFootnoteModel(modelId);
+		final ZLTextModel model = Model.Book.getFootnoteModel(modelId);
 		FootnoteView.setModel(model);
 		if (model != null) {
 			myFootnoteModelId = modelId;
@@ -274,7 +259,7 @@ public final class FBReaderApp extends ZLApplication {
 		try {
 			Model = BookModel.createModel(mContext, book, plugin);
 			ZLTextHyphenator.Instance().load(mContext, book.getLanguage());
-			BookTextView.setModel(Model.getTextModel());
+			BookTextView.setModel(Model.Book.getTextModel());
 			setBookmarkHighlightings(BookTextView, null);
 			gotoStoredPosition();
 			if (bookmark == null) {
@@ -449,7 +434,7 @@ public final class FBReaderApp extends ZLApplication {
 			++index;
 		}
 		TOCTree treeToSelect = null;
-		for (TOCTree tree : Model.TOCTree) {
+		for (TOCTree tree : Model.Book.TOCTree) {
 			final TOCTree.Reference reference = tree.getReference();
 			if (reference == null) {
 				continue;

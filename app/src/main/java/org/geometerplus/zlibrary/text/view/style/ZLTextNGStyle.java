@@ -47,7 +47,7 @@ public class ZLTextNGStyle extends ZLTextDecoratedStyle {
 		if (parentEntries.size() > 0 && e.equals(parentEntries.get(0))) {
 			return parentEntries;
 		}
-		final List<FontEntry> entries = new ArrayList<FontEntry>(parentEntries.size() + 1);
+		final List<FontEntry> entries = new ArrayList<>(parentEntries.size() + 1);
 		entries.add(e);
 		entries.addAll(parentEntries);
 		return entries;

@@ -22,10 +22,9 @@ package org.geometerplus.zlibrary.text.view;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.text.TextUtils;
 
+import org.geometerplus.android.fbreader.config.PageTurningPreferences;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
-import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.util.RationalNumber;
 import org.geometerplus.zlibrary.core.view.Hull;
 import org.geometerplus.zlibrary.core.view.SelectionCursor;
@@ -64,12 +63,13 @@ public abstract class ZLTextView extends ZLTextViewBase {
 
   private int myScrollingMode;
 	private int myOverlappingValue;
+	private List<ZLTextPosition> mPagePositionList = new ArrayList<>();
 
 	private ZLTextPage myPreviousPage = new ZLTextPage();
 	private ZLTextPage myCurrentPage = new ZLTextPage();
 	private ZLTextPage myNextPage = new ZLTextPage();
 
-	private final HashMap<ZLTextLineInfo,ZLTextLineInfo> myLineInfoCache = new HashMap<ZLTextLineInfo,ZLTextLineInfo>();
+	private final HashMap<ZLTextLineInfo,ZLTextLineInfo> myLineInfoCache = new HashMap<>();
 
 	private ZLTextRegion.Soul myOutlinedRegionSoul;
 	private boolean myShowOutline = true;
@@ -94,13 +94,14 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		myCurrentPage.reset();
 		myPreviousPage.reset();
 		myNextPage.reset();
+		Application.getViewWidget().reset();
+		mPagePositionList.clear();
 		if (myModel != null) {
 			final int paragraphsNumber = myModel.getParagraphsNumber();
 			if (paragraphsNumber > 0) {
 				myCurrentPage.moveStartCursor(myCursorManager.get(0));
 			}
 		}
-		Application.getViewWidget().reset();
 	}
 
 	public final ZLTextModel getModel() {
@@ -119,6 +120,53 @@ public abstract class ZLTextView extends ZLTextViewBase {
 			preparePaintInfo(myCurrentPage);
 		}
 		return myCurrentPage.EndCursor;
+	}
+
+	private boolean gotoPreviousPage() {
+		if (!hasPreviousPage()) {
+			return false;
+		}
+		final ZLTextPage swap = myNextPage;
+		myNextPage = myCurrentPage;
+		myCurrentPage = myPreviousPage;
+		myPreviousPage = swap;
+		myPreviousPage.reset();
+		if (myCurrentPage.PaintState == PaintStateEnum.NOTHING_TO_PAINT) {
+			preparePaintInfo(myNextPage);
+			myCurrentPage.EndCursor.setCursor(myNextPage.StartCursor);
+			myCurrentPage.PaintState = PaintStateEnum.END_IS_KNOWN;
+		} else if (!myCurrentPage.EndCursor.isNull() &&
+				!myNextPage.StartCursor.isNull() &&
+				!myCurrentPage.EndCursor.samePositionAs(myNextPage.StartCursor)) {
+			myNextPage.reset();
+			myNextPage.StartCursor.setCursor(myCurrentPage.EndCursor);
+			myNextPage.PaintState = PaintStateEnum.START_IS_KNOWN;
+			Application.getViewWidget().reset();
+		}
+		return true;
+	}
+
+	private boolean gotoNextPage() {
+		if (!hasNextPage()) {
+			return false;
+		}
+		final ZLTextPage swap = myPreviousPage;
+		myPreviousPage = myCurrentPage;
+		myCurrentPage = myNextPage;
+		myNextPage = swap;
+		myNextPage.reset();
+		switch (myCurrentPage.PaintState) {
+			case PaintStateEnum.NOTHING_TO_PAINT:
+				preparePaintInfo(myPreviousPage);
+				myCurrentPage.StartCursor.setCursor(myPreviousPage.EndCursor);
+				myCurrentPage.PaintState = PaintStateEnum.START_IS_KNOWN;
+				break;
+			case PaintStateEnum.READY:
+				myNextPage.StartCursor.setCursor(myCurrentPage.EndCursor);
+				myNextPage.PaintState = PaintStateEnum.START_IS_KNOWN;
+				break;
+		}
+		return true;
 	}
 
 	private synchronized void gotoMark(ZLTextMark mark) {
@@ -260,46 +308,11 @@ public abstract class ZLTextView extends ZLTextViewBase {
 			case current:
 				break;
 			case previous:
-			{
-				final ZLTextPage swap = myNextPage;
-				myNextPage = myCurrentPage;
-				myCurrentPage = myPreviousPage;
-				myPreviousPage = swap;
-				myPreviousPage.reset();
-				if (myCurrentPage.PaintState == PaintStateEnum.NOTHING_TO_PAINT) {
-					preparePaintInfo(myNextPage);
-					myCurrentPage.EndCursor.setCursor(myNextPage.StartCursor);
-					myCurrentPage.PaintState = PaintStateEnum.END_IS_KNOWN;
-				} else if (!myCurrentPage.EndCursor.isNull() &&
-						   !myNextPage.StartCursor.isNull() &&
-						   !myCurrentPage.EndCursor.samePositionAs(myNextPage.StartCursor)) {
-					myNextPage.reset();
-					myNextPage.StartCursor.setCursor(myCurrentPage.EndCursor);
-					myNextPage.PaintState = PaintStateEnum.START_IS_KNOWN;
-					Application.getViewWidget().reset();
-				}
+				gotoPreviousPage();
 				break;
-			}
 			case next:
-			{
-				final ZLTextPage swap = myPreviousPage;
-				myPreviousPage = myCurrentPage;
-				myCurrentPage = myNextPage;
-				myNextPage = swap;
-				myNextPage.reset();
-				switch (myCurrentPage.PaintState) {
-					case PaintStateEnum.NOTHING_TO_PAINT:
-						preparePaintInfo(myPreviousPage);
-						myCurrentPage.StartCursor.setCursor(myPreviousPage.EndCursor);
-						myCurrentPage.PaintState = PaintStateEnum.START_IS_KNOWN;
-						break;
-					case PaintStateEnum.READY:
-						myNextPage.StartCursor.setCursor(myCurrentPage.EndCursor);
-						myNextPage.PaintState = PaintStateEnum.START_IS_KNOWN;
-						break;
-				}
+				gotoNextPage();
 				break;
-			}
 		}
 	}
 
@@ -723,8 +736,71 @@ public abstract class ZLTextView extends ZLTextViewBase {
 	}
 
 	public final synchronized PagePosition pagePosition() {
-		int current = computeTextPageNumber(getCurrentCharNumber(PageIndex.current, false));
-		int total = computeTextPageNumber(sizeOfFullText());
+		int current;
+		int total;
+		// 不精确的计算页数, 适合不自带样式的文本
+		if (!PageTurningPreferences.getPageCalculateAccurate(context)) {
+			current = computeTextPageNumber(getCurrentCharNumber(PageIndex.current, false));
+			total = computeTextPageNumber(sizeOfFullText());
+		} else {
+			if (mPagePositionList.isEmpty()) {
+				ZLTextPosition start = new ZLTextFixedPosition(myCurrentPage.StartCursor);
+				gotoHome();
+				ZLTextPosition minPos = new ZLTextFixedPosition(myCurrentPage.StartCursor);
+				mPagePositionList.add(minPos);
+				int min = Math.abs(minPos.hashCode() - start.hashCode());
+				while (gotoNextPage()) {
+					ZLTextPosition pos = new ZLTextFixedPosition(myCurrentPage.StartCursor);
+					mPagePositionList.add(pos);
+					int dif = Math.abs(pos.hashCode() - start.hashCode());
+					if (min > dif) {
+						min = dif;
+						minPos = pos;
+					}
+				}
+				gotoPosition(minPos);
+			}
+			current = mPagePositionList.indexOf(myCurrentPage.StartCursor);
+			if (current == -1) {
+				int st = 0;
+				int end = mPagePositionList.size() - 1;
+				int med = end / 2;
+				while (end > st && (med - st) > 0 && (end - med) > 0) {
+					ZLTextPosition pos = mPagePositionList.get(med);
+					int comp = pos.compareTo(myCurrentPage.StartCursor);
+					if (comp < 0) {
+						st = med;
+						med = (med + end) / 2;
+					} else if (comp > 0) {
+						end = med;
+						med = (med + st) / 2;
+					}
+				}
+
+				ZLTextPosition pre = mPagePositionList.get(0);
+				ZLTextPosition medP = mPagePositionList.get(med);
+				ZLTextPosition next = mPagePositionList.get(mPagePositionList.size() - 1);
+				if (med > 0) {
+					pre = mPagePositionList.get(med - 1);
+				}
+				if (med < mPagePositionList.size() - 1) {
+					next = mPagePositionList.get(med + 1);
+				}
+				int min = Math.abs(myCurrentPage.StartCursor.hashCode() - medP.hashCode());
+				current = med;
+				int parPre = Math.abs(myCurrentPage.StartCursor.hashCode() - pre.hashCode());
+				if (min > parPre) {
+					min = parPre;
+					current = med - 1;
+				}
+				int parNex = Math.abs(myCurrentPage.StartCursor.hashCode() - next.hashCode());
+				if (min > parNex) {
+					current = med + 1;
+				}
+			}
+			current++;
+			total = mPagePositionList.size();
+		}
 
 		if (total > 3) {
 			return new PagePosition(current, total);
@@ -1555,6 +1631,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		}
 
 		myLineInfoCache.clear();
+		mPagePositionList.clear();
 	}
 
 	private int infoSize(ZLTextLineInfo info, int unit) {
@@ -1794,21 +1871,25 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		return myCurrentPage.TextElementMap.nextRegion(getOutlinedRegion(), direction, filter);
 	}
 
+	public boolean hasNextPage() {
+		final ZLTextWordCursor cursor = getEndCursor();
+		return cursor != null && !cursor.isNull() && !cursor.isEndOfText();
+	}
+
+	public boolean hasPreviousPage() {
+		final ZLTextWordCursor cursor = getStartCursor();
+		return cursor != null && !cursor.isNull() && !cursor.isStartOfText();
+	}
+
 	@Override
 	public boolean canScroll(PageIndex index) {
 		switch (index) {
 			default:
 				return true;
 			case next:
-			{
-				final ZLTextWordCursor cursor = getEndCursor();
-				return cursor != null && !cursor.isNull() && !cursor.isEndOfText();
-			}
+				return hasNextPage();
 			case previous:
-			{
-				final ZLTextWordCursor cursor = getStartCursor();
-				return cursor != null && !cursor.isNull() && !cursor.isStartOfText();
-			}
+				return hasPreviousPage();
 		}
 	}
 

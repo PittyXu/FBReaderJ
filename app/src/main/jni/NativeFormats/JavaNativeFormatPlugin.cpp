@@ -196,17 +196,17 @@ static bool ct_compare(const shared_ptr<ContentsTree> &first, const shared_ptr<C
 	return first->reference() < second->reference();
 }
 
-static void initTOC(JNIEnv *env, jobject javaModel, const ContentsTree &tree) {
+static void initTOC(JNIEnv *env, jobject javaBook, const ContentsTree &tree) {
 	std::vector<shared_ptr<ContentsTree> > children = tree.children();
 	std::sort(children.begin(), children.end(), ct_compare);
 	for (std::vector<shared_ptr<ContentsTree> >::const_iterator it = children.begin(); it != children.end(); ++it) {
 		const ContentsTree &child = **it;
 		JString text(env, child.text());
-		AndroidUtil::Method_BookModel_addTOCItem->call(javaModel, text.j(), child.reference());
+		AndroidUtil::Method_Book_addTOCItem->call(javaBook, text.j(), child.reference());
 
-		initTOC(env, javaModel, child);
+		initTOC(env, javaBook, child);
 
-		AndroidUtil::Method_BookModel_leaveTOCItem->call(javaModel);
+		AndroidUtil::Method_Book_leaveTOCItem->call(javaBook);
 	}
 }
 
@@ -251,14 +251,14 @@ JNIEXPORT jint JNICALL Java_org_geometerplus_fbreader_formats_NativeFormatPlugin
 		return 4;
 	}
 
-	initTOC(env, javaModel, *model->contentsTree());
+	initTOC(env, javaBook, *model->contentsTree());
 
 	shared_ptr<ZLTextModel> textModel = model->bookTextModel();
 	jobject javaTextModel = createTextModel(env, javaModel, *textModel);
 	if (javaTextModel == 0) {
 		return 5;
 	}
-	AndroidUtil::Method_BookModel_setBookTextModel->call(javaModel, javaTextModel);
+	AndroidUtil::Method_Book_setBookTextModel->call(javaBook, javaTextModel);
 	if (env->ExceptionCheck()) {
 		return 6;
 	}
@@ -271,7 +271,7 @@ JNIEXPORT jint JNICALL Java_org_geometerplus_fbreader_formats_NativeFormatPlugin
 		if (javaFootnoteModel == 0) {
 			return 7;
 		}
-		AndroidUtil::Method_BookModel_setFootnoteModel->call(javaModel, javaFootnoteModel);
+		AndroidUtil::Method_Book_setFootnoteModel->call(javaBook, javaFootnoteModel);
 		if (env->ExceptionCheck()) {
 			return 8;
 		}

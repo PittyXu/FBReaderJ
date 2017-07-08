@@ -356,7 +356,7 @@ public final class ZLTextPlainModel implements ZLTextModel, ZLTextStyleEntry.Fea
 	public final int search(final String text, int startIndex, int endIndex, boolean ignoreCase) {
 		int count = 0;
 		ZLSearchPattern pattern = new ZLSearchPattern(text, ignoreCase);
-		myMarks = new ArrayList<ZLTextMark>();
+		myMarks = new ArrayList<>();
 		if (startIndex > myParagraphsNumber) {
 			startIndex = myParagraphsNumber;
 		}

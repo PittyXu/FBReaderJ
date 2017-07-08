@@ -25,19 +25,6 @@ import org.geometerplus.zlibrary.text.view.ZLTextPosition;
 import java.util.List;
 
 public interface IBookCollection<B extends AbstractBook> {
-	enum Status {
-		NotStarted(false),
-		Started(false),
-		Succeeded(true),
-		Failed(true);
-
-		public final Boolean IsComplete;
-
-		Status(boolean complete) {
-			IsComplete = complete;
-		}
-	}
-
 	interface Listener {
 		void onBookEvent(BookEvent event, AbstractBook book);
 	}
@@ -48,9 +35,6 @@ public interface IBookCollection<B extends AbstractBook> {
 
 	ZLTextFixedPosition.WithTimestamp getStoredPosition(long bookId);
 	void storePosition(long bookId, ZLTextPosition position);
-
-	boolean isHyperlinkVisited(B book, String linkId);
-	void markHyperlinkAsVisited(B book, String linkId);
 
 	List<Bookmark> bookmarks(BookmarkQuery query);
 	void saveBookmark(Bookmark bookmark);

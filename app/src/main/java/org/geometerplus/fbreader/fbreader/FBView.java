@@ -63,7 +63,7 @@ import java.util.TreeSet;
 public final class FBView extends ZLTextView {
 	private final FBReaderApp myReader;
 
-	FBView(FBReaderApp reader) {
+	public FBView(FBReaderApp reader) {
 		super(reader.getContext(), reader);
 		myReader = reader;
 	}
@@ -177,10 +177,6 @@ public final class FBView extends ZLTextView {
 		}
 
 		synchronized (this) {
-			if (x >= getContextWidth() / 5) {
-				startManualScrolling(x, y);
-			}
-
 			if (isFlickScrollingEnabled()) {
 				myReader.getViewWidget().scrollManuallyTo(x, y);
 			}
@@ -299,19 +295,6 @@ public final class FBView extends ZLTextView {
 		}
 	}
 
-	public boolean onTrackballRotated(int diffX, int diffY) {
-		if (diffX == 0 && diffY == 0) {
-			return true;
-		}
-
-		final Direction direction = (diffY != 0) ?
-			(diffY > 0 ? Direction.down : Direction.up) :
-			(diffX > 0 ? Direction.leftToRight : Direction.rightToLeft);
-
-		new MoveCursorAction(myReader, direction).run();
-		return true;
-	}
-
 	@Override
 	public ZLTextStyleCollection getTextStyleCollection() {
 		return myReader.myTextStyleCollection;
@@ -401,7 +384,7 @@ public final class FBView extends ZLTextView {
 				return profile.regularTextColor;
 			case FBHyperlinkType.INTERNAL:
 			case FBHyperlinkType.FOOTNOTE:
-				return myReader.Collection.isHyperlinkVisited(myReader.getCurrentBook(), hyperlink.Id)
+				return myReader.getCurrentBook().isHyperlinkVisited(hyperlink.Id)
 					? profile.visitedHyperlinkTextColor
 					: profile.hyperlinkTextColor;
 			case FBHyperlinkType.EXTERNAL:
@@ -447,7 +430,7 @@ public final class FBView extends ZLTextView {
 			myTOCMarks = new ArrayList<>();
 			myMaxTOCMarksNumber = maxNumber;
 
-			TOCTree toc = model.TOCTree;
+			TOCTree toc = model.Book.TOCTree;
 			if (toc == null) {
 				return;
 			}
@@ -498,8 +481,8 @@ public final class FBView extends ZLTextView {
 		}
 
 		private List<FontEntry> myFontEntry;
-		private Map<String,Integer> myHeightMap = new HashMap<String,Integer>();
-		private Map<String,Integer> myCharHeightMap = new HashMap<String,Integer>();
+		private Map<String,Integer> myHeightMap = new HashMap<>();
+		private Map<String,Integer> myCharHeightMap = new HashMap<>();
 		protected synchronized int setFont(ZLPaintContext context, int height, boolean bold) {
 			final String family = ViewPreferences.getFooterFont(myReader.getContext());
 			if (myFontEntry == null || !family.equals(myFontEntry.get(0).Family)) {

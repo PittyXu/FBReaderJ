@@ -107,14 +107,14 @@ shared_ptr<StringMethod> AndroidUtil::Method_Book_getEncodingNoDetection;
 shared_ptr<VoidMethod> AndroidUtil::Method_Book_setTitle;
 shared_ptr<VoidMethod> AndroidUtil::Method_Book_setLanguage;
 shared_ptr<VoidMethod> AndroidUtil::Method_Book_setEncoding;
+shared_ptr<VoidMethod> AndroidUtil::Method_Book_addTOCItem;
+shared_ptr<VoidMethod> AndroidUtil::Method_Book_leaveTOCItem;
+shared_ptr<VoidMethod> AndroidUtil::Method_Book_setBookTextModel;
+shared_ptr<VoidMethod> AndroidUtil::Method_Book_setFootnoteModel;
 
 shared_ptr<ObjectField> AndroidUtil::Field_BookModel_Book;
 shared_ptr<VoidMethod> AndroidUtil::Method_BookModel_initInternalHyperlinks;
-shared_ptr<VoidMethod> AndroidUtil::Method_BookModel_addTOCItem;
-shared_ptr<VoidMethod> AndroidUtil::Method_BookModel_leaveTOCItem;
 shared_ptr<ObjectMethod> AndroidUtil::Method_BookModel_createTextModel;
-shared_ptr<VoidMethod> AndroidUtil::Method_BookModel_setBookTextModel;
-shared_ptr<VoidMethod> AndroidUtil::Method_BookModel_setFootnoteModel;
 shared_ptr<VoidMethod> AndroidUtil::Method_BookModel_addImage;
 shared_ptr<VoidMethod> AndroidUtil::Method_BookModel_registerFontFamilyList;
 shared_ptr<VoidMethod> AndroidUtil::Method_BookModel_registerFontEntry;
@@ -174,14 +174,14 @@ bool AndroidUtil::init(JavaVM* jvm) {
 	Method_Book_setTitle = new VoidMethod(Class_AbstractBook, "setTitle", "(Ljava/lang/String;)");
 	Method_Book_setLanguage = new VoidMethod(Class_AbstractBook, "setLanguage", "(Ljava/lang/String;)");
 	Method_Book_setEncoding = new VoidMethod(Class_AbstractBook, "setEncoding", "(Ljava/lang/String;)");
+	Method_Book_addTOCItem = new VoidMethod(Class_Book, "addTOCItem", "(Ljava/lang/String;I)");
+	Method_Book_leaveTOCItem = new VoidMethod(Class_Book, "leaveTOCItem", "()");
+	Method_Book_setBookTextModel = new VoidMethod(Class_Book, "setBookTextModel", "(Lorg/geometerplus/zlibrary/text/model/ZLTextModel;)");
+	Method_Book_setFootnoteModel = new VoidMethod(Class_Book, "setFootnoteModel", "(Lorg/geometerplus/zlibrary/text/model/ZLTextModel;)");
 
 	Field_BookModel_Book = new ObjectField(Class_BookModel, "Book", Class_Book);
 	Method_BookModel_initInternalHyperlinks = new VoidMethod(Class_BookModel, "initInternalHyperlinks", "(Ljava/lang/String;Ljava/lang/String;I)");
-	Method_BookModel_addTOCItem = new VoidMethod(Class_BookModel, "addTOCItem", "(Ljava/lang/String;I)");
-	Method_BookModel_leaveTOCItem = new VoidMethod(Class_BookModel, "leaveTOCItem", "()");
 	Method_BookModel_createTextModel = new ObjectMethod(Class_BookModel, "createTextModel", Class_ZLTextModel, "(Ljava/lang/String;Ljava/lang/String;I[I[I[I[I[BLjava/lang/String;Ljava/lang/String;I)");
-	Method_BookModel_setBookTextModel = new VoidMethod(Class_BookModel, "setBookTextModel", "(Lorg/geometerplus/zlibrary/text/model/ZLTextModel;)");
-	Method_BookModel_setFootnoteModel = new VoidMethod(Class_BookModel, "setFootnoteModel", "(Lorg/geometerplus/zlibrary/text/model/ZLTextModel;)");
 	Method_BookModel_addImage = new VoidMethod(Class_BookModel, "addImage", "(Ljava/lang/String;Lorg/geometerplus/zlibrary/core/image/ZLImage;)");
 	Method_BookModel_registerFontFamilyList = new VoidMethod(Class_BookModel, "registerFontFamilyList", "([Ljava/lang/String;)");
 	Method_BookModel_registerFontEntry = new VoidMethod(Class_BookModel, "registerFontEntry", "(Ljava/lang/String;Lorg/geometerplus/zlibrary/core/fonts/FileInfo;Lorg/geometerplus/zlibrary/core/fonts/FileInfo;Lorg/geometerplus/zlibrary/core/fonts/FileInfo;Lorg/geometerplus/zlibrary/core/fonts/FileInfo;)");

@@ -19,7 +19,6 @@
 
 package org.geometerplus.android.fbreader;
 
-import android.app.SearchManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,7 +26,6 @@ import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -36,8 +34,6 @@ import com.afollestad.materialdialogs.folderselector.FileChooserDialog.FileCallb
 
 import org.geometerplus.android.fbreader.FBReaderIntents.Key;
 import org.geometerplus.android.fbreader.config.ColorProfile;
-import org.geometerplus.android.fbreader.config.MiscPreferences;
-import org.geometerplus.android.util.UIUtil;
 import org.geometerplus.fbreader.book.Book;
 import org.geometerplus.fbreader.book.BookUtil;
 import org.geometerplus.fbreader.book.Bookmark;
@@ -61,8 +57,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 
 	private RelativeLayout myRootView;
 	private ZLAndroidWidget myMainView;
-
-	volatile boolean IsPaused = false;
 
 	private Intent myOpenBookIntent = null;
 
@@ -108,7 +102,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
 		myRootView = (RelativeLayout)findViewById(R.id.root_view);
 		myMainView = (ZLAndroidWidget)findViewById(R.id.main_view);
@@ -149,13 +142,9 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	@Override
 	protected void onNewIntent(final Intent intent) {
 		final String action = intent.getAction();
-		final Uri data = intent.getData();
 
 		if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0) {
 			super.onNewIntent(intent);
-		} else if (Intent.ACTION_VIEW.equals(action)
-				   && data != null && "fbreader-action".equals(data.getScheme())) {
-			myFBReaderApp.runAction(data.getEncodedSchemeSpecificPart(), data.getFragment());
 		} else if (Intent.ACTION_VIEW.equals(action) || FBReaderIntents.Action.VIEW.equals(action)) {
 			myOpenBookIntent = intent;
 		} else {
@@ -172,7 +161,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 			onPreferencesUpdate(model.Book);
 		}
 
-		IsPaused = false;
 		if (myOpenBookIntent != null) {
 			final Intent intent = myOpenBookIntent;
 			myOpenBookIntent = null;
@@ -186,16 +174,8 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 	protected void onPause() {
 		super.onPause();
 
-		IsPaused = true;
-
 		myFBReaderApp.stopTimer();
 		myFBReaderApp.onWindowClosing();
-	}
-
-	@Override
-	public void onLowMemory() {
-		myFBReaderApp.onWindowClosing();
-		super.onLowMemory();
 	}
 
 	public void showSelectionPanel() {

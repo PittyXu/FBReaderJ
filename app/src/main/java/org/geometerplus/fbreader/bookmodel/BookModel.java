@@ -49,13 +49,11 @@ public final class BookModel {
 	}
 
 	public final Book Book;
-	public final TOCTree TOCTree = new TOCTree();
 	public final FontManager FontManager = new FontManager();
 
 	protected CachedCharStorage myInternalHyperlinks;
 	protected final HashMap<String,ZLImage> myImageMap = new HashMap<String,ZLImage>();
-	protected ZLTextModel myBookTextModel;
-	protected final HashMap<String,ZLTextModel> myFootnotes = new HashMap<String,ZLTextModel>();
+
 
 	public static final class Label {
 		public final String ModelId;
@@ -120,43 +118,12 @@ public final class BookModel {
 		);
 	}
 
-	public void setBookTextModel(ZLTextModel model) {
-		myBookTextModel = model;
-	}
-
-	public void setFootnoteModel(ZLTextModel model) {
-		myFootnotes.put(model.getId(), model);
-	}
-
-	public ZLTextModel getTextModel() {
-		return myBookTextModel;
-	}
-
-	public ZLTextModel getFootnoteModel(String id) {
-		return myFootnotes.get(id);
-	}
-
 	public void addImage(String id, ZLImage image) {
 		myImageMap.put(id, image);
 	}
 
 	public void initInternalHyperlinks(String directoryName, String fileExtension, int blocksNumber) {
 		myInternalHyperlinks = new CachedCharStorage(directoryName, fileExtension, blocksNumber);
-	}
-
-	private TOCTree myCurrentTree = TOCTree;
-
-	public void addTOCItem(String text, int reference) {
-		myCurrentTree = new TOCTree(myCurrentTree);
-		myCurrentTree.setText(text);
-		myCurrentTree.setReference(myBookTextModel, reference);
-	}
-
-	public void leaveTOCItem() {
-		myCurrentTree = myCurrentTree.Parent;
-		if (myCurrentTree == null) {
-			myCurrentTree = TOCTree;
-		}
 	}
 
 	private Label getLabelInternal(String id) {

@@ -287,35 +287,6 @@ final class SQLiteBooksDatabase extends BooksDatabase {
 		}
 	}
 
-	private void deleteVisitedHyperlinks(long bookId) {
-		final SQLiteStatement statement = get("DELETE FROM VisitedHyperlinks WHERE book_id=?");
-		synchronized (statement) {
-			statement.bindLong(1, bookId);
-			statement.execute();
-		}
-	}
-
-	protected void addVisitedHyperlink(long bookId, String hyperlinkId) {
-		final SQLiteStatement statement = get(
-			"INSERT OR IGNORE INTO VisitedHyperlinks(book_id,hyperlink_id) VALUES (?,?)"
-		);
-		synchronized (statement) {
-			statement.bindLong(1, bookId);
-			statement.bindString(2, hyperlinkId);
-			statement.execute();
-		}
-	}
-
-	protected Collection<String> loadVisitedHyperlinks(long bookId) {
-		final TreeSet<String> links = new TreeSet<String>();
-		final Cursor cursor = myDatabase.rawQuery("SELECT hyperlink_id FROM VisitedHyperlinks WHERE book_id = ?", new String[] { String.valueOf(bookId) });
-		while (cursor.moveToNext()) {
-			links.add(cursor.getString(0));
-		}
-		cursor.close();
-		return links;
-	}
-
 	private void createTables() {
 		myDatabase.execSQL(
 			"CREATE TABLE IF NOT EXISTS BookState(" +
@@ -325,11 +296,6 @@ final class SQLiteBooksDatabase extends BooksDatabase {
 				"char INTEGER NOT NULL," +
 				"timestamp INTEGER DEFAULT 0)");
 
-		myDatabase.execSQL(
-			"CREATE TABLE IF NOT EXISTS VisitedHyperlinks(" +
-				"book_id INTEGER NOT NULL REFERENCES Books(book_id)," +
-				"hyperlink_id TEXT NOT NULL," +
-				"CONSTRAINT VisitedHyperlinks_Unique UNIQUE (book_id, hyperlink_id))");
 		myDatabase.execSQL(
 			"CREATE TABLE IF NOT EXISTS HighlightingStyle(" +
 				"style_id INTEGER PRIMARY KEY," +

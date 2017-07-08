@@ -26,7 +26,7 @@ public class TOCTree extends ZLTree<TOCTree> {
 	private String myText;
 	private Reference myReference;
 
-	protected TOCTree() {
+	public TOCTree() {
 		super();
 	}
 

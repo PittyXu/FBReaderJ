@@ -16,6 +16,7 @@ public class PageTurningPreferences {
   private static final String ANIMATION_SPEED = "page_turning_animation_speed";
   private static final String HORIZONTAL = "page_turning_horizontal";
   private static final String TAP_ZONE_MAP = "page_turning_tap_zone_map";
+  private static final String PAGE_CALCULATE_ACCURATE = "page_calculate_accurate";
 
   public static void setFingerScrolling(Context pContext, int finger) {
     DefaultPreferences.getInstance(pContext).setInt(FINGER_SCROLLING, finger);
@@ -57,5 +58,18 @@ public class PageTurningPreferences {
 
   public static String getTapZoneMap(Context pContext) {
     return DefaultPreferences.getInstance(pContext).getString(TAP_ZONE_MAP, "");
+  }
+
+  /**
+   * 是否精确计算页数
+   * @param pContext
+   * @param accurate
+   */
+  public static void setPageCalculateAccurate(Context pContext, boolean accurate) {
+    DefaultPreferences.getInstance(pContext).setBoolean(PAGE_CALCULATE_ACCURATE, accurate);
+  }
+
+  public static boolean getPageCalculateAccurate(Context pContext) {
+    return DefaultPreferences.getInstance(pContext).getBoolean(PAGE_CALCULATE_ACCURATE, true);
   }
 }

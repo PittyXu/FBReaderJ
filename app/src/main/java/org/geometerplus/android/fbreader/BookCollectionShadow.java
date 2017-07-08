@@ -38,6 +38,7 @@ import org.geometerplus.zlibrary.text.view.ZLTextPosition;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -84,14 +85,6 @@ public class BookCollectionShadow extends AbstractBookCollection<Book> {
 						pos.ParagraphIndex, pos.ElementIndex, pos.CharIndex, pos.Timestamp));
 			}
 		}
-	}
-
-	public synchronized boolean isHyperlinkVisited(Book book, String linkId) {
-		return book.isHyperlinkVisited(myDatabase, linkId);
-	}
-
-	public synchronized void markHyperlinkAsVisited(Book book, String linkId) {
-		book.markHyperlinkAsVisited(myDatabase, linkId);
 	}
 
 	@Override

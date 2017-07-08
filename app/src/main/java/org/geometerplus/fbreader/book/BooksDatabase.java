@@ -67,7 +67,4 @@ public abstract class BooksDatabase {
 
 	public abstract ZLTextFixedPosition.WithTimestamp getStoredPosition(long bookId);
 	public abstract void storePosition(long bookId, ZLTextPosition position);
-
-	protected abstract Collection<String> loadVisitedHyperlinks(long bookId);
-	protected abstract void addVisitedHyperlink(long bookId, String hyperlinkId);
 }

@@ -146,14 +146,14 @@ public:
 	static shared_ptr<VoidMethod> Method_Book_setTitle;
 	static shared_ptr<VoidMethod> Method_Book_setLanguage;
 	static shared_ptr<VoidMethod> Method_Book_setEncoding;
+	static shared_ptr<VoidMethod> Method_Book_addTOCItem;
+	static shared_ptr<VoidMethod> Method_Book_leaveTOCItem;
+	static shared_ptr<VoidMethod> Method_Book_setBookTextModel;
+	static shared_ptr<VoidMethod> Method_Book_setFootnoteModel;
 
 	static shared_ptr<ObjectField> Field_BookModel_Book;
 	static shared_ptr<VoidMethod> Method_BookModel_initInternalHyperlinks;
-	static shared_ptr<VoidMethod> Method_BookModel_addTOCItem;
-	static shared_ptr<VoidMethod> Method_BookModel_leaveTOCItem;
 	static shared_ptr<ObjectMethod> Method_BookModel_createTextModel;
-	static shared_ptr<VoidMethod> Method_BookModel_setBookTextModel;
-	static shared_ptr<VoidMethod> Method_BookModel_setFootnoteModel;
 	static shared_ptr<VoidMethod> Method_BookModel_addImage;
 	static shared_ptr<VoidMethod> Method_BookModel_registerFontFamilyList;
 	static shared_ptr<VoidMethod> Method_BookModel_registerFontEntry;
