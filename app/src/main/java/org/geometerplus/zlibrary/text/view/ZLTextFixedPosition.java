@@ -51,20 +51,6 @@ public class ZLTextFixedPosition extends ZLTextPosition implements Parcelable {
 		return CharIndex;
 	}
 
-	public static class WithTimestamp extends ZLTextFixedPosition {
-		public final long Timestamp;
-
-		public WithTimestamp(int paragraphIndex, int elementIndex, int charIndex, Long stamp) {
-			super(paragraphIndex, elementIndex, charIndex);
-			Timestamp = stamp != null ? stamp : -1;
-		}
-
-		@Override
-		public String toString() {
-			return super.toString() + "; timestamp = " + Timestamp;
-		}
-	}
-
 	@Override
 	public int describeContents() {
 		return 0;
@@ -83,15 +69,4 @@ public class ZLTextFixedPosition extends ZLTextPosition implements Parcelable {
 		this.CharIndex = in.readInt();
 	}
 
-	public static final Creator<ZLTextFixedPosition> CREATOR = new Creator<ZLTextFixedPosition>() {
-		@Override
-		public ZLTextFixedPosition createFromParcel(Parcel source) {
-			return new ZLTextFixedPosition(source);
-		}
-
-		@Override
-		public ZLTextFixedPosition[] newArray(int size) {
-			return new ZLTextFixedPosition[size];
-		}
-	};
 }

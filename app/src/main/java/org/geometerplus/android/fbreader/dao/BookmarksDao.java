@@ -4,6 +4,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
+import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
+
 import java.util.Date;
 
 import de.greenrobot.dao.AbstractDao;
@@ -45,7 +47,7 @@ public class BookmarksDao extends AbstractDao<Bookmark, Long> {
     public final static Property Paragraph = new Property(11, Integer.class, "paragraph", false,
         "paragraph");
     public final static Property Word = new Property(12, Integer.class, "word", false, "word");
-    public final static Property character = new Property(13, Integer.class, "character", false,
+    public final static Property Character = new Property(13, Integer.class, "character", false,
         "char");
     public final static Property EndParagraph = new Property(14, Integer.class, "endParagraph",
         false, "end_paragraph");
@@ -53,17 +55,15 @@ public class BookmarksDao extends AbstractDao<Bookmark, Long> {
         "end_word");
     public final static Property EndCharacter = new Property(16, Integer.class, "endCharacter",
         false, "end_char");
-    public final static Property OriginalText = new Property(17, String.class, "originalText",
-        false, "original_text");
   }
 
-  private DaoSession daoSession;
+  private BooksDaoSession daoSession;
 
   public BookmarksDao(DaoConfig config) {
     super(config);
   }
 
-  public BookmarksDao(DaoConfig config, DaoSession daoSession) {
+  public BookmarksDao(DaoConfig config, BooksDaoSession daoSession) {
     super(config, daoSession);
     this.daoSession = daoSession;
   }
@@ -81,15 +81,14 @@ public class BookmarksDao extends AbstractDao<Bookmark, Long> {
         "\"bg_color\" INTEGER DEFAULT 8948357, " +                        // 6: bg_color
         "\"title\" TEXT, " +                                              // 7: title
         "\"text\" TEXT NOT NULL, " +                                      // 8: text
-        "\"original_text\" TEXT DEFAULT NULL, " +                         // 9: original_text
-        "\"creation_time\" INTEGER NOT NULL, " +                          // 10: creation_time
-        "\"modification_time\" INTEGER, " +                               // 11: modification_time
-        "\"paragraph\" INTEGER NOT NULL, " +                              // 12: paragraph
-        "\"word\" INTEGER NOT NULL, " +                                   // 13: word
-        "\"char\" INTEGER NOT NULL, " +                                   // 14: char
-        "\"end_paragraph\" INTEGER, " +                                   // 15: end_paragraph
-        "\"end_word\" INTEGER, " +                                        // 16: end_word
-        "\"end_char\" INTEGER);");                                        // 17: end_char
+        "\"creation_time\" INTEGER NOT NULL, " +                          // 9: creation_time
+        "\"modification_time\" INTEGER, " +                               // 10: modification_time
+        "\"paragraph\" INTEGER NOT NULL, " +                              // 11: paragraph
+        "\"word\" INTEGER NOT NULL, " +                                   // 12: word
+        "\"char\" INTEGER NOT NULL, " +                                   // 13: char
+        "\"end_paragraph\" INTEGER, " +                                   // 14: end_paragraph
+        "\"end_word\" INTEGER, " +                                        // 15: end_word
+        "\"end_char\" INTEGER);");                                        // 16: end_char
     // Add Indexes
     db.execSQL("CREATE INDEX " + constraint
         + TABLENAME + "_book_code_paragraph_idx ON " + TABLENAME +
@@ -130,32 +129,21 @@ public class BookmarksDao extends AbstractDao<Bookmark, Long> {
     if (entity.text != null) {
       stmt.bindString(9, entity.text);
     }
-    if (entity.originalText != null) {
-      stmt.bindString(10, entity.originalText);
-    }
     if (entity.creationTime != null) {
-      stmt.bindLong(11, entity.creationTime.getTime());
+      stmt.bindLong(10, entity.creationTime.getTime());
     }
     if (entity.modificationTime != null) {
-      stmt.bindLong(12, entity.modificationTime.getTime());
+      stmt.bindLong(11, entity.modificationTime.getTime());
     }
-    if (entity.paragraph != null) {
-      stmt.bindLong(13, entity.paragraph);
+    if (entity.startPosition != null) {
+      stmt.bindLong(12, entity.startPosition.ParagraphIndex);
+      stmt.bindLong(13, entity.startPosition.ElementIndex);
+      stmt.bindLong(14, entity.startPosition.CharIndex);
     }
-    if (entity.word != null) {
-      stmt.bindLong(14, entity.word);
-    }
-    if (entity.character != null) {
-      stmt.bindLong(15, entity.character);
-    }
-    if (entity.endParagraph != null) {
-      stmt.bindLong(16, entity.endParagraph);
-    }
-    if (entity.endWord != null) {
-      stmt.bindLong(17, entity.endWord);
-    }
-    if (entity.endCharacter != null) {
-      stmt.bindLong(18, entity.endCharacter);
+    if (entity.endPosition != null) {
+      stmt.bindLong(15, entity.endPosition.ParagraphIndex);
+      stmt.bindLong(16, entity.endPosition.ElementIndex);
+      stmt.bindLong(17, entity.endPosition.CharIndex);
     }
   }
 
@@ -186,16 +174,14 @@ public class BookmarksDao extends AbstractDao<Bookmark, Long> {
         // backgroundColor
         cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7),           // title
         cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8),           // text
-        cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9),           // originalText
-        cursor.isNull(offset + 10) ? null : new Date(cursor.getLong(offset + 10)), // creationTime
-        cursor.isNull(offset + 11) ? null : new Date(cursor.getLong(offset + 11)),
-        // modificationTime
-        cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12),            // paragraph
-        cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13),            // word
-        cursor.isNull(offset + 14) ? null : cursor.getInt(offset + 14),            // character
-        cursor.isNull(offset + 15) ? null : cursor.getInt(offset + 15),            // endParagraph
-        cursor.isNull(offset + 16) ? null : cursor.getInt(offset + 16),            // endWord
-        cursor.isNull(offset + 17) ? null : cursor.getInt(offset + 17)             // endCharacter
+        cursor.isNull(offset + 9) ? null : new Date(cursor.getLong(offset + 9)),   // creationTime
+        cursor.isNull(offset + 10) ? null : new Date(cursor.getLong(offset + 10)), // modificationTime
+        cursor.getInt(offset + 11),                                                // paragraph
+        cursor.getInt(offset + 12),                                                // word
+        cursor.getInt(offset + 13),                                                // character
+        cursor.isNull(offset + 14) ? null : cursor.getInt(offset + 14),            // endParagraph
+        cursor.isNull(offset + 15) ? null : cursor.getInt(offset + 15),            // endWord
+        cursor.isNull(offset + 16) ? null : cursor.getInt(offset + 16)             // endCharacter
     );
   }
 
@@ -211,16 +197,18 @@ public class BookmarksDao extends AbstractDao<Bookmark, Long> {
     entity.backgroundColor = cursor.getInt(6);
     entity.title = cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7);
     entity.text = cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8);
-    entity.originalText = cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9);
-    entity.creationTime = cursor.isNull(offset + 10) ? null : new Date(cursor.getLong(offset + 10));
-    entity.modificationTime =
-        cursor.isNull(offset + 11) ? null : new Date(cursor.getLong(offset + 11));
-    entity.paragraph = cursor.isNull(offset + 12) ? null : cursor.getInt(offset + 12);
-    entity.word = cursor.isNull(offset + 13) ? null : cursor.getInt(offset + 13);
-    entity.character = cursor.isNull(offset + 14) ? null : cursor.getInt(offset + 14);
-    entity.endParagraph = cursor.isNull(offset + 15) ? null : cursor.getInt(offset + 15);
-    entity.endWord = cursor.isNull(offset + 16) ? null : cursor.getInt(offset + 16);
-    entity.endCharacter = cursor.isNull(offset + 17) ? null : cursor.getInt(offset + 17);
+    entity.creationTime = cursor.isNull(offset + 9) ? null : new Date(cursor.getLong(offset + 9));
+    entity.modificationTime = cursor.isNull(offset + 10) ? null : new Date(cursor.getLong(offset + 10));
+    int paragraph = cursor.getInt(offset + 11);
+    int word = cursor.getInt(offset + 12);
+    int character = cursor.getInt(offset + 13);
+    entity.startPosition = new ZLTextFixedPosition(paragraph, word, character);
+    Integer endParagraph = cursor.isNull(offset + 14) ? 0 : cursor.getInt(offset + 14);
+    Integer endWord = cursor.isNull(offset + 15) ? 0 : cursor.getInt(offset + 15);
+    Integer endCharacter = cursor.isNull(offset + 16) ? null : cursor.getInt(offset + 16);
+    if (null != endCharacter) {
+      entity.endPosition = new ZLTextFixedPosition(endParagraph, endWord, endCharacter);
+    }
   }
 
   /** @inheritdoc */

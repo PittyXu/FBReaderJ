@@ -41,4 +41,8 @@ public class BooksDaoHelper {
   public BookmarksDao getBookmarksDao() {
     return mSession.getBookmarksDao();
   }
+
+  public BookStateDao getBookStateDao() {
+    return mSession.getBookStateDao();
+  }
 }

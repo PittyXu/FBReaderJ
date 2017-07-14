@@ -34,12 +34,14 @@ import com.afollestad.materialdialogs.folderselector.FileChooserDialog.FileCallb
 
 import org.geometerplus.android.fbreader.FBReaderIntents.Key;
 import org.geometerplus.android.fbreader.config.ColorProfile;
+import org.geometerplus.android.fbreader.dao.Bookmark;
 import org.geometerplus.fbreader.book.Book;
 import org.geometerplus.fbreader.book.BookUtil;
-import org.geometerplus.fbreader.book.Bookmark;
 import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
+import org.geometerplus.fbreader.formats.BookReadingException;
+import org.geometerplus.fbreader.formats.PluginCollection;
 import org.geometerplus.zlibrary.core.application.ZLApplicationWindow;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.view.ZLViewWidget;
@@ -91,11 +93,16 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		if (file == null) {
 			return null;
 		}
-		Book book = myFBReaderApp.Collection.getBookByFile(file.getPath());
-		if (book != null) {
-			return book;
+
+		String path = file.getPath();
+		Book book = new Book(-1, path, null, null, null);
+		try {
+			BookUtil.readMetainfo(book, PluginCollection.Instance().getPlugin(ZLFile.createFileByPath(path)));
+		} catch (BookReadingException pE) {
+			pE.printStackTrace();
 		}
-		return null;
+
+		return book;
 	}
 
 	@Override

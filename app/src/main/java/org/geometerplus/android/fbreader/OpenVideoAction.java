@@ -19,13 +19,15 @@
 
 package org.geometerplus.android.fbreader;
 
+import android.app.Activity;
+
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.zlibrary.core.util.MimeType;
 import org.geometerplus.zlibrary.text.view.ZLTextVideoElement;
 import org.geometerplus.zlibrary.text.view.ZLTextVideoRegionSoul;
 
 public class OpenVideoAction extends FBAndroidAction {
-	public OpenVideoAction(FBReader baseActivity, FBReaderApp fbreader) {
+	public OpenVideoAction(Activity baseActivity, FBReaderApp fbreader) {
 		super(baseActivity, fbreader);
 	}
 

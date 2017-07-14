@@ -3,10 +3,16 @@ package org.geometerplus.android.fbreader.dao;
 
 import android.graphics.Color;
 
+import org.geometerplus.fbreader.util.TextSnippet;
+import org.geometerplus.zlibrary.text.view.ZLTextElement;
 import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
 import org.geometerplus.zlibrary.text.view.ZLTextPosition;
+import org.geometerplus.zlibrary.text.view.ZLTextView;
+import org.geometerplus.zlibrary.text.view.ZLTextWord;
+import org.geometerplus.zlibrary.text.view.ZLTextWordCursor;
 
 import java.util.Date;
+import java.util.UUID;
 
 import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.DaoException;
@@ -39,13 +45,12 @@ public class Bookmark {
   public int backgroundColor = Color.YELLOW;
   public String title;
   public String text;
-  public String originalText;
   public Date creationTime;
   public Date modificationTime;
   public ZLTextFixedPosition startPosition;
   public ZLTextFixedPosition endPosition;
 
-  private int myLength;
+  private int mLength;
 
   /** Used to resolve relations */
   private transient BooksDaoSession daoSession;
@@ -64,9 +69,9 @@ public class Bookmark {
   }
 
   public Bookmark(Long pId, Long pBookCode, int pType, String pUid, boolean pVisible,
-      int fgColor, int bgColor, String pTitle, String pText, String pOriginalText,
-      Date pCreationTime, Date pModificationTime, Integer pParagraph, Integer pWord,
-      Integer pCharacter, Integer pEndParagraph, Integer pEndWord, int pEndCharacter) {
+      int fgColor, int bgColor, String pTitle, String pText, Date pCreationTime,
+      Date pModificationTime, int pParagraph, int pWord, int pCharacter,
+      Integer pEndParagraph, Integer pEndWord, Integer pEndCharacter) {
     this.id = pId;
     this.bookCode = pBookCode;
     this.type = pType;
@@ -76,16 +81,25 @@ public class Bookmark {
     this.backgroundColor = bgColor;
     this.title = pTitle;
     this.text = pText;
-    this.originalText = pOriginalText;
     this.creationTime = pCreationTime;
     this.modificationTime = pModificationTime;
     startPosition = new ZLTextFixedPosition(pParagraph, pWord, pCharacter);
 
-    if (pEndCharacter >= 0) {
+    if (null != pEndCharacter) {
       endPosition = new ZLTextFixedPosition(pEndParagraph, pEndWord, pEndCharacter);
     } else {
-      myLength = pEndParagraph;
+      mLength = pEndParagraph;
     }
+  }
+
+  public Bookmark(Long pBookCode, TextSnippet snippet, boolean pVisible) {
+    bookCode = pBookCode;
+    uid = newUUID();
+    visible = pVisible;
+    text = snippet.getText();
+    creationTime = new Date();
+    startPosition = new ZLTextFixedPosition(snippet.getStart());
+    endPosition = new ZLTextFixedPosition(snippet.getEnd());
   }
 
   /** called by internal mechanisms, do not call yourself. */
@@ -128,6 +142,10 @@ public class Bookmark {
   }
 
   // KEEP METHODS - put your custom methods here
+  private static String newUUID() {
+    return UUID.randomUUID().toString();
+  }
+
   private static String verifiedUUID(String uid) {
     if (uid == null || uid.length() == 36) {
       return uid;
@@ -135,8 +153,44 @@ public class Bookmark {
     throw new RuntimeException("INVALID UUID: " + uid);
   }
 
-  public ZLTextPosition getEnd() {
-    return myEnd;
+  public void findEnd(ZLTextView view) {
+    if (endPosition != null) {
+      return;
+    }
+    ZLTextWordCursor cursor = view.getStartCursor();
+    if (cursor.isNull()) {
+      cursor = view.getEndCursor();
+    }
+    if (cursor.isNull()) {
+      return;
+    }
+    cursor = new ZLTextWordCursor(cursor);
+    cursor.moveTo(startPosition);
+
+    ZLTextWord word = null;
+    mainLoop:
+    for (int count = mLength; count > 0; cursor.nextWord()) {
+      while (cursor.isEndOfParagraph()) {
+        if (!cursor.nextParagraph()) {
+          break mainLoop;
+        }
+      }
+      final ZLTextElement element = cursor.getElement();
+      if (element instanceof ZLTextWord) {
+        if (word != null) {
+          --count;
+        }
+        word = (ZLTextWord)element;
+        count -= word.Length;
+      }
+    }
+    if (word != null) {
+      endPosition = new ZLTextFixedPosition(cursor.getParagraphIndex(), cursor.getElementIndex(), word.Length);
+    }
+  }
+
+  public void setEnd(int paragraphIndex, int elementIndex, int charIndex) {
+    endPosition = new ZLTextFixedPosition(paragraphIndex, elementIndex, charIndex);
   }
 
   // KEEP METHODS END

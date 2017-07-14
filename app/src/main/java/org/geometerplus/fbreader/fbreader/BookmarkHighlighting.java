@@ -21,49 +21,43 @@ package org.geometerplus.fbreader.fbreader;
 
 import android.support.annotation.ColorInt;
 
-import org.geometerplus.fbreader.book.Bookmark;
-import org.geometerplus.fbreader.book.HighlightingStyle;
-import org.geometerplus.fbreader.book.IBookCollection;
+import org.geometerplus.android.fbreader.dao.Bookmark;
 import org.geometerplus.zlibrary.text.view.ZLTextFixedPosition;
 import org.geometerplus.zlibrary.text.view.ZLTextPosition;
 import org.geometerplus.zlibrary.text.view.ZLTextSimpleHighlighting;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 
 public final class BookmarkHighlighting extends ZLTextSimpleHighlighting {
-	private final IBookCollection Collection;
-	final Bookmark Bookmark;
+	final Bookmark bookmark;
 
 	private static ZLTextPosition startPosition(Bookmark bookmark) {
-		return new ZLTextFixedPosition(bookmark.getParagraphIndex(), bookmark.getElementIndex(), 0);
+		return new ZLTextFixedPosition(bookmark.startPosition.getParagraphIndex(), bookmark.startPosition.getElementIndex(), 0);
 	}
 
 	private static ZLTextPosition endPosition(Bookmark bookmark) {
-		final ZLTextPosition end = bookmark.getEnd();
+		final ZLTextPosition end = bookmark.endPosition;
 		if (end != null) {
 			return end;
 		}
 		// TODO: compute end and save bookmark
-		return bookmark;
+		return bookmark.startPosition;
 	}
 
-	BookmarkHighlighting(ZLTextView view, IBookCollection collection, Bookmark bookmark) {
+	BookmarkHighlighting(ZLTextView view, Bookmark bookmark) {
 		super(view, startPosition(bookmark), endPosition(bookmark));
-		Collection = collection;
-		Bookmark = bookmark;
+		this.bookmark = bookmark;
 	}
 
 	@ColorInt
 	@Override
 	public Integer getBackgroundColor() {
-		final HighlightingStyle bmStyle = Collection.getHighlightingStyle(Bookmark.getStyleId());
-		return bmStyle != null ? bmStyle.getBackgroundColor() : null;
+		return bookmark.backgroundColor;
 	}
 
 	@ColorInt
 	@Override
 	public Integer getForegroundColor() {
-		final HighlightingStyle bmStyle = Collection.getHighlightingStyle(Bookmark.getStyleId());
-		return bmStyle != null ? bmStyle.getForegroundColor() : null;
+		return bookmark.foregroundColor;
 	}
 
 	@ColorInt

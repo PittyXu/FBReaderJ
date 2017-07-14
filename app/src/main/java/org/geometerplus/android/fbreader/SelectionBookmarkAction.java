@@ -19,11 +19,13 @@
 
 package org.geometerplus.android.fbreader;
 
-import org.geometerplus.fbreader.book.Bookmark;
+import android.app.Activity;
+
+import org.geometerplus.android.fbreader.dao.Bookmark;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 
 public class SelectionBookmarkAction extends FBAndroidAction {
-	public SelectionBookmarkAction(FBReader baseApplication, FBReaderApp fbreader) {
+	public SelectionBookmarkAction(Activity baseApplication, FBReaderApp fbreader) {
 		super(baseApplication, fbreader);
 	}
 
@@ -34,9 +36,6 @@ public class SelectionBookmarkAction extends FBAndroidAction {
 			bookmark = (Bookmark)params[0];
 		} else {
 			bookmark = Reader.addSelectionBookmark();
-		}
-		if (bookmark == null) {
-			return;
 		}
 	}
 }

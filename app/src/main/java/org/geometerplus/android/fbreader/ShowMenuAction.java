@@ -19,10 +19,12 @@
 
 package org.geometerplus.android.fbreader;
 
+import android.app.Activity;
+
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 
 public class ShowMenuAction extends FBAndroidAction {
-	public ShowMenuAction(FBReader baseActivity, FBReaderApp fbreader) {
+	public ShowMenuAction(Activity baseActivity, FBReaderApp fbreader) {
 		super(baseActivity, fbreader);
 	}
 

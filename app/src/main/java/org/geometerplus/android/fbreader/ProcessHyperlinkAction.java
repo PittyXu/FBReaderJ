@@ -19,6 +19,7 @@
 
 package org.geometerplus.android.fbreader;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.BaseTransientBottomBar.BaseCallback;
 import android.support.design.widget.Snackbar;
@@ -41,7 +42,7 @@ import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
 public class ProcessHyperlinkAction extends FBAndroidAction {
 
-  public ProcessHyperlinkAction(FBReader baseActivity, FBReaderApp fbreader) {
+  public ProcessHyperlinkAction(Activity baseActivity, FBReaderApp fbreader) {
     super(baseActivity, fbreader);
   }
 

@@ -19,6 +19,7 @@
 
 package org.geometerplus.android.fbreader;
 
+import android.app.Activity;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -45,7 +46,7 @@ final class TextSearchPopup extends PopupPanel implements View.OnClickListener {
 	}
 
 	@Override
-	public synchronized void createControlPanel(FBReader activity, RelativeLayout root) {
+	public synchronized void createControlPanel(Activity activity, RelativeLayout root) {
 		if (myWindow != null && activity == myWindow.getContext()) {
 			return;
 		}

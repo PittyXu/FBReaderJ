@@ -19,10 +19,12 @@
 
 package org.geometerplus.android.fbreader;
 
+import android.app.Activity;
+
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 
 public class SelectionShowPanelAction extends FBAndroidAction {
-	public SelectionShowPanelAction(FBReader baseActivity, FBReaderApp fbreader) {
+	public SelectionShowPanelAction(Activity baseActivity, FBReaderApp fbreader) {
 		super(baseActivity, fbreader);
 	}
 
@@ -33,6 +35,6 @@ public class SelectionShowPanelAction extends FBAndroidAction {
 
 	@Override
 	protected void run(Object ... params) {
-		BaseActivity.showSelectionPanel();
+		((FBReader) BaseActivity).showSelectionPanel();
 	}
 }

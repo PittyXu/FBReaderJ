@@ -22,20 +22,17 @@ package org.geometerplus.fbreader.fbreader;
 import android.content.Context;
 import android.widget.Toast;
 
-import org.geometerplus.android.fbreader.BookCollectionShadow;
+import org.geometerplus.android.fbreader.dao.BookState;
 import org.geometerplus.android.fbreader.dao.Bookmark;
 import org.geometerplus.android.fbreader.dao.BooksDaoHelper;
 import org.geometerplus.fbreader.book.Book;
 import org.geometerplus.fbreader.book.BookUtil;
-import org.geometerplus.fbreader.book.BookmarkQuery;
-import org.geometerplus.fbreader.book.BookmarkUtil;
 import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.bookmodel.TOCTree;
 import org.geometerplus.fbreader.formats.BookReadingException;
 import org.geometerplus.fbreader.formats.FormatPlugin;
 import org.geometerplus.fbreader.formats.PluginCollection;
 import org.geometerplus.fbreader.util.AutoTextSnippet;
-import org.geometerplus.fbreader.util.ComparisonUtil;
 import org.geometerplus.fbreader.util.TextSnippet;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.application.ZLKeyBindings;
@@ -52,7 +49,9 @@ import org.geometerplus.zlibrary.text.view.ZLTextView.PagePosition;
 import org.geometerplus.zlibrary.text.view.ZLTextWordCursor;
 import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -68,12 +67,10 @@ public final class FBReaderApp extends ZLApplication {
 	public volatile BookModel Model;
 	public volatile Book ExternalBook;
 
-	public final BookCollectionShadow Collection;
 	private Context mContext;
 
 	public FBReaderApp(Context pContext) {
 		mContext = pContext;
-		Collection = new BookCollectionShadow(pContext);
 		myBindings = new ZLKeyBindings(pContext);
 		myTextStyleCollection = new ZLTextStyleCollection(pContext, "Base");
 
@@ -194,13 +191,8 @@ public final class FBReaderApp extends ZLApplication {
 			return null;
 		}
 
-		final Bookmark bookmark = new Bookmark(getContext(),
-			Model.Book,
-			fbView.getModel().getId(),
-			snippet,
-			true
-		);
-		Collection.saveBookmark(bookmark);
+		final Bookmark bookmark = new Bookmark((long) Model.Book.getPath().hashCode(), snippet, true);
+		BooksDaoHelper.getInstance(mContext).getBookmarksDao().insertOrReplace(bookmark);
 		fbView.clearSelection();
 
 		return bookmark;
@@ -210,12 +202,10 @@ public final class FBReaderApp extends ZLApplication {
 		view.removeHighlightings(BookmarkHighlighting.class);
 		List<Bookmark> bookmarks = BooksDaoHelper.getInstance(mContext).getBookmarksDao().loadAll();
 		for (Bookmark b : bookmarks) {
-			if (b.getEnd() == null) {
-				BookmarkUtil.findEnd(b, view);
+			if (b.endPosition == null) {
+				b.findEnd(view);
 			}
-			if (ComparisonUtil.equal(modelId, b.ModelId)) {
-				view.addHighlighting(new BookmarkHighlighting(view, Collection, b));
-			}
+			view.addHighlighting(new BookmarkHighlighting(view, b));
 		}
 	}
 
@@ -282,36 +272,15 @@ public final class FBReaderApp extends ZLApplication {
 		}
 	}
 
-	private List<Bookmark> invisibleBookmarks() {
-		final List<Bookmark> bookmarks = Collection.bookmarks(
-			new BookmarkQuery(Model.Book, false, 10)
-		);
-		Collections.sort(bookmarks, new Bookmark.ByTimeComparator());
-		return bookmarks;
-	}
-
 	private void gotoBookmark(Bookmark bookmark, boolean exactly) {
-		final String modelId = bookmark.ModelId;
-		if (modelId == null) {
-			if (exactly) {
-				BookTextView.gotoPosition(bookmark);
-			} else {
-				BookTextView.gotoHighlighting(
-					new BookmarkHighlighting(BookTextView, Collection, bookmark)
-				);
-			}
-			setView(BookTextView);
+		if (exactly) {
+			BookTextView.gotoPosition(bookmark.startPosition);
 		} else {
-			setFootnoteModel(modelId);
-			if (exactly) {
-				FootnoteView.gotoPosition(bookmark);
-			} else {
-				FootnoteView.gotoHighlighting(
-					new BookmarkHighlighting(FootnoteView, Collection, bookmark)
-				);
-			}
-			setView(FootnoteView);
+			BookTextView.gotoHighlighting(
+				new BookmarkHighlighting(BookTextView, bookmark)
+			);
 		}
+		setView(BookTextView);
 		getViewWidget().repaint();
 		storePosition();
 	}
@@ -336,7 +305,11 @@ public final class FBReaderApp extends ZLApplication {
 		}
 
 		public void run() {
-			Collection.storePosition(myBook.getId(), myPosition);
+			if (null != myPosition) {
+				BookState state = new BookState((long) myBook.getPath().hashCode(), myPosition, new Date());
+				BooksDaoHelper.getInstance(mContext).getBookStateDao()
+						.insertOrReplace(state);
+			}
 			myBook.setProgress(myProgress);
 		}
 	}
@@ -372,8 +345,13 @@ public final class FBReaderApp extends ZLApplication {
 	private volatile ZLTextPosition myStoredPosition;
 	private volatile Book myStoredPositionBook;
 
-	private ZLTextFixedPosition getStoredPosition(Book book) {
-		return Collection.getStoredPosition(book.getId());
+	private ZLTextPosition getStoredPosition(Book book) {
+		BookState state = BooksDaoHelper.getInstance(mContext).getBookStateDao()
+				.load((long) book.getPath().hashCode());
+		if (null != state) {
+			return state.position;
+		}
+		return null;
 	}
 
 	private void gotoStoredPosition() {
@@ -415,12 +393,7 @@ public final class FBReaderApp extends ZLApplication {
 			return null;
 		}
 
-		return new Bookmark(getContext(),
-			Model.Book,
-			view.getModel().getId(),
-			new AutoTextSnippet(cursor, maxChars),
-			visible
-		);
+		return new Bookmark((long) Model.Book.getPath().hashCode(), new AutoTextSnippet(cursor, maxChars), visible);
 	}
 
 	public TOCTree getCurrentTOCElement() {

@@ -79,7 +79,7 @@ public final class ZLAndroidLibrary extends ZLibrary {
 
 	@Override
 	public List<String> defaultLanguageCodes() {
-		final TreeSet<String> set = new TreeSet<String>();
+		final TreeSet<String> set = new TreeSet<>();
 		set.add(Locale.getDefault().getLanguage());
 		final TelephonyManager manager = (TelephonyManager)myApplication.getSystemService(Context.TELEPHONY_SERVICE);
 		if (manager != null) {
@@ -93,21 +93,13 @@ public final class ZLAndroidLibrary extends ZLibrary {
 			}
 			for (Locale locale : Locale.getAvailableLocales()) {
 				final String country = locale.getCountry().toLowerCase();
-				if (country != null && country.length() > 0 &&
-					(country.equals(country0) || country.equals(country1))) {
+				if (country.length() > 0 && (country.equals(country0) || country.equals(country1))) {
 					set.add(locale.getLanguage());
 				}
 			}
-			if ("ru".equals(country0) || "ru".equals(country1)) {
-				set.add("ru");
-			} else if ("by".equals(country0) || "by".equals(country1)) {
-				set.add("ru");
-			} else if ("ua".equals(country0) || "ua".equals(country1)) {
-				set.add("ru");
-			}
 		}
 		set.add("multi");
-		return new ArrayList<String>(set);
+		return new ArrayList<>(set);
 	}
 
 	@Override

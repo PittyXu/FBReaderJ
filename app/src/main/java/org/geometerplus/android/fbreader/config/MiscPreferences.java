@@ -16,7 +16,6 @@ public class MiscPreferences {
     never, footnotesOnly, footnotesAndSuperscripts, allInternalLinks
   }
 
-  private static final String BOOKMARK_CURRENT_TAB = "misc_bookmark_current_tab";
   private static final String ENABLE_DOUBLE_TAP = "misc_enable_double_tap";
   private static final String NAVIGATE_ALL_WORDS = "misc_navigate_all_words";
   private static final String WORD_TAPPING_ACTION = "misc_word_tapping_action";
@@ -27,14 +26,6 @@ public class MiscPreferences {
   private static final String TAP_ZONE_MAP_LIST = "misc_tap_zone_map_list";
   private static final String KEYS = "misc_keys_";
   private static final String KEY_LIST = "misc_key_list_";
-
-  public static void setBookmarkCurrentTab(Context pContext, String tab) {
-    DefaultPreferences.getInstance(pContext).setString(BOOKMARK_CURRENT_TAB, tab);
-  }
-
-  public static String getBookmarkCurrentTab(Context pContext) {
-    return DefaultPreferences.getInstance(pContext).getString(BOOKMARK_CURRENT_TAB, "");
-  }
 
   public static void setEnableDoubleTap(Context pContext, boolean enable) {
     DefaultPreferences.getInstance(pContext).setBoolean(ENABLE_DOUBLE_TAP, enable);

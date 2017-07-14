@@ -19,6 +19,7 @@
 
 package org.geometerplus.android.fbreader;
 
+import android.app.Activity;
 import android.app.Application;
 import android.text.ClipboardManager;
 import android.widget.Toast;
@@ -29,7 +30,7 @@ import org.geometerplus.fbreader.util.TextSnippet;
 import org.geometerplus.zlibrary.ui.android.R;
 
 public class SelectionCopyAction extends FBAndroidAction {
-	public SelectionCopyAction(FBReader baseActivity, FBReaderApp fbreader) {
+	public SelectionCopyAction(Activity baseActivity, FBReaderApp fbreader) {
 		super(baseActivity, fbreader);
 	}
 

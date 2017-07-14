@@ -22,11 +22,13 @@ public class BooksDaoMaster extends AbstractDaoMaster {
   /** Creates underlying database table using DAOs. */
   public static void createAllTables(SQLiteDatabase db, boolean ifNotExists) {
     BookmarksDao.createTable(db, ifNotExists);
+    BookStateDao.createTable(db, ifNotExists);
   }
 
   /** Drops underlying database table using DAOs. */
   public static void dropAllTables(SQLiteDatabase db, boolean ifExists) {
     BookmarksDao.dropTable(db, ifExists);
+    BookStateDao.dropTable(db, ifExists);
   }
 
   public static abstract class OpenHelper extends SQLiteOpenHelper {
@@ -61,6 +63,7 @@ public class BooksDaoMaster extends AbstractDaoMaster {
   public BooksDaoMaster(SQLiteDatabase db) {
     super(db, SCHEMA_VERSION);
     registerDaoClass(BookmarksDao.class);
+    registerDaoClass(BookStateDao.class);
   }
 
   public BooksDaoSession newSession() {

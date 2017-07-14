@@ -19,26 +19,38 @@ import de.greenrobot.dao.internal.DaoConfig;
 public class BooksDaoSession extends AbstractDaoSession {
 
   private final DaoConfig mBookmarksDaoConfig;
+  private final DaoConfig mBookStateDaoConfig;
 
   private final BookmarksDao mBookmarksDao;
+  private final BookStateDao mBookStateDao;
 
   public BooksDaoSession(SQLiteDatabase db, IdentityScopeType type,
       Map<Class<? extends AbstractDao<?, ?>>, DaoConfig> daoConfigMap) {
     super(db);
 
     mBookmarksDaoConfig = daoConfigMap.get(BookmarksDao.class).clone();
+    mBookStateDaoConfig = daoConfigMap.get(BookStateDao.class).clone();
+
     mBookmarksDaoConfig.initIdentityScope(type);
+    mBookStateDaoConfig.initIdentityScope(type);
 
     mBookmarksDao = new BookmarksDao(mBookmarksDaoConfig, this);
+    mBookStateDao = new BookStateDao(mBookStateDaoConfig, this);
 
     registerDao(Bookmark.class, mBookmarksDao);
+    registerDao(BookState.class, mBookStateDao);
   }
 
   public void clear() {
     mBookmarksDaoConfig.getIdentityScope().clear();
+    mBookStateDaoConfig.getIdentityScope().clear();
   }
 
   public BookmarksDao getBookmarksDao() {
     return mBookmarksDao;
+  }
+
+  public BookStateDao getBookStateDao() {
+    return mBookStateDao;
   }
 }

@@ -12,7 +12,6 @@ public class StylePreferences {
   private static final String STYLE = "style_";
   private static final String STYLE_DESCRIPTION = "style_description_";
   private static final String TEXT_FONT_FAMILY = "style_text_font_family";
-  private final static String DEFAULT_STYLE_ID_KEY = "style_default_highlighting_id";
 
 
   public static void setFontFamily(Context pContext, String font) {
@@ -41,13 +40,5 @@ public class StylePreferences {
       style = new ZLTextBaseStyle();
     }
     return style;
-  }
-
-  public static void setDefaultHighlightingStyle(Context pContext, int style) {
-    DefaultPreferences.getInstance(pContext).setInt(DEFAULT_STYLE_ID_KEY, style);
-  }
-
-  public static int getDefaultHighlightingStyle(Context pContext) {
-     return DefaultPreferences.getInstance(pContext).getInt(DEFAULT_STYLE_ID_KEY, 1);
   }
 }
