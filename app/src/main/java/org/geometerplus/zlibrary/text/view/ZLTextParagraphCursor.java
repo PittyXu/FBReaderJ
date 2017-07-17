@@ -31,6 +31,7 @@ import org.geometerplus.zlibrary.text.model.ZLTextOtherStyleEntry;
 import org.geometerplus.zlibrary.text.model.ZLTextParagraph;
 import org.geometerplus.zlibrary.text.model.ZLTextStyleEntry;
 import org.geometerplus.zlibrary.ui.android.R;
+import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 import org.vimgadgets.linebreak.LineBreaker;
 
 import java.util.ArrayList;
@@ -101,7 +102,7 @@ public final class ZLTextParagraphCursor {
 						final ZLImageEntry imageEntry = it.getImageEntry();
 						final ZLImage image = imageEntry.getImage();
 						if (image != null) {
-							ZLImageData data = ZLImageManager.Instance().getImageData(image);
+							ZLImageData data = ZLAndroidImageManager.getInstance().getImageData(image);
 							if (data != null) {
 								if (hyperlink != null) {
 									hyperlink.addElementIndex(elements.size());
@@ -203,7 +204,7 @@ public final class ZLTextParagraphCursor {
 			}
 		}
 
-		private final void addWord(char[] data, int offset, int len, int paragraphOffset, ZLTextHyperlink hyperlink) {
+		private void addWord(char[] data, int offset, int len, int paragraphOffset, ZLTextHyperlink hyperlink) {
 			ZLTextWord word = new ZLTextWord(data, offset, len, paragraphOffset);
 			for (int i = myFirstMark; i < myLastMark; ++i) {
 				final ZLTextMark mark = myMarks.get(i);

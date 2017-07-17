@@ -22,6 +22,7 @@ package org.geometerplus.fbreader.fbreader;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.ColorInt;
+import android.text.TextUtils;
 
 import org.geometerplus.android.fbreader.config.ColorProfile;
 import org.geometerplus.android.fbreader.config.ImagePreferences;
@@ -31,19 +32,24 @@ import org.geometerplus.android.fbreader.config.MiscPreferences.WordTappingActio
 import org.geometerplus.android.fbreader.config.PageTurningPreferences;
 import org.geometerplus.android.fbreader.config.PageTurningPreferences.FingerScrollingType;
 import org.geometerplus.android.fbreader.config.ViewPreferences;
+import org.geometerplus.android.fbreader.dao.Bookmark;
+import org.geometerplus.android.fbreader.listeners.SelectionListener;
+import org.geometerplus.android.fbreader.listeners.onElementClickListener;
 import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.bookmodel.FBHyperlinkType;
 import org.geometerplus.fbreader.bookmodel.TOCTree;
+import org.geometerplus.fbreader.fbreader.TapZoneMap.Tap;
 import org.geometerplus.fbreader.util.FixedTextSnippet;
 import org.geometerplus.fbreader.util.TextSnippet;
 import org.geometerplus.zlibrary.core.fonts.FontEntry;
-import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.core.view.SelectionCursor;
+import org.geometerplus.zlibrary.core.view.SelectionCursor.Which;
 import org.geometerplus.zlibrary.core.view.ZLPaintContext;
 import org.geometerplus.zlibrary.text.model.ZLTextModel;
 import org.geometerplus.zlibrary.text.view.ZLTextHighlighting;
 import org.geometerplus.zlibrary.text.view.ZLTextHyperlink;
 import org.geometerplus.zlibrary.text.view.ZLTextHyperlinkRegionSoul;
+import org.geometerplus.zlibrary.text.view.ZLTextImageElement;
 import org.geometerplus.zlibrary.text.view.ZLTextImageRegionSoul;
 import org.geometerplus.zlibrary.text.view.ZLTextPosition;
 import org.geometerplus.zlibrary.text.view.ZLTextRegion;
@@ -62,6 +68,8 @@ import java.util.TreeSet;
 
 public final class FBView extends ZLTextView {
 	private final FBReaderApp myReader;
+	private SelectionListener mSelectionListener;
+	private onElementClickListener mHyperlinkListener;
 
 	public FBView(FBReaderApp reader) {
 		super(reader.getContext(), reader);
@@ -79,7 +87,7 @@ public final class FBView extends ZLTextView {
 
 	private TapZoneMap getZoneMap() {
 		String id = PageTurningPreferences.getTapZoneMap(myReader.getContext());
-		if ("".equals(id)) {
+		if (TextUtils.isEmpty(id)) {
 			id = PageTurningPreferences.getHorizontal(myReader.getContext()) ? "right_to_left" : "up";
 		}
 		if (myZoneMap == null || !id.equals(myZoneMap.Name)) {
@@ -89,20 +97,25 @@ public final class FBView extends ZLTextView {
 	}
 
 	private void onFingerSingleTapLastResort(int x, int y) {
-		myReader.runAction(getZoneMap().getActionByCoordinates(
-			x, y, getContextWidth(), getContextHeight(),
-			isDoubleTapSupported() ? TapZoneMap.Tap.singleNotDoubleTap : TapZoneMap.Tap.singleTap
-		), x, y);
+		Tap tap = isDoubleTapSupported() ? TapZoneMap.Tap.singleNotDoubleTap : TapZoneMap.Tap.singleTap;
+		applyAction(x, y, tap);
 	}
 
 	@Override
 	public void onFingerSingleTap(int x, int y) {
+		if (!isSelectionEmpty()) {
+			clearSelection();
+			if (null != mSelectionListener) {
+				mSelectionListener.onCancelled();
+			}
+			return;
+		}
 		final ZLTextRegion hyperlinkRegion = findRegion(x, y, maxSelectionDistance(), ZLTextRegion.HyperlinkFilter);
 		if (hyperlinkRegion != null) {
 			outlineRegion(hyperlinkRegion);
 			myReader.getViewWidget().reset();
 			myReader.getViewWidget().repaint();
-			myReader.runAction(ActionCode.PROCESS_HYPERLINK);
+			processHyperlink();
 			return;
 		}
 
@@ -111,16 +124,16 @@ public final class FBView extends ZLTextView {
 			outlineRegion(videoRegion);
 			myReader.getViewWidget().reset();
 			myReader.getViewWidget().repaint();
-			myReader.runAction(ActionCode.OPEN_VIDEO, (ZLTextVideoRegionSoul)videoRegion.getSoul());
+			if (null != mHyperlinkListener) {
+				mHyperlinkListener.onVideoClick(((ZLTextVideoRegionSoul)videoRegion.getSoul()).VideoElement);
+			}
 			return;
 		}
 
 		final ZLTextHighlighting highlighting = findHighlighting(x, y, maxSelectionDistance());
 		if (highlighting instanceof BookmarkHighlighting) {
-			myReader.runAction(
-				ActionCode.SELECTION_BOOKMARK,
-				((BookmarkHighlighting)highlighting).bookmark
-			);
+			Bookmark bookmark = ((BookmarkHighlighting)highlighting).bookmark;
+			markBookmarkSelection(bookmark);
 			return;
 		}
 
@@ -134,17 +147,27 @@ public final class FBView extends ZLTextView {
 
 	@Override
 	public void onFingerDoubleTap(int x, int y) {
-		myReader.runAction(getZoneMap().getActionByCoordinates(
-			x, y, getContextWidth(), getContextHeight(), TapZoneMap.Tap.doubleTap
-		), x, y);
+		applyAction(x, y, Tap.doubleTap);
+	}
+
+	public void applyAction(int x, int y, Tap tap) {
+		TapZoneMap map = getZoneMap();
+		String actionId = map.getActionByCoordinates(x, y, getContextWidth(), getContextHeight(), tap);
+		boolean horizontal = PageTurningPreferences.getHorizontal(myReader.getContext());
+		Direction dir = horizontal ? Direction.rightToLeft : Direction.up;
+		int speed = PageTurningPreferences.getAnimationSpeed(myReader.getContext());
+		if (TapZoneMap.TURN_PAGE_FORWARD.equals(actionId)) {
+			myReader.getViewWidget().startAnimatedScrolling(PageIndex.next, x, y, dir, speed);
+		} else if (TapZoneMap.TURN_PAGE_BACK.equals(actionId)) {
+			myReader.getViewWidget().startAnimatedScrolling(PageIndex.previous, dir, speed);
+		}
 	}
 
 	@Override
 	public void onFingerPress(int x, int y) {
-		final float maxDist = ZLibrary.Instance().getDisplayDPI() / 4;
+		final float maxDist = myReader.getDisplayDPI() / 4;
 		final SelectionCursor.Which cursor = findSelectionCursor(x, y, maxDist * maxDist);
 		if (cursor != null) {
-			myReader.runAction(ActionCode.SELECTION_HIDE_PANEL);
 			moveSelectionCursorTo(cursor, x, y);
 			return;
 		}
@@ -203,7 +226,9 @@ public final class FBView extends ZLTextView {
 			if (soul instanceof ZLTextWordRegionSoul) {
 				int action = MiscPreferences.getWordTappingAction(myReader.getContext());
 				if (WordTappingActionEnum.startSelecting.ordinal() == action) {
-					myReader.runAction(ActionCode.SELECTION_HIDE_PANEL);
+					if (null != mSelectionListener) {
+						mSelectionListener.onStarted(x, y);
+					}
 					initSelection(x, y);
 					final SelectionCursor.Which cursor = findSelectionCursor(x, y);
 					if (cursor != null) {
@@ -282,7 +307,7 @@ public final class FBView extends ZLTextView {
 			}
 
 			if (doRunAction) {
-				myReader.runAction(ActionCode.PROCESS_HYPERLINK);
+				processHyperlink();
 			}
 		}
 	}
@@ -402,6 +427,49 @@ public final class FBView extends ZLTextView {
 	@Override
 	public Integer getHighlightingForegroundColor() {
 		return ViewPreferences.getColorProfile(myReader.getContext()).highlightingForegroundColor;
+	}
+
+	public void processHyperlink() {
+		final ZLTextRegion region = getOutlinedRegion();
+		if (region == null) {
+			return;
+		}
+
+		final ZLTextRegion.Soul soul = region.getSoul();
+		if (soul instanceof ZLTextHyperlinkRegionSoul) {
+			hideOutline();
+			myReader.getViewWidget().repaint();
+			final ZLTextHyperlink hyperlink = ((ZLTextHyperlinkRegionSoul) soul).Hyperlink;
+			switch (hyperlink.Type) {
+				case FBHyperlinkType.EXTERNAL:
+					if (null != mHyperlinkListener) {
+						mHyperlinkListener.onHyperlinkExternalClick(hyperlink);
+					}
+					break;
+				case FBHyperlinkType.INTERNAL:
+					if (null != mHyperlinkListener) {
+						mHyperlinkListener.onHyperlinkInternalClick(hyperlink);
+					}
+					break;
+				case FBHyperlinkType.FOOTNOTE: {
+					if (null != mHyperlinkListener) {
+						mHyperlinkListener.onHyperlinkFootnoteClick(hyperlink);
+					}
+					break;
+				}
+			}
+		} else if (soul instanceof ZLTextImageRegionSoul) {
+			hideOutline();
+			myReader.getViewWidget().repaint();
+			final ZLTextImageElement element = ((ZLTextImageRegionSoul) soul).ImageElement;
+			if (null != mHyperlinkListener) {
+				mHyperlinkListener.onImageClick(element);
+			}
+		} else if (soul instanceof ZLTextWordRegionSoul) {
+      if (null != mHyperlinkListener) {
+        mHyperlinkListener.onWordClick(((ZLTextWordRegionSoul)soul).Word);
+      }
+		}
 	}
 
 	private abstract class Footer implements FooterArea {
@@ -591,10 +659,20 @@ public final class FBView extends ZLTextView {
 	}
 
 	@Override
+	protected void moveSelectionCursorTo(final Which which, final int x, final int y) {
+		super.moveSelectionCursorTo(which, x, y);
+		if (null != mSelectionListener) {
+			mSelectionListener.onChanged(getSelectedSnippet(), getSelectionStartY(), getSelectionEndY());
+		}
+	}
+
+	@Override
 	protected void releaseSelectionCursor() {
 		super.releaseSelectionCursor();
 		if (getCountOfSelectedWords() > 0) {
-			myReader.runAction(ActionCode.SELECTION_SHOW_PANEL);
+			if (null != mSelectionListener) {
+				mSelectionListener.onEnded(getSelectedSnippet(), getSelectionStartY(), getSelectionEndY());
+			}
 		}
 	}
 
@@ -646,5 +724,13 @@ public final class FBView extends ZLTextView {
 	public synchronized void onScrollingFinished(PageIndex pageIndex) {
 		super.onScrollingFinished(pageIndex);
 		myReader.storePosition();
+	}
+
+	public void setSelectionListener(SelectionListener pListener) {
+		mSelectionListener = pListener;
+	}
+
+	public void setProcessHyperlinkListener(onElementClickListener pListener) {
+		mHyperlinkListener = pListener;
 	}
 }

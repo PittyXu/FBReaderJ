@@ -20,6 +20,7 @@
 package org.geometerplus.fbreader.fbreader;
 
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import org.geometerplus.android.fbreader.dao.BookState;
@@ -35,7 +36,6 @@ import org.geometerplus.fbreader.formats.PluginCollection;
 import org.geometerplus.fbreader.util.AutoTextSnippet;
 import org.geometerplus.fbreader.util.TextSnippet;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
-import org.geometerplus.zlibrary.core.application.ZLKeyBindings;
 import org.geometerplus.zlibrary.core.drm.EncryptionMethod;
 import org.geometerplus.zlibrary.core.drm.FileEncryptionInfo;
 import org.geometerplus.zlibrary.core.util.RationalNumber;
@@ -49,16 +49,11 @@ import org.geometerplus.zlibrary.text.view.ZLTextView.PagePosition;
 import org.geometerplus.zlibrary.text.view.ZLTextWordCursor;
 import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 public final class FBReaderApp extends ZLApplication {
 	public final ZLTextStyleCollection myTextStyleCollection;
-
-	private final ZLKeyBindings myBindings;
 
 	public final FBView BookTextView;
 	public final FBView FootnoteView;
@@ -68,36 +63,28 @@ public final class FBReaderApp extends ZLApplication {
 	public volatile Book ExternalBook;
 
 	private Context mContext;
+	private DisplayMetrics myMetrics;
 
 	public FBReaderApp(Context pContext) {
 		mContext = pContext;
-		myBindings = new ZLKeyBindings(pContext);
-		myTextStyleCollection = new ZLTextStyleCollection(pContext, "Base");
-
-		addAction(ActionCode.INCREASE_FONT, new ChangeFontSizeAction(this, +2));
-		addAction(ActionCode.DECREASE_FONT, new ChangeFontSizeAction(this, -2));
-
-		addAction(ActionCode.FIND_NEXT, new FindNextAction(this));
-		addAction(ActionCode.FIND_PREVIOUS, new FindPreviousAction(this));
-		addAction(ActionCode.CLEAR_FIND_RESULTS, new ClearFindResultsAction(this));
-
-		addAction(ActionCode.SELECTION_CLEAR, new SelectionClearAction(this));
-
-		addAction(ActionCode.TURN_PAGE_FORWARD, new TurnPageAction(this, true));
-		addAction(ActionCode.TURN_PAGE_BACK, new TurnPageAction(this, false));
-
-		addAction(ActionCode.MOVE_CURSOR_UP, new MoveCursorAction(this, FBView.Direction.up));
-		addAction(ActionCode.MOVE_CURSOR_DOWN, new MoveCursorAction(this, FBView.Direction.down));
-		addAction(ActionCode.MOVE_CURSOR_LEFT, new MoveCursorAction(this, FBView.Direction.rightToLeft));
-		addAction(ActionCode.MOVE_CURSOR_RIGHT, new MoveCursorAction(this, FBView.Direction.leftToRight));
-
-		addAction(ActionCode.VOLUME_KEY_SCROLL_FORWARD, new VolumeKeyTurnPageAction(this, true));
-		addAction(ActionCode.VOLUME_KEY_SCROLL_BACK, new VolumeKeyTurnPageAction(this, false));
+		myTextStyleCollection = new ZLTextStyleCollection(this, pContext, "Base");
 
 		BookTextView = new FBView(this);
 		FootnoteView = new FBView(this);
 
 		setView(BookTextView);
+	}
+
+	private DisplayMetrics getMetrics() {
+		if (myMetrics == null) {
+			myMetrics = mContext.getApplicationContext().getResources().getDisplayMetrics();
+		}
+		return myMetrics;
+	}
+
+	public int getDisplayDPI() {
+		final DisplayMetrics metrics = getMetrics();
+		return metrics == null ? 0 : (int)(160 * metrics.density);
 	}
 
 	public Book getCurrentBook() {
@@ -124,10 +111,6 @@ public final class FBReaderApp extends ZLApplication {
 		if (book != null) {
 			openBookInternal(book, null, true);
 		}
-	}
-
-	public ZLKeyBindings keyBindings() {
-		return myBindings;
 	}
 
 	public FBView getTextView() {
@@ -195,10 +178,19 @@ public final class FBReaderApp extends ZLApplication {
 		BooksDaoHelper.getInstance(mContext).getBookmarksDao().insertOrReplace(bookmark);
 		fbView.clearSelection();
 
+		if (Model != null) {
+			if (BookTextView.getModel() != null) {
+				setBookmarkHighlightings(BookTextView);
+			}
+			if (FootnoteView.getModel() != null && myFootnoteModelId != null) {
+				setBookmarkHighlightings(FootnoteView);
+			}
+		}
+
 		return bookmark;
 	}
 
-	private void setBookmarkHighlightings(ZLTextView view, String modelId) {
+	private void setBookmarkHighlightings(ZLTextView view) {
 		view.removeHighlightings(BookmarkHighlighting.class);
 		List<Bookmark> bookmarks = BooksDaoHelper.getInstance(mContext).getBookmarksDao().loadAll();
 		for (Bookmark b : bookmarks) {
@@ -214,7 +206,7 @@ public final class FBReaderApp extends ZLApplication {
 		FootnoteView.setModel(model);
 		if (model != null) {
 			myFootnoteModelId = modelId;
-			setBookmarkHighlightings(FootnoteView, modelId);
+			setBookmarkHighlightings(FootnoteView);
 		}
 	}
 
@@ -226,7 +218,6 @@ public final class FBReaderApp extends ZLApplication {
 			return;
 		}
 
-		hideActivePopup();
 		storePosition();
 
 		BookTextView.setModel(null);
@@ -250,7 +241,7 @@ public final class FBReaderApp extends ZLApplication {
 			Model = BookModel.createModel(mContext, book, plugin);
 			ZLTextHyphenator.Instance().load(mContext, book.getLanguage());
 			BookTextView.setModel(Model.Book.getTextModel());
-			setBookmarkHighlightings(BookTextView, null);
+			setBookmarkHighlightings(BookTextView);
 			gotoStoredPosition();
 			if (bookmark == null) {
 				setView(BookTextView);
@@ -293,55 +284,6 @@ public final class FBReaderApp extends ZLApplication {
 		storePosition();
 	}
 
-	private class PositionSaver implements Runnable {
-		private final Book myBook;
-		private final ZLTextPosition myPosition;
-		private final RationalNumber myProgress;
-
-		PositionSaver(Book book, ZLTextPosition position, RationalNumber progress) {
-			myBook = book;
-			myPosition = position;
-			myProgress = progress;
-		}
-
-		public void run() {
-			if (null != myPosition) {
-				BookState state = new BookState((long) myBook.getPath().hashCode(), myPosition, new Date());
-				BooksDaoHelper.getInstance(mContext).getBookStateDao()
-						.insertOrReplace(state);
-			}
-			myBook.setProgress(myProgress);
-		}
-	}
-
-	private class SaverThread extends Thread {
-		private final List<Runnable> myTasks =
-			Collections.synchronizedList(new LinkedList<Runnable>());
-
-		SaverThread() {
-			setPriority(MIN_PRIORITY);
-		}
-
-		void add(Runnable task) {
-			myTasks.add(task);
-		}
-
-		public void run() {
-			while (true) {
-				synchronized (myTasks) {
-					while (!myTasks.isEmpty()) {
-						myTasks.remove(0).run();
-					}
-				}
-				try {
-					sleep(500);
-				} catch (InterruptedException e) {
-				}
-			}
-		}
-	}
-
-	private final SaverThread mySaverThread = new SaverThread();
 	private volatile ZLTextPosition myStoredPosition;
 	private volatile Book myStoredPositionBook;
 
@@ -377,12 +319,13 @@ public final class FBReaderApp extends ZLApplication {
 
 	private void savePosition() {
 		final RationalNumber progress = BookTextView.getProgress();
-		synchronized (mySaverThread) {
-			if (!mySaverThread.isAlive()) {
-				mySaverThread.start();
-			}
-			mySaverThread.add(new PositionSaver(myStoredPositionBook, myStoredPosition, progress));
+		if (null != myStoredPosition) {
+			BookState state = new BookState((long) myStoredPositionBook.getPath().hashCode(),
+					myStoredPosition, new Date());
+			BooksDaoHelper.getInstance(mContext).getBookStateDao()
+					.insertOrReplace(state);
 		}
+		myStoredPositionBook.setProgress(progress);
 	}
 
 	public Bookmark createBookmark(int maxChars, boolean visible) {
@@ -436,17 +379,6 @@ public final class FBReaderApp extends ZLApplication {
 			ZLTextHyphenator.Instance().load(mContext, Model.Book.getLanguage());
 			clearTextCaches();
 			getViewWidget().repaint();
-		}
-	}
-
-	@Override
-	public void runAction(final String actionId, final Object... params) {
-		if (ActionCode.INCREASE_FONT.equals(actionId)) {
-			actionChangeFontSize(2);
-		} else if (ActionCode.DECREASE_FONT.equals(actionId)) {
-			actionChangeFontSize(-2);
-		} else {
-			super.runAction(actionId, params);
 		}
 	}
 

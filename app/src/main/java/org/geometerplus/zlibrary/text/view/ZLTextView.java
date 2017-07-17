@@ -24,6 +24,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 
 import org.geometerplus.android.fbreader.config.PageTurningPreferences;
+import org.geometerplus.android.fbreader.dao.Bookmark;
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.util.RationalNumber;
 import org.geometerplus.zlibrary.core.view.Hull;
@@ -80,7 +82,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 
 	private CursorManager myCursorManager;
 
-	public ZLTextView(Context pContext, ZLApplication application) {
+	public ZLTextView(Context pContext, FBReaderApp application) {
 		super(pContext, application);
 	}
 
@@ -433,7 +435,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 	private void drawSelectionCursor(ZLPaintContext context, ZLTextPage page, SelectionCursor.Which which) {
 		final ZLTextSelection.Point pt = getSelectionCursorPoint(page, which);
 		if (pt != null) {
-			SelectionCursor.draw(context, which, pt.X, pt.Y, getSelectionBackgroundColor());
+			SelectionCursor.draw(context, which, Application.getDisplayDPI(), pt.X, pt.Y, getSelectionBackgroundColor());
 		}
 	}
 
@@ -587,7 +589,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		return myModel.getTextLength(myModel.getParagraphsNumber() - 1);
 	}
 
-	private final synchronized int getCurrentCharNumber(PageIndex pageIndex, boolean startNotEndOfPage) {
+	private synchronized int getCurrentCharNumber(PageIndex pageIndex, boolean startNotEndOfPage) {
 		if (myModel == null || myModel.getParagraphsNumber() == 0) {
 			return 0;
 		}
@@ -684,7 +686,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 	private ZLTextModel myLettersModel = null;
 	private float myCharWidth = -1f;
 
-	private final float computeCharWidth() {
+	private float computeCharWidth() {
 		if (myLettersModel != myModel) {
 			myLettersModel = myModel;
 			myLettersBufferLength = 0;
@@ -721,7 +723,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		return myCharWidth;
 	}
 
-	private final float computeCharWidth(char[] pattern, int length) {
+	private float computeCharWidth(char[] pattern, int length) {
 		return getContext().getStringWidth(pattern, 0, length) / ((float)length);
 	}
 
@@ -897,7 +899,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 	}
 
 	private List<ZLTextHighlighting> findHilites(ZLTextPage page) {
-		final LinkedList<ZLTextHighlighting> hilites = new LinkedList<ZLTextHighlighting>();
+		final LinkedList<ZLTextHighlighting> hilites = new LinkedList<>();
 		if (mySelection.intersects(page)) {
 			hilites.add(mySelection);
 		}
@@ -1071,7 +1073,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 
 	private volatile ZLTextWord myCachedWord;
 	private volatile ZLTextHyphenationInfo myCachedInfo;
-	private final synchronized ZLTextHyphenationInfo getHyphenationInfo(ZLTextWord word) {
+	private synchronized ZLTextHyphenationInfo getHyphenationInfo(ZLTextWord word) {
 		if (myCachedWord != word) {
 			myCachedWord = word;
 			myCachedInfo = ZLTextHyphenator.Instance().getInfo(word);
@@ -1466,7 +1468,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		}
 	}
 
-	private final synchronized void gotoPositionByEnd(int paragraphIndex, int wordIndex, int charIndex) {
+	private synchronized void gotoPositionByEnd(int paragraphIndex, int wordIndex, int charIndex) {
 		if (myModel != null && myModel.getParagraphsNumber() > 0) {
 			myCurrentPage.moveEndCursor(paragraphIndex, wordIndex, charIndex);
 			myPreviousPage.reset();
@@ -1478,7 +1480,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		}
 	}
 
-	protected synchronized void preparePaintInfo() {
+	synchronized void preparePaintInfo() {
 		myPreviousPage.reset();
 		myNextPage.reset();
 		preparePaintInfo(myCurrentPage);
@@ -1819,6 +1821,17 @@ public abstract class ZLTextView extends ZLTextViewBase {
 
 	public ZLTextHighlighting getSelectionHighlighting() {
 		return mySelection;
+	}
+
+	public void markBookmarkSelection(Bookmark pBookmark) {
+		ZLTextElementArea selectionStartArea = myCurrentPage.TextElementMap.getFirstAfter(pBookmark.startPosition);
+		if (null == selectionStartArea) {
+			return;
+		}
+		initSelection(selectionStartArea.XEnd, selectionStartArea.YEnd);
+
+		ZLTextElementArea selectionEndArea = myCurrentPage.TextElementMap.getLastBefore(pBookmark.endPosition);
+		moveSelectionCursorTo(getSelectionCursorInMovement(), selectionEndArea.XEnd, selectionEndArea.YEnd);
 	}
 
 	public int getSelectionStartY() {

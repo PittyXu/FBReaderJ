@@ -23,14 +23,15 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.zlibrary.core.view.ZLViewEnums;
 import org.geometerplus.zlibrary.ui.android.view.ViewUtil;
 
 public final class NoneAnimationProvider extends AnimationProvider {
 	private final Paint myPaint = new Paint();
 
-	public NoneAnimationProvider(BitmapManager bitmapManager) {
-		super(bitmapManager);
+	public NoneAnimationProvider(FBReaderApp app, BitmapManager bitmapManager) {
+		super(app, bitmapManager);
 	}
 
 	@Override

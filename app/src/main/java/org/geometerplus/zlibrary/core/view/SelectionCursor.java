@@ -21,17 +21,14 @@ package org.geometerplus.zlibrary.core.view;
 
 import android.support.annotation.ColorInt;
 
-import org.geometerplus.zlibrary.core.library.ZLibrary;
-
 public abstract class SelectionCursor {
 	public enum Which {
 		Left,
 		Right
 	}
 
-	public static void draw(ZLPaintContext context, Which which, int x, int y, @ColorInt Integer color) {
+	public static void draw(ZLPaintContext context, Which which, int dpi, int x, int y, @ColorInt Integer color) {
 		context.setFillColor(color);
-		final int dpi = ZLibrary.Instance().getDisplayDPI();
 		final int unit = dpi / 120;
 		final int xCenter = which == Which.Left ? x - unit - 1 : x + unit + 1;
 		context.fillRectangle(xCenter - unit, y + dpi / 8, xCenter + unit, y - dpi / 8);

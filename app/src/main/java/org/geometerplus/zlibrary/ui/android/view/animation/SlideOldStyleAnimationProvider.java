@@ -24,13 +24,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.zlibrary.ui.android.view.ViewUtil;
 
 public final class SlideOldStyleAnimationProvider extends SimpleAnimationProvider {
 	private final Paint myPaint = new Paint();
 
-	public SlideOldStyleAnimationProvider(BitmapManager bitmapManager) {
-		super(bitmapManager);
+	public SlideOldStyleAnimationProvider(FBReaderApp app, BitmapManager bitmapManager) {
+		super(app, bitmapManager);
 	}
 
 	@Override

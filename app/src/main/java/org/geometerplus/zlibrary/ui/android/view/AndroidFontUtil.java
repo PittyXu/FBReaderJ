@@ -28,7 +28,6 @@ import org.geometerplus.zlibrary.core.fonts.FileInfo;
 import org.geometerplus.zlibrary.core.fonts.FontEntry;
 import org.geometerplus.zlibrary.core.util.XmlUtil;
 import org.geometerplus.zlibrary.core.util.ZLTTFInfoDetector;
-import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -144,10 +143,9 @@ public final class AndroidFontUtil {
 			return null;
 		}
 		try {
-			return Typeface.createFromAsset(
-				((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).getAssets(), assets[style]
-			);
+			return Typeface.createFromAsset(pContext.getAssets(), assets[style]);
 		} catch (Throwable t) {
+			t.printStackTrace();
 		}
 		return null;
 	}

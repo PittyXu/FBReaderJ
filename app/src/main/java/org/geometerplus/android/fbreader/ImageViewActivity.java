@@ -34,8 +34,8 @@ import android.view.Window;
 
 import org.geometerplus.zlibrary.core.image.ZLFileImage;
 import org.geometerplus.zlibrary.core.image.ZLImageData;
-import org.geometerplus.zlibrary.core.image.ZLImageManager;
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageData;
+import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 
 public class ImageViewActivity extends Activity {
 	public static final String URL_KEY = "fbreader.imageview.url";
@@ -66,7 +66,7 @@ public class ImageViewActivity extends Activity {
 				finish();
 			}
 			try {
-				final ZLImageData imageData = ZLImageManager.Instance().getImageData(image);
+				final ZLImageData imageData = ZLAndroidImageManager.getInstance().getImageData(image);
 				myBitmap = ((ZLAndroidImageData)imageData).getFullSizeBitmap();
 			} catch (Exception e) {
 				// TODO: error message (?)

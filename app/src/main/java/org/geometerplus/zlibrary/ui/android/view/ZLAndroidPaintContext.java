@@ -322,7 +322,7 @@ public final class ZLAndroidPaintContext extends ZLPaintContext {
 	@Override
 	public void setFillColor(@ColorInt Integer color, int alpha) {
 		if (color != null) {
-			myFillPaint.setColor(Color.argb(Color.red(color), Color.green(color), Color.blue(color), alpha));
+			myFillPaint.setColor(Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color)));
 		}
 	}
 

@@ -41,8 +41,8 @@ public class Bookmark {
   public int type = 1;
   public String uid;
   public boolean visible = true;
-  public int foregroundColor = -1;
-  public int backgroundColor = Color.YELLOW;
+  public int foregroundColor = Color.BLACK;
+  public int backgroundColor = Color.BLUE;
   public String title;
   public String text;
   public Date creationTime;

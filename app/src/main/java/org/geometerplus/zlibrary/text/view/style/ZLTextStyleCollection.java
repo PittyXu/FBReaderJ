@@ -22,7 +22,7 @@ package org.geometerplus.zlibrary.text.view.style;
 import android.content.Context;
 
 import org.geometerplus.android.fbreader.config.StylePreferences;
-import org.geometerplus.zlibrary.core.library.ZLibrary;
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.zlibrary.core.util.XmlUtil;
 import org.geometerplus.zlibrary.text.model.ZLTextAlignmentType;
 import org.xml.sax.Attributes;
@@ -45,8 +45,10 @@ public class ZLTextStyleCollection {
   private final List<ZLTextNGStyleDescription> myDescriptionList;
   private final ZLTextNGStyleDescription[] myDescriptionMap = new ZLTextNGStyleDescription[256];
   private Context mContext;
+  private FBReaderApp mApp;
 
-  public ZLTextStyleCollection(Context pContext, String screen) {
+  public ZLTextStyleCollection(FBReaderApp pApp, Context pContext, String screen) {
+    mApp = pApp;
     mContext = pContext;
     this.screen = screen;
     final Map<Integer, ZLTextNGStyleDescription> descriptions = new SimpleCSSReader().read(pContext, "default/styles.css");
@@ -93,7 +95,7 @@ public class ZLTextStyleCollection {
           myBaseStyle.fontFamily = fontFamily;
         }
         if (null == myBaseStyle.fontSize) {
-          fontSize = fontSize * ZLibrary.Instance().getDisplayDPI() / 160;
+          fontSize = fontSize * mApp.getDisplayDPI() / 160;
           myBaseStyle.fontSize = fontSize;
         }
         if (null == myBaseStyle.lineSpacing) {

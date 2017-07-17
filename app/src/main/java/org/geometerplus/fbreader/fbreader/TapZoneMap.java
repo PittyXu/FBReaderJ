@@ -27,37 +27,14 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class TapZoneMap {
-	private static final List<String> ourPredefinedMaps = new LinkedList<String>();
-	private static List<String> ourMapsOption;
-	static {
-		// TODO: list files from default/tapzones
-		ourPredefinedMaps.add("right_to_left");
-		ourPredefinedMaps.add("left_to_right");
-		ourPredefinedMaps.add("down");
-		ourPredefinedMaps.add("up");
-	}
-	private static final Map<String,TapZoneMap> ourMaps = new HashMap<String,TapZoneMap>();
+	public static final String TURN_PAGE_BACK = "previousPage";
+	public static final String TURN_PAGE_FORWARD = "nextPage";
 
-	public static List<String> zoneMapNames(Context pContext) {
-		if (null == ourMapsOption) {
-			Set<String> list = MiscPreferences.getTapZoneMapList(pContext);
-			if (null == list) {
-				ourMapsOption = new ArrayList<>(ourPredefinedMaps);
-			} else {
-				ourMapsOption = new ArrayList<>(list);
-			}
-		}
-		return ourMapsOption;
-	}
+	private static final Map<String,TapZoneMap> ourMaps = new HashMap<>();
 
 	public static TapZoneMap zoneMap(Context pContext, String name) {
 		TapZoneMap map = ourMaps.get(name);
@@ -66,36 +43,6 @@ public class TapZoneMap {
 			ourMaps.put(name, map);
 		}
 		return map;
-	}
-
-	public static TapZoneMap createZoneMap(Context pContext, String name, int width, int height) {
-		List<String> list = zoneMapNames(pContext);
-		if (list.contains(name)) {
-			return null;
-		}
-
-		final TapZoneMap map = zoneMap(pContext, name);
-		map.myWidth = width;
-		map.myHeight = height;
-		MiscPreferences.setTapZoneWidth(pContext, name, width);
-		MiscPreferences.setTapZoneHeight(pContext, name, height);
-
-		final List<String> lst = new LinkedList<>(list);
-		lst.add(name);
-		MiscPreferences.setTapZoneMapList(pContext, new HashSet<>(lst));
-		return map;
-	}
-
-	public static void deleteZoneMap(Context pContext, String name) {
-		if (ourPredefinedMaps.contains(name)) {
-			return;
-		}
-
-		ourMaps.remove(name);
-
-		final List<String> lst = new LinkedList<>(zoneMapNames(pContext));
-		lst.remove(name);
-		MiscPreferences.setTapZoneMapList(pContext, new HashSet<>(lst));
 	}
 
 	public enum Tap {
@@ -116,11 +63,7 @@ public class TapZoneMap {
 		Name = name;
 		myHeight = MiscPreferences.getTapZoneHeight(pContext, name, 3);
 		myWidth = MiscPreferences.getTapZoneWidth(pContext, name, 3);
-		XmlUtil.parseQuietly(pContext, "default/tapzones/" + name.toLowerCase() + ".xml", new Reader());
-	}
-
-	public boolean isCustom() {
-		return !ourPredefinedMaps.contains(Name);
+		XmlUtil.parseQuietly(pContext, "default/" + name.toLowerCase() + ".xml", new Reader());
 	}
 
 	public int getHeight() {
@@ -163,18 +106,6 @@ public class TapZoneMap {
 				zone.HIndex, zone.VIndex, action);
 	}
 
-	public void setActionForZone(int h, int v, boolean singleTap, String action) {
-		final Zone zone = new Zone(h, v);
-		final HashMap<Zone, String> map = singleTap ? myZoneMap : myZoneMap2;
-		String option = map.get(zone);
-		if (option == null) {
-			option = createOptionForZone(zone, singleTap, null);
-			map.put(zone, option);
-		}
-		MiscPreferences.setTapZoneAction(mContext, (singleTap ? "Action" : "Action2"),
-				zone.HIndex, zone.VIndex, action);
-	}
-
 	private static class Zone {
 		int HIndex;
 		int VIndex;
@@ -183,12 +114,6 @@ public class TapZoneMap {
 			HIndex = h;
 			VIndex = v;
 		}
-
-		/*void mirror45() {
-			final int swap = HIndex;
-			HIndex = VIndex;
-			VIndex = swap;
-		}*/
 
 		@Override
 		public boolean equals(Object o) {
@@ -240,6 +165,7 @@ public class TapZoneMap {
 					}
 				}
 			} catch (Throwable e) {
+				e.printStackTrace();
 			}
 		}
 	}

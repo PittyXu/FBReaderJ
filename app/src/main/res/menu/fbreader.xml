@@ -2,6 +2,13 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <item
+      android:id="@+id/action_add_bookmark"
+      android:icon="@android:drawable/ic_input_add"
+      android:title="添加标记"
+      app:showAsAction="ifRoom" />
+
   <item
       android:id="@+id/action_file"
       android:icon="@drawable/ic_menu_toc"

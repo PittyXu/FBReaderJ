@@ -23,9 +23,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.ColorInt;
 
-import org.geometerplus.zlibrary.core.application.ZLApplication;
-import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.library.ZLibrary;
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.zlibrary.core.view.ZLPaintContext;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.text.model.ZLTextMetrics;
@@ -43,14 +41,14 @@ abstract class ZLTextViewBase extends ZLView {
 	private int myWordHeight = -1;
 	private ZLTextMetrics myMetrics;
 
-	ZLTextViewBase(Context pContext, ZLApplication application) {
+	ZLTextViewBase(Context pContext, FBReaderApp application) {
 		super(pContext, application);
 	}
 
 	private int myMaxSelectionDistance = 0;
 	protected final int maxSelectionDistance() {
 		if (myMaxSelectionDistance == 0) {
-			myMaxSelectionDistance = ZLibrary.Instance().getDisplayDPI() / 20;
+			myMaxSelectionDistance = Application.getDisplayDPI() / 20;
 		}
 		return myMaxSelectionDistance;
 	}
@@ -65,7 +63,7 @@ abstract class ZLTextViewBase extends ZLView {
 		ZLTextMetrics m = myMetrics;
 		if (m == null) {
 			m = new ZLTextMetrics(
-				ZLibrary.Instance().getDisplayDPI(),
+				Application.getDisplayDPI(),
 				// TODO: screen area width
 				100,
 				// TODO: screen area height
@@ -329,7 +327,7 @@ abstract class ZLTextViewBase extends ZLView {
 		}
 	}
 
-	private final void drawString(ZLPaintContext context, int x, int y, char[] str, int offset, int length, ZLTextWord.Mark mark, @ColorInt Integer color, int shift) {
+	private void drawString(ZLPaintContext context, int x, int y, char[] str, int offset, int length, ZLTextWord.Mark mark, @ColorInt Integer color, int shift) {
 		if (mark == null) {
 			context.setTextColor(color);
 			context.drawString(x, y, str, offset, length);

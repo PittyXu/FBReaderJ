@@ -21,14 +21,14 @@ package org.geometerplus.zlibrary.core.view;
 
 import android.content.Context;
 
-import org.geometerplus.zlibrary.core.application.ZLApplication;
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
 
 abstract public class ZLView implements ZLViewEnums {
-	public final ZLApplication Application;
+	public final FBReaderApp Application;
 	private ZLPaintContext myViewContext = new DummyPaintContext();
 	public final Context context;
 
-	protected ZLView(Context pContext, ZLApplication application) {
+	protected ZLView(Context pContext, FBReaderApp application) {
 		Application = application;
 		context = pContext;
 	}

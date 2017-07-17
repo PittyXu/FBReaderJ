@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-  <org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget
+  <org.geometerplus.android.fbreader.ReaderView
       android:id="@+id/main_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"

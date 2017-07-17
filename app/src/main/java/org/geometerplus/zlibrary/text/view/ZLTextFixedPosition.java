@@ -69,4 +69,15 @@ public class ZLTextFixedPosition extends ZLTextPosition implements Parcelable {
 		this.CharIndex = in.readInt();
 	}
 
+	public static final Creator<ZLTextFixedPosition> CREATOR = new Creator<ZLTextFixedPosition>() {
+		@Override
+		public ZLTextFixedPosition createFromParcel(Parcel source) {
+			return new ZLTextFixedPosition(source);
+		}
+
+		@Override
+		public ZLTextFixedPosition[] newArray(int size) {
+			return new ZLTextFixedPosition[size];
+		}
+	};
 }

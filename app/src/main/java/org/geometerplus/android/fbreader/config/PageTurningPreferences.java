@@ -57,7 +57,7 @@ public class PageTurningPreferences {
   }
 
   public static String getTapZoneMap(Context pContext) {
-    return DefaultPreferences.getInstance(pContext).getString(TAP_ZONE_MAP, "");
+    return DefaultPreferences.getInstance(pContext).getString(TAP_ZONE_MAP);
   }
 
   /**

@@ -21,9 +21,7 @@ package org.geometerplus.zlibrary.core.application;
 
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.view.ZLViewWidget;
-import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -35,12 +33,8 @@ public abstract class ZLApplication {
 
 	private static ZLApplication ourInstance;
 
-	public static final String NoAction = "none";
-
-	private volatile ZLApplicationWindow myWindow;
+	private volatile ZLViewWidget mWidget;
 	private volatile ZLView myView;
-
-	private final HashMap<String,ZLAction> myIdToActionMap = new HashMap<>();
 
 	protected ZLApplication() {
 		ourInstance = this;
@@ -54,7 +48,6 @@ public abstract class ZLApplication {
 				widget.reset();
 				widget.repaint();
 			}
-			hideActivePopup();
 		}
 	}
 
@@ -62,129 +55,22 @@ public abstract class ZLApplication {
 		return myView;
 	}
 
-	public final void setWindow(ZLApplicationWindow window) {
-		myWindow = window;
+	public final void setViewWidget(ZLViewWidget pWidget) {
+		mWidget = pWidget;
 	}
 
 	public final void initWindow() {
 		setView(myView);
 	}
 
-	protected void showErrorMessage(String msg) {
-		if (myWindow != null) {
-			myWindow.showErrorMessage(msg);
-		}
-	}
-
 	public final ZLViewWidget getViewWidget() {
-		return myWindow != null ? myWindow.getViewWidget() : null;
+		return mWidget;
 	}
 
 	public final void onRepaintFinished() {
-		for (PopupPanel popup : popupPanels()) {
-			popup.update();
-		}
-	}
-
-	public final void hideActivePopup() {
-		if (myActivePopup != null) {
-			myActivePopup.hide_();
-			myActivePopup = null;
-		}
-	}
-
-	public final void showPopup(String id) {
-		hideActivePopup();
-		myActivePopup = myPopups.get(id);
-		if (myActivePopup != null) {
-			myActivePopup.show_();
-		}
-	}
-
-	public final void addAction(String actionId, ZLAction action) {
-		myIdToActionMap.put(actionId, action);
-	}
-
-	public final boolean isActionEnabled(String actionId) {
-		final ZLAction action = myIdToActionMap.get(actionId);
-		return action != null && action.isEnabled();
-	}
-
-	public void runAction(String actionId, Object... params) {
-		final ZLAction action = myIdToActionMap.get(actionId);
-		if (action != null) {
-			action.checkAndRun(params);
-		}
-	}
-
-	//may be protected
-	abstract public ZLKeyBindings keyBindings();
-
-	public final boolean runActionByKey(int key, boolean longPress) {
-		final String actionId = keyBindings().getBinding(key, longPress);
-		if (actionId != null) {
-			final ZLAction action = myIdToActionMap.get(actionId);
-			return action != null && action.checkAndRun();
-		}
-		return false;
-	}
-
-	public boolean closeWindow() {
-		onWindowClosing();
-		if (myWindow != null) {
-			myWindow.close();
-		}
-		return true;
 	}
 
 	public void onWindowClosing() {
-	}
-
-	//Action
-	static abstract public class ZLAction {
-		public boolean isVisible() {
-			return true;
-		}
-
-		public boolean isEnabled() {
-			return isVisible();
-		}
-
-		public final boolean checkAndRun(Object ... params) {
-			if (isEnabled()) {
-				run(params);
-				return true;
-			}
-			return false;
-		}
-
-		abstract protected void run(Object ... params);
-	}
-
-	public static abstract class PopupPanel {
-		protected final ZLApplication Application;
-
-		protected PopupPanel(ZLApplication application) {
-			application.myPopups.put(getId(), this);
-			Application = application;
-		}
-
-		abstract public String getId();
-		abstract protected void update();
-		abstract protected void hide_();
-		abstract protected void show_();
-	}
-
-	private final HashMap<String,PopupPanel> myPopups = new HashMap<String,PopupPanel>();
-	private PopupPanel myActivePopup;
-	public final Collection<PopupPanel> popupPanels() {
-		return myPopups.values();
-	}
-	public final PopupPanel getActivePopup() {
-		return myActivePopup;
-	}
-	public final PopupPanel getPopupById(String id) {
-		return myPopups.get(id);
 	}
 
 	private volatile Timer myTimer;

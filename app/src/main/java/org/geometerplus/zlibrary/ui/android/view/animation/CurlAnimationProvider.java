@@ -24,6 +24,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.zlibrary.core.util.BitmapUtil;
 import org.geometerplus.zlibrary.core.view.ZLViewEnums;
 import org.geometerplus.zlibrary.ui.android.util.ZLAndroidColorUtil;
@@ -40,8 +41,8 @@ public final class CurlAnimationProvider extends AnimationProvider {
 
 	private float mySpeedFactor = 1;
 
-	public CurlAnimationProvider(BitmapManager bitmapManager) {
-		super(bitmapManager);
+	public CurlAnimationProvider(FBReaderApp app, BitmapManager bitmapManager) {
+		super(app, bitmapManager);
 
 		myBackPaint.setAntiAlias(true);
 		myBackPaint.setAlpha(0x40);

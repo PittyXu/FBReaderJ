@@ -23,14 +23,14 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import org.geometerplus.zlibrary.core.library.ZLibrary;
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.zlibrary.core.view.ZLViewEnums;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class AnimationProvider {
-	public static enum Mode {
+	public enum Mode {
 		NoScrolling(false),
 		PreManualScrolling(false),
 		ManualScrolling(false),
@@ -57,9 +57,11 @@ public abstract class AnimationProvider {
 	protected int myWidth;
 	protected int myHeight;
 	protected Integer myColorLevel;
+	private FBReaderApp mApp;
 
-	protected AnimationProvider(BitmapManager bitmapManager) {
+	protected AnimationProvider(FBReaderApp app, BitmapManager bitmapManager) {
 		myBitmapManager = bitmapManager;
+		mApp = app;
 	}
 
 	public Mode getMode() {
@@ -80,19 +82,19 @@ public abstract class AnimationProvider {
 		}
 	}
 
-	private final Mode detectManualMode() {
+	private Mode detectManualMode() {
 		final int dX = Math.abs(myStartX - myEndX);
 		final int dY = Math.abs(myStartY - myEndY);
 		if (myDirection.IsHorizontal) {
-			if (dY > ZLibrary.Instance().getDisplayDPI() / 2 && dY > dX) {
+			if (dY > mApp.getDisplayDPI() / 2 && dY > dX) {
 				return Mode.NoScrolling;
-			} else if (dX > ZLibrary.Instance().getDisplayDPI() / 10) {
+			} else if (dX > mApp.getDisplayDPI() / 10) {
 				return Mode.ManualScrolling;
 			}
 		} else {
-			if (dX > ZLibrary.Instance().getDisplayDPI() / 2 && dX > dY) {
+			if (dX > mApp.getDisplayDPI() / 2 && dX > dY) {
 				return Mode.NoScrolling;
-			} else if (dY > ZLibrary.Instance().getDisplayDPI() / 10) {
+			} else if (dY > mApp.getDisplayDPI() / 10) {
 				return Mode.ManualScrolling;
 			}
 		}
@@ -122,7 +124,7 @@ public abstract class AnimationProvider {
 			return;
 		}
 
-		final int dpi = ZLibrary.Instance().getDisplayDPI();
+		final int dpi = mApp.getDisplayDPI();
 		final int diff = myDirection.IsHorizontal ? x - myStartX : y - myStartY;
 		final int minDiff = myDirection.IsHorizontal
 			? (myWidth > myHeight ? myWidth / 4 : myWidth / 3)

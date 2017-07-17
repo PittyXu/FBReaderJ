@@ -19,13 +19,14 @@
 
 package org.geometerplus.zlibrary.ui.android.view.animation;
 
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.zlibrary.core.view.ZLViewEnums;
 
 abstract class SimpleAnimationProvider extends AnimationProvider {
 	private float mySpeedFactor;
 
-	SimpleAnimationProvider(BitmapManager bitmapManager) {
-		super(bitmapManager);
+	SimpleAnimationProvider(FBReaderApp app, BitmapManager bitmapManager) {
+		super(app, bitmapManager);
 	}
 
 	@Override

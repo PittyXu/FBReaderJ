@@ -24,13 +24,12 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
-import org.geometerplus.zlibrary.core.application.ZLKeyBindings;
 import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.core.view.ZLViewWidget;
 import org.geometerplus.zlibrary.ui.android.view.animation.AnimationProvider;
@@ -49,6 +48,7 @@ public class ZLAndroidWidget extends MainView implements ZLViewWidget, View.OnLo
 
 	private final BitmapManagerImpl myBitmapManager = new BitmapManagerImpl(this);
 	private Bitmap myFooterBitmap;
+	private FBReaderApp mApp;
 
 	public ZLAndroidWidget(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
@@ -71,6 +71,11 @@ public class ZLAndroidWidget extends MainView implements ZLViewWidget, View.OnLo
 		setFocusableInTouchMode(true);
 		setDrawingCacheEnabled(false);
 		setOnLongClickListener(this);
+
+		mApp = (FBReaderApp)FBReaderApp.Instance();
+		if (mApp == null) {
+			mApp = new FBReaderApp(getContext());
+		}
 	}
 
 	@Override
@@ -108,19 +113,19 @@ public class ZLAndroidWidget extends MainView implements ZLViewWidget, View.OnLo
 			myAnimationType = type;
 			switch (type) {
 				case none:
-					myAnimationProvider = new NoneAnimationProvider(myBitmapManager);
+					myAnimationProvider = new NoneAnimationProvider(mApp, myBitmapManager);
 					break;
 				case curl:
-					myAnimationProvider = new CurlAnimationProvider(myBitmapManager);
+					myAnimationProvider = new CurlAnimationProvider(mApp, myBitmapManager);
 					break;
 				case slide:
-					myAnimationProvider = new SlideAnimationProvider(myBitmapManager);
+					myAnimationProvider = new SlideAnimationProvider(mApp, myBitmapManager);
 					break;
 				case slideOldStyle:
-					myAnimationProvider = new SlideOldStyleAnimationProvider(myBitmapManager);
+					myAnimationProvider = new SlideOldStyleAnimationProvider(mApp, myBitmapManager);
 					break;
 				case shift:
-					myAnimationProvider = new ShiftAnimationProvider(myBitmapManager);
+					myAnimationProvider = new ShiftAnimationProvider(mApp, myBitmapManager);
 					break;
 			}
 		}
@@ -440,53 +445,6 @@ public class ZLAndroidWidget extends MainView implements ZLViewWidget, View.OnLo
 	public boolean onLongClick(View v) {
 		final ZLView view = ZLApplication.Instance().getCurrentView();
 		return view.onFingerLongPress(myPressedX, myPressedY);
-	}
-
-	private int myKeyUnderTracking = -1;
-	private long myTrackingStartTime;
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		final ZLApplication application = ZLApplication.Instance();
-		final ZLKeyBindings bindings = application.keyBindings();
-
-		if (bindings.hasBinding(keyCode, true) ||
-			bindings.hasBinding(keyCode, false)) {
-			if (myKeyUnderTracking != -1) {
-				if (myKeyUnderTracking == keyCode) {
-					return true;
-				} else {
-					myKeyUnderTracking = -1;
-				}
-			}
-			if (bindings.hasBinding(keyCode, true)) {
-				myKeyUnderTracking = keyCode;
-				myTrackingStartTime = System.currentTimeMillis();
-				return true;
-			} else {
-				return application.runActionByKey(keyCode, false);
-			}
-		} else {
-			return false;
-		}
-	}
-
-	@Override
-	public boolean onKeyUp(int keyCode, KeyEvent event) {
-		if (myKeyUnderTracking != -1) {
-			if (myKeyUnderTracking == keyCode) {
-				final boolean longPress = System.currentTimeMillis() >
-					myTrackingStartTime + ViewConfiguration.getLongPressTimeout();
-				ZLApplication.Instance().runActionByKey(keyCode, longPress);
-			}
-			myKeyUnderTracking = -1;
-			return true;
-		} else {
-			final ZLKeyBindings bindings = ZLApplication.Instance().keyBindings();
-			return
-				bindings.hasBinding(keyCode, false) ||
-				bindings.hasBinding(keyCode, true);
-		}
 	}
 
 	@Override

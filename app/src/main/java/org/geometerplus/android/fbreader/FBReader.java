@@ -23,42 +23,35 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.folderselector.FileChooserDialog;
 import com.afollestad.materialdialogs.folderselector.FileChooserDialog.FileCallback;
 
 import org.geometerplus.android.fbreader.FBReaderIntents.Key;
-import org.geometerplus.android.fbreader.config.ColorProfile;
 import org.geometerplus.android.fbreader.dao.Bookmark;
 import org.geometerplus.fbreader.book.Book;
 import org.geometerplus.fbreader.book.BookUtil;
 import org.geometerplus.fbreader.bookmodel.BookModel;
-import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.formats.BookReadingException;
 import org.geometerplus.fbreader.formats.PluginCollection;
-import org.geometerplus.zlibrary.core.application.ZLApplicationWindow;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.view.ZLViewWidget;
-import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.ui.android.R;
 import org.geometerplus.zlibrary.ui.android.view.AndroidFontUtil;
-import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
 import java.io.File;
 
-public final class FBReader extends FBReaderMainActivity implements ZLApplicationWindow, FileCallback {
+public final class FBReader extends AppCompatActivity implements FileCallback {
 
 	private FBReaderApp myFBReaderApp;
 	private volatile Book myBook;
 
-	private RelativeLayout myRootView;
-	private ZLAndroidWidget myMainView;
+	private ReaderView myMainView;
 
 	private Intent myOpenBookIntent = null;
 
@@ -110,8 +103,7 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		super.onCreate(icicle);
 
 		setContentView(R.layout.main);
-		myRootView = (RelativeLayout)findViewById(R.id.root_view);
-		myMainView = (ZLAndroidWidget)findViewById(R.id.main_view);
+		myMainView = (ReaderView)findViewById(R.id.main_view);
 
 		myFBReaderApp = (FBReaderApp)FBReaderApp.Instance();
 		if (myFBReaderApp == null) {
@@ -119,29 +111,8 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		}
 		myBook = null;
 
-		myFBReaderApp.setWindow(this);
+		myFBReaderApp.setViewWidget(myMainView);
 		myFBReaderApp.initWindow();
-
-		if (myFBReaderApp.getPopupById(TextSearchPopup.ID) == null) {
-			new TextSearchPopup(myFBReaderApp);
-		}
-		if (myFBReaderApp.getPopupById(SelectionPopup.ID) == null) {
-			new SelectionPopup(myFBReaderApp);
-		}
-
-		myFBReaderApp.addAction(ActionCode.SHOW_MENU, new ShowMenuAction(this, myFBReaderApp));
-		myFBReaderApp.addAction(ActionCode.SEARCH, new SearchAction(this, myFBReaderApp));
-
-		myFBReaderApp.addAction(ActionCode.SELECTION_SHOW_PANEL, new SelectionShowPanelAction(this, myFBReaderApp));
-		myFBReaderApp.addAction(ActionCode.SELECTION_HIDE_PANEL, new SelectionHidePanelAction(this, myFBReaderApp));
-		myFBReaderApp.addAction(ActionCode.SELECTION_COPY_TO_CLIPBOARD, new SelectionCopyAction(this, myFBReaderApp));
-		myFBReaderApp.addAction(ActionCode.SELECTION_BOOKMARK, new SelectionBookmarkAction(this, myFBReaderApp));
-
-		myFBReaderApp.addAction(ActionCode.PROCESS_HYPERLINK, new ProcessHyperlinkAction(this, myFBReaderApp));
-		myFBReaderApp.addAction(ActionCode.OPEN_VIDEO, new OpenVideoAction(this, myFBReaderApp));
-
-		myFBReaderApp.addAction(ActionCode.SWITCH_TO_DAY_PROFILE, new SwitchProfileAction(this, myFBReaderApp, ColorProfile.DAY));
-		myFBReaderApp.addAction(ActionCode.SWITCH_TO_NIGHT_PROFILE, new SwitchProfileAction(this, myFBReaderApp, ColorProfile.NIGHT));
 
 		myOpenBookIntent = getIntent();
 	}
@@ -185,13 +156,6 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		myFBReaderApp.onWindowClosing();
 	}
 
-	public void showSelectionPanel() {
-		final ZLTextView view = myFBReaderApp.getTextView();
-	}
-
-	public void hideSelectionPanel() {
-	}
-
 	private void onPreferencesUpdate(Book book) {
 		AndroidFontUtil.clearFontCache();
 		myFBReaderApp.onBookUpdated(book);
@@ -207,24 +171,24 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
-		String actionId;
 		switch (item.getItemId()) {
 			case R.id.action_file:
 				FileChooserDialog.Builder builder = new FileChooserDialog.Builder(this);
 				builder.mimeType("application/epub+zip")
 						.show();
-				return true;
+				break;
 			case R.id.action_increase_font:
-				actionId = ActionCode.INCREASE_FONT;
+				myFBReaderApp.actionChangeFontSize(2);
 				break;
 			case R.id.action_decrease_font:
-				actionId = ActionCode.DECREASE_FONT;
+				myFBReaderApp.actionChangeFontSize(-2);
+				break;
+			case R.id.action_add_bookmark:
+				myFBReaderApp.addSelectionBookmark();
 				break;
 			default:
-				actionId = ActionCode.DECREASE_FONT;
 				break;
 		}
-		myFBReaderApp.runAction(actionId);
 
 		return super.onOptionsItemSelected(item);
 	}
@@ -239,19 +203,8 @@ public final class FBReader extends FBReaderMainActivity implements ZLApplicatio
 		return (myMainView != null && myMainView.onKeyUp(keyCode, event)) || super.onKeyUp(keyCode, event);
 	}
 
-	@Override
 	public void showErrorMessage(String msg) {
 		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-	}
-
-	@Override
-	public void close() {
-		finish();
-	}
-
-	@Override
-	public ZLViewWidget getViewWidget() {
-		return myMainView;
 	}
 
 	@Override

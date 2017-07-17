@@ -25,14 +25,15 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 
+import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.zlibrary.ui.android.view.ViewUtil;
 
 public final class SlideAnimationProvider extends SimpleAnimationProvider {
 	private final Paint myDarkPaint = new Paint();
 	private final Paint myPaint = new Paint();
 
-	public SlideAnimationProvider(BitmapManager bitmapManager) {
-		super(bitmapManager);
+	public SlideAnimationProvider(FBReaderApp app, BitmapManager bitmapManager) {
+		super(app, bitmapManager);
 	}
 
 	private void setDarkFilter(int visible, int full) {

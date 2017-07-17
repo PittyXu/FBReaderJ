@@ -43,7 +43,7 @@ final class ZLTextElementAreaVector {
 
 	public List<ZLTextElementArea> areas() {
 		synchronized (myAreas) {
-			return new ArrayList<ZLTextElementArea>(myAreas);
+			return new ArrayList<>(myAreas);
 		}
 	}
 
