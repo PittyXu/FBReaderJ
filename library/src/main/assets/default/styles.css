@@ -196,6 +196,12 @@ b {
 	font-weight: bold;
 }
 
+u {
+  fbreader-id: 38;
+  fbreader-name: "Underline"
+  text-decoration: underline;
+}
+
 strong {
 	fbreader-id: 18;
 	fbreader-name: "Strong";

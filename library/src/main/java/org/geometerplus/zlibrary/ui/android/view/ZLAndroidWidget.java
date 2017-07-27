@@ -138,13 +138,13 @@ public class ZLAndroidWidget extends MainView implements ZLViewWidget, View.OnLo
 		mCurrentView = pView;
 	}
 
-	private Book createBookForFile(ZLFile file) {
+	private Book createBookForFile(ZLFile file, int bookCode) {
 		if (file == null) {
 			return null;
 		}
 
 		String path = file.getPath();
-		Book book = new Book(-1, path, null, null, null);
+		Book book = new Book(bookCode, path, null, null, null);
 		try {
 			BookUtil.readMetainfo(book, PluginCollection.Instance().getPlugin(ZLFile.createFileByPath(path)));
 		} catch (BookReadingException pE) {
@@ -166,7 +166,11 @@ public class ZLAndroidWidget extends MainView implements ZLViewWidget, View.OnLo
 	}
 
 	public void openBook(String path) {
-		Book book = createBookForFile(ZLFile.createFileByPath(path));
+		openBook(path, -1);
+	}
+
+	public void openBook(String path, int bookCode) {
+		Book book = createBookForFile(ZLFile.createFileByPath(path), bookCode);
 		if (book != null) {
 			ZLFile file = BookUtil.fileByBook(book);
 			if (!file.exists()) {

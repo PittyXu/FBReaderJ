@@ -60,6 +60,7 @@ public interface FBTextKind {
 	byte H6 = 36;
 	byte EXTERNAL_HYPERLINK = 37;
 	//byte BOOK_HYPERLINK = 38;
+	byte UNDERLINE = 38;
 
 	byte XHTML_TAG_P = 51;
 }

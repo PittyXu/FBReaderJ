@@ -32,7 +32,7 @@ import org.geometerplus.zlibrary.text.view.style.ZLTextNGStyle;
 import org.geometerplus.zlibrary.text.view.style.ZLTextNGStyleDescription;
 import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
 
-abstract class ZLTextViewBase extends ZLView {
+public abstract class ZLTextViewBase extends ZLView {
 	public enum ImageFitting {
 		none, covers, all
 	}

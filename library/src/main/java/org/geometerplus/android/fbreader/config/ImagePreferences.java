@@ -3,7 +3,7 @@ package org.geometerplus.android.fbreader.config;
 import android.content.Context;
 
 import org.geometerplus.android.util.DefaultPreferences;
-import org.geometerplus.fbreader.fbreader.FBView;
+import org.geometerplus.zlibrary.text.view.ZLTextViewBase.ImageFitting;
 
 public class ImagePreferences {
   public enum TapActionEnum {
@@ -27,8 +27,15 @@ public class ImagePreferences {
     DefaultPreferences.getInstance(pContext).setInt(FIT_IMAGES_TO_SCREEN, fit);
   }
 
+  /**
+   * 图片缩放模式
+   * {@link ImageFitting#none} 原始图片大小
+   * {@link ImageFitting#covers} cover适配屏幕宽度, 其他图片原始大小
+   * {@link ImageFitting#all} 所有图片适配屏幕宽度
+   */
   public static int getFitToScreen(Context pContext) {
-    return DefaultPreferences.getInstance(pContext).getInt(FIT_IMAGES_TO_SCREEN, FBView.ImageFitting.covers.ordinal());
+    return DefaultPreferences.getInstance(pContext)
+        .getInt(FIT_IMAGES_TO_SCREEN, ImageFitting.all.ordinal());
   }
 
   public static void setTappingAction(Context pContext, int action) {

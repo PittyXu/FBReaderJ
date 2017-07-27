@@ -688,7 +688,7 @@ void XHTMLReader::fillTagTable() {
 		addAction("pre", new XHTMLTagPreAction());
 		//addAction("big", new XHTMLTagAction());
 		//addAction("small", new XHTMLTagAction());
-		//addAction("u", new XHTMLTagAction());
+		addAction("u", new XHTMLTagControlAction(UNDERLINE));
 
 		//addAction("table", new XHTMLTagAction());
 		addAction("td", new XHTMLTagParagraphAction());
